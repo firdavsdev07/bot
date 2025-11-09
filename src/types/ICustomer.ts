@@ -24,4 +24,9 @@ export type ICustomerContract = {
   remainingDebt: number;
   monthlyPayment: number;
   debtorId: string;
+  payments?: Array<{
+    amount: number;
+    date: string;
+    isPaid: boolean;
+  }>;
 };

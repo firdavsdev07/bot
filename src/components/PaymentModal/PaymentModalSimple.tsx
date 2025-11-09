@@ -74,7 +74,7 @@ const PaymentModal: FC<IProps> = ({ open, onClose, contract, customerId }) => {
     onClose();
   };
 
-  const isDisabled = !(parseFloat(amount) > 0 && notes.trim() !== "");
+  const isDisabled = !(parseFloat(amount) > 0 && notes !== "");
 
   return (
     <Dialog open={open} onClose={handleOnClose} maxWidth="sm" fullWidth>
@@ -92,18 +92,6 @@ const PaymentModal: FC<IProps> = ({ open, onClose, contract, customerId }) => {
           <Typography variant="h6">{contract?.monthlyPayment} $</Typography>
         </Box>
 
-        <Box sx={{ bgcolor: "#e3f2fd", p: 1.5, borderRadius: 1, mb: 2 }}>
-          <Typography variant="caption" color="primary.main" fontWeight={600}>
-            📅{" "}
-            {new Date().toLocaleDateString("uz-UZ", {
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-            })}{" "}
-            uchun to'lov
-          </Typography>
-        </Box>
-
         <TextField
           label="To'lov miqdori ($)"
           fullWidth
@@ -112,7 +100,6 @@ const PaymentModal: FC<IProps> = ({ open, onClose, contract, customerId }) => {
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
           placeholder="0.00"
-          inputProps={{ step: "0.01", min: "0" }}
         />
 
         <TextField
@@ -120,10 +107,10 @@ const PaymentModal: FC<IProps> = ({ open, onClose, contract, customerId }) => {
           fullWidth
           multiline
           margin="normal"
-          rows={3}
+          rows={2}
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
-          placeholder="To'lov haqida izoh yozing..."
+          placeholder="To'lov haqida izoh..."
         />
       </DialogContent>
       <DialogActions>

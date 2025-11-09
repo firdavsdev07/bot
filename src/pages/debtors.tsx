@@ -97,13 +97,13 @@ export default function DebtorsPage({ activeTabIndex, index }: TabPageProps) {
               key={customer._id}
               customer={customer}
               onClick={handleClientClick}
-              // showDebtStatus
+              showDebtBadge
             />
           ))}
         </List>
       ) : (
         <Typography textAlign="center" color="text.secondary" mt={4}>
-          Qarzdor mijozlar topilmadi.
+          ✅ Qarzdor mijozlar topilmadi.
         </Typography>
       )}
 

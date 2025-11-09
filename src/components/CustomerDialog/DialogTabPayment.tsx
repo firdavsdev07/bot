@@ -94,37 +94,92 @@ const DialogTabPayment: FC<IProps> = ({ customerId }) => {
               px: 2,
               py: 1.5,
               display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
+              flexDirection: "column",
+              alignItems: "stretch",
               boxShadow: "0px 6px 20px rgba(0,0,0,0.1)",
             }}
           >
-            <Box>
-              <Typography
-                variant="subtitle2"
-                fontWeight="bold"
-                color="primary.main"
-              >
-                {contract.productName}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                {contract.monthlyPayment.toLocaleString()} $
-              </Typography>
+            <Box
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
+              mb={1}
+            >
+              <Box>
+                <Typography
+                  variant="subtitle2"
+                  fontWeight="bold"
+                  color="primary.main"
+                >
+                  {contract.productName}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  💰 Oylik: {contract.monthlyPayment.toLocaleString()} $
+                </Typography>
+                <Typography
+                  variant="caption"
+                  color="primary.main"
+                  fontWeight={600}
+                >
+                  📅{" "}
+                  {new Date().toLocaleDateString("uz-UZ", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })}
+                </Typography>
+              </Box>
+              {!noPay && (
+                <Button
+                  size="small"
+                  variant="contained"
+                  startIcon={<MdPayment />}
+                  sx={{ borderRadius: 2, bgcolor: "text.main" }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleOpenPayment(contract);
+                  }}
+                >
+                  To'lov
+                </Button>
+              )}
             </Box>
-            {!noPay && (
-              <Button
-                size="small"
-                variant="contained"
-                startIcon={<MdPayment />}
-                sx={{ borderRadius: 2, bgcolor: "text.main" }}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleOpenPayment(contract);
-                }}
-              >
-                To'lov
-              </Button>
-            )}
+
+            {/* To'lov ma'lumotlari */}
+            <Box
+              sx={{
+                display: "flex",
+                gap: 1,
+                mt: 1,
+                pt: 1,
+                borderTop: "1px solid #e0e0e0",
+              }}
+            >
+              <Box flex={1}>
+                <Typography variant="caption" color="text.secondary">
+                  Jami qarz
+                </Typography>
+                <Typography variant="body2" fontWeight="bold">
+                  {contract.totalDebt?.toLocaleString() || 0} $
+                </Typography>
+              </Box>
+              <Box flex={1}>
+                <Typography variant="caption" color="text.secondary">
+                  To'langan
+                </Typography>
+                <Typography variant="body2" fontWeight="bold">
+                  {contract.totalPaid?.toLocaleString() || 0} $
+                </Typography>
+              </Box>
+              <Box flex={1}>
+                <Typography variant="caption" color="text.secondary">
+                  Qolgan
+                </Typography>
+                <Typography variant="body2" fontWeight="bold">
+                  {contract.remainingDebt?.toLocaleString() || 0} $
+                </Typography>
+              </Box>
+            </Box>
           </ListItem>
         ))}
       </List>
