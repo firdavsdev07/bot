@@ -83,7 +83,7 @@ export const authenticateWithTelegram = async (): Promise<{
   try {
     console.log('🔐 [TELEGRAM] Authenticating with backend...');
     
-    const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/telegram`, {
+    const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://api.craftly.uz/api/bot'}/auth/telegram`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -117,7 +117,7 @@ export const checkUserRegistration = async (): Promise<boolean> => {
   if (!initData) return false;
   
   try {
-    const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/check-registration`, {
+    const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://api.craftly.uz/api/bot'}/auth/check-registration`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

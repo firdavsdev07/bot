@@ -2,7 +2,7 @@ import axios from "axios";
 import { showGlobalError } from "../utils/global-alert";
 
 const authApi = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || "http://localhost:3000/api/bot",
+  baseURL: import.meta.env.VITE_API_URL || "https://api.craftly.uz/api/bot",
   withCredentials: true,
 });
 
@@ -57,7 +57,7 @@ authApi.interceptors.response.use(
         try {
           console.log("🔄 Bot: Re-authenticating with Telegram... (attempt " + (retryCount + 1) + "/3)");
           const response = await axios.post(
-            `${import.meta.env.VITE_API_URL}/auth/telegram`,
+            `${import.meta.env.VITE_API_URL || 'https://api.craftly.uz/api/bot'}/auth/telegram`,
             { initData }
           );
 
