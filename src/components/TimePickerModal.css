@@ -1,0 +1,29 @@
+.picker-column {
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  flex: 1;
+  text-align: center;
+  scroll-snap-type: y mandatory;
+  padding-bottom: 130px;
+}
+
+.picker-column::-webkit-scrollbar {
+  display: none;
+}
+
+.picker-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 16px;
+  color: #888;
+  height: 40px;
+  scroll-snap-align: center;
+}
+
+.picker-item.selected {
+  font-weight: bold;
+  color: #000;
+  font-size: 18px;
+}
