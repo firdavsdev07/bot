@@ -53,9 +53,13 @@ const PaymentModal: FC<PaymentModalProps> = ({
   const dispatch = useAppDispatch();
   const [note, setNote] = useState("");
   const [dollarAmount, setDollarAmount] = useState(amount);
+  const [sumAmount, setSumAmount] = useState(0);
+  const [currencyCourse, setCurrencyCourse] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [currencyCourse, setCurrencyCourse] = useState(12500); // Default qiymat
+  
+  // Jami summa (dollar + so'mni dollorga o'tkazgandan keyin)
+  const totalAmountInDollar = dollarAmount + (sumAmount / currencyCourse);
 
   useEffect(() => {
     if (open) {
@@ -75,8 +79,8 @@ const PaymentModal: FC<PaymentModalProps> = ({
       const fetchCurrencyCourse = async () => {
         try {
           const res = await authApi.get("/dashboard/currency-course");
-          if (res.data) {
-            setCurrencyCourse(res.data);
+          if (res.data && res.data.course) {
+            setCurrencyCourse(res.data.course);
           }
         } catch (err) {
           console.error("❌ Failed to load currency course:", err);
@@ -86,6 +90,31 @@ const PaymentModal: FC<PaymentModalProps> = ({
       fetchCurrencyCourse();
     }
   }, [open, amount, paymentId, isPayAll, contractId, debtorId, targetMonth]);
+
+  // Input qiymatini parse qilish (nuqta va vergulni qo'llab-quvvatlaydi)
+  const parseInputNumber = (str: string): number => {
+    // Faqat raqamlar, nuqta va vergulni qoldirish
+    const cleaned = str.replace(/[^\d.,]/g, "");
+    // Vergulni nuqtaga almashtirish
+    const normalized = cleaned.replace(/,/g, "");
+    return parseFloat(normalized) || 0;
+  };
+
+  const handleDollarChange = (value: string) => {
+    // Faqat raqamlar va nuqtani qabul qilish
+    if (value === "" || /^[\d.]*$/.test(value)) {
+      const numValue = parseInputNumber(value);
+      setDollarAmount(numValue);
+    }
+  };
+
+  const handleSumChange = (value: string) => {
+    // Faqat raqamlar va nuqtani qabul qilish
+    if (value === "" || /^[\d.]*$/.test(value)) {
+      const numValue = parseInputNumber(value);
+      setSumAmount(numValue);
+    }
+  };
 
   const handleSubmit = async () => {
     if (loading) {
@@ -106,19 +135,19 @@ const PaymentModal: FC<PaymentModalProps> = ({
       setLoading(false);
       return;
     }
-    if (dollarAmount <= 0) {
+    if (totalAmountInDollar <= 0) {
       setError("To'lov summasi 0 dan katta bo'lishi kerak.");
       setLoading(false);
       return;
     }
 
     const basePayload = {
-      amount: dollarAmount,
+      amount: totalAmountInDollar, // Jami summa dolarda
       notes: note.trim(),
       customerId,
       currencyDetails: {
         dollar: dollarAmount,
-        sum: 0,
+        sum: sumAmount,
       },
       currencyCourse,
       targetMonth: targetMonth || 1, // ✅ Backend validator talab qiladi
@@ -134,11 +163,11 @@ const PaymentModal: FC<PaymentModalProps> = ({
         // Shuning uchun to'g'ridan-to'g'ri API chaqiramiz
         const response = await authApi.post("/payment/pay-remaining", {
           paymentId: paymentId,
-          amount: dollarAmount,
+          amount: totalAmountInDollar, // Jami summa dolarda
           notes: note.trim(),
           currencyDetails: {
             dollar: dollarAmount,
-            sum: 0,
+            sum: sumAmount,
           },
           currencyCourse,
         });
@@ -309,10 +338,10 @@ const PaymentModal: FC<PaymentModalProps> = ({
 
           <TextField
             fullWidth
-            label="To'lov summasi"
+            label="Dollar"
             type="number"
             value={dollarAmount}
-            onChange={(e) => setDollarAmount(parseFloat(e.target.value) || 0)}
+            onChange={(e) => handleDollarChange(e.target.value)}
             placeholder="0.00"
             InputProps={{
               startAdornment: (
@@ -329,14 +358,51 @@ const PaymentModal: FC<PaymentModalProps> = ({
             }}
           />
 
-          {dollarAmount > 0 && (
+          <TextField
+            fullWidth
+            label="So'm"
+            type="number"
+            value={sumAmount}
+            onChange={(e) => handleSumChange(e.target.value)}
+            placeholder="0"
+            InputProps={{
+              endAdornment: <InputAdornment position="end">so'm</InputAdornment>,
+            }}
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                borderRadius: borderRadius.md,
+              }
+            }}
+          />
+
+          <Box
+            sx={{
+              p: 2,
+              bgcolor: "background.neutral",
+              borderRadius: borderRadius.md,
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <Typography variant="caption" color="text.secondary">
+              Kurs: 1$ = {currencyCourse.toLocaleString()} so'm
+            </Typography>
+            {sumAmount > 0 && (
+              <Typography variant="caption" color="primary.main" fontWeight="bold">
+                Jami: {dollarAmount.toFixed(2)} $ + {sumAmount.toFixed(0)} so'm = {totalAmountInDollar.toFixed(2)} $
+              </Typography>
+            )}
+          </Box>
+
+          {totalAmountInDollar > 0 && (
             <motion.div
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
               transition={{ duration: 0.3 }}
             >
               <PaymentCalculator
-                amount={dollarAmount}
+                amount={totalAmountInDollar}
                 monthlyPayment={amount}
               />
             </motion.div>
@@ -382,7 +448,7 @@ const PaymentModal: FC<PaymentModalProps> = ({
         <Button
           variant="contained"
           onClick={handleSubmit}
-          disabled={loading || dollarAmount <= 0}
+          disabled={loading || totalAmountInDollar <= 0}
           fullWidth
           sx={{ 
             py: 1.5, 
