@@ -1,10 +1,9 @@
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Box, Typography, Button, IconButton, Card, CardContent, Chip, Stack } from "@mui/material";
-import { Bell, CheckCheck, Trash2, Clock, CheckCircle, XCircle, RefreshCw } from "lucide-react";
+import { Bell, CheckCheck, Trash2, Clock, CheckCircle, XCircle, RefreshCw, User, Calendar, TrendingUp, AlertTriangle, Package } from "lucide-react";
 import { 
   AttachMoney, 
-  Inventory, 
 } from "@mui/icons-material";
 import { useAlert } from "../components/AlertSystem";
 import { RootState } from "../store";
@@ -243,18 +242,45 @@ export default function NotificationsPage({ activeTabIndex, index }: TabPageProp
                       <Box mt={1.5}>
                         <Stack direction="row" spacing={1} mb={1} flexWrap="wrap">
                           <Chip
-                            label={`👤 ${notification.data.customerName}`}
+                            icon={<User size={12} />}
+                            label={notification.data.customerName}
                             size="small"
                             variant="outlined"
                             sx={{ height: 24, fontSize: "0.75rem" }}
                           />
                           <Chip
                             icon={<AttachMoney sx={{ fontSize: '0.8rem !important' }} />}
-                            label={`$${notification.data.amount}`}
+                            label={`$${notification.data.amount.toFixed(2)}`}
                             size="small"
-                            color="primary"
+                            color={notification.data.status === 'OVERPAID' ? 'warning' : notification.data.status === 'UNDERPAID' ? 'error' : 'primary'}
                             sx={{ height: 24, fontSize: "0.75rem" }}
                           />
+                          {(notification.data as any).monthNumber && (
+                            <Chip
+                              icon={<Calendar size={12} />}
+                              label={`${(notification.data as any).monthNumber}-oy`}
+                              size="small"
+                              color="secondary"
+                              sx={{ height: 24, fontSize: "0.75rem" }}
+                            />
+                          )}
+                          {(notification.data as any).paymentType && (
+                            <Chip
+                              icon={
+                                (notification.data as any).paymentType === 'FULL' ? <CheckCircle size={12} /> :
+                                (notification.data as any).paymentType === 'EXCESS' ? <TrendingUp size={12} /> : 
+                                <AlertTriangle size={12} />
+                              }
+                              label={
+                                (notification.data as any).paymentType === 'FULL' ? 'To\'liq' :
+                                (notification.data as any).paymentType === 'EXCESS' ? 'Ortiqcha' : 
+                                'Qisman'
+                              }
+                              size="small"
+                              variant="outlined"
+                              sx={{ height: 24, fontSize: "0.65rem" }}
+                            />
+                          )}
                         </Stack>
                         
                         {/* Product Name */}
@@ -270,7 +296,7 @@ export default function NotificationsPage({ activeTabIndex, index }: TabPageProp
                             fontSize: "0.7rem"
                           }}
                         >
-                          <Inventory sx={{ fontSize: '0.7rem', mr: 0.5 }} />
+                          <Package size={12} style={{ marginRight: 4 }} />
                           {notification.data.productName}
                         </Typography>
                       </Box>
