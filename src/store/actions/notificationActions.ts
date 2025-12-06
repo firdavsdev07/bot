@@ -21,7 +21,6 @@ export const getNotifications = (): AppThunk => async (dispatch) => {
     const res = await authApi.get("/notifications");
     const { data } = res;
     
-    console.log("📬 Notifications API Response:", data);
     
     dispatch(setNotifications(data.data));
     dispatch(success());

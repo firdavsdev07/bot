@@ -59,7 +59,6 @@ const PaymentModal: FC<PaymentModalProps> = ({
 
   useEffect(() => {
     if (open) {
-      // ✅ DEBUG: Modal ochilganda amount'ni tekshirish
       console.log("💰 PaymentModal opened:", {
         amount,
         paymentId,
@@ -89,7 +88,6 @@ const PaymentModal: FC<PaymentModalProps> = ({
   }, [open, amount, paymentId, isPayAll, contractId, debtorId, targetMonth]);
 
   const handleSubmit = async () => {
-    // ✅ Agar allaqachon yuborilayotgan bo'lsa, qayta yuborishni oldini olish
     if (loading) {
       console.warn("⚠️ To'lov allaqachon yuborilmoqda, iltimos kuting...");
       return;
@@ -149,7 +147,6 @@ const PaymentModal: FC<PaymentModalProps> = ({
         if (response.data.payment?.remainingAmount > 0) {
           console.log(`⚠️ Qarz qisman to'landi. Hali ${response.data.payment.remainingAmount}$ qoldi`);
         } else {
-          // console.log("✅ Qolgan qarz to'liq to'landi!");
         }
       } else {
         const payload: IPaydata = {
@@ -166,10 +163,8 @@ const PaymentModal: FC<PaymentModalProps> = ({
 
       console.log("✅ To'lov muvaffaqiyatli yuborildi, modal yopilmoqda...");
       
-      // ✅ Modal'ni yopish va onSuccess chaqirish
       onSuccess();
       
-      // ✅ Modal yopilgandan keyin tozalash
       setTimeout(() => {
         setLoading(false);
         setDollarAmount(0);

@@ -16,8 +16,6 @@ export const getDashboard = (): AppThunk => async (dispatch) => {
   try {
     const res = await authApi.get("/dashboard");
     const { data } = res;
-    console.log("📊 Dashboard API Response:", data);
-    console.log("📊 Dashboard data.data:", data.data);
     dispatch(setDashboard(data.data));
     dispatch(success());
   } catch (error) {

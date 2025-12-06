@@ -78,14 +78,10 @@ export const getCustomersPayment = (): AppThunk => async (dispatch) => {
 export const getCustomer =
   (id: string): AppThunk =>
     async (dispatch) => {
-      // console.log("🔍 getCustomer action called with ID:", id);
       dispatch(start());
       try {
-        console.log("📡 Fetching customer details from API...");
         const res = await authApi.get(`/customer/get-by-id/${id}`);
         const { data } = res;
-        // console.log("✅ Customer API response:", data);
-        // console.log("📊 Customer data:", data.data);
         dispatch(setCustomerDetails(data.data));
       } catch (error) {
         console.error("❌ Error fetching customer:", error);
@@ -108,17 +104,8 @@ export const getContract = createAsyncThunk(
   "customer/getContract",
   async (customerId: string, { dispatch, rejectWithValue }) => {
     try {
-      // console.log("🔍 getContract action - Fetching contracts for customer:", customerId);
       const res = await authApi.get(`/customer/get-contract-by-id/${customerId}`);
       const { data } = res;
-
-      console.log("📦 getContract action - API Response:", data);
-      console.log("📋 getContract action - Contracts data:", {
-        hasData: !!data.data,
-        allContractsCount: data.data?.allContracts?.length,
-        debtorContractsCount: data.data?.debtorContracts?.length,
-        paidContractsCount: data.data?.paidContracts?.length,
-      });
 
       // This dispatch call is for the slice, not for another thunk from AppThunk
       dispatch(setCustomerContracts(data.data));

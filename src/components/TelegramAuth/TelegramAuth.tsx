@@ -36,11 +36,8 @@ const TelegramAuth: React.FC<TelegramAuthProps> = ({ onAuthSuccess }) => {
 
   const initializeAuth = async () => {
     try {
-      console.log('🔄 [AUTH] Initializing Telegram authentication...');
-      
       // Check if we're in Telegram Web App
       if (!isTelegramWebApp()) {
-        console.log('❌ [AUTH] Not running in Telegram Web App');
         setAuthStep('need_phone');
         setLoading(false);
         return;
@@ -49,22 +46,18 @@ const TelegramAuth: React.FC<TelegramAuthProps> = ({ onAuthSuccess }) => {
       // Initialize Telegram Web App
       const isInitialized = initTelegramWebApp();
       if (!isInitialized) {
-        console.log('❌ [AUTH] Failed to initialize Telegram Web App');
         setAuthStep('need_phone');
         setLoading(false);
         return;
       }
       
       // Try to authenticate
-      console.log('🔐 [AUTH] Attempting authentication...');
       const authResult = await authenticateWithTelegram();
       
       if (authResult) {
-        console.log('✅ [AUTH] Authentication successful');
         onAuthSuccess(authResult.token, authResult.profile);
         setAuthStep('ready');
       } else {
-        console.log('📱 [AUTH] User needs phone registration');
         setAuthStep('need_phone');
       }
       

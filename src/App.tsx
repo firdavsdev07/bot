@@ -21,23 +21,14 @@ function App() {
   const isAuthenticated = user.id && user.id !== "";
 
   useEffect(() => {
-    console.log('🚀 [APP] Faqat Telegram orqali kirish mumkin');
-    console.log('🔧 [APP] Environment:', {
-      mode: import.meta.env.MODE,
-      nodeEnv: import.meta.env.VITE_NODE_ENV,
-      isProd: import.meta.env.PROD,
-    });
     setLoading(false);
   }, []);
 
-  // 🚀 Handle Telegram authentication success
+  // Handle Telegram authentication success
   const handleTelegramAuthSuccess = (token: string, profile: any) => {
-    console.log('✅ [APP] Telegram authentication successful');
-    console.log('👤 [APP] User profile:', profile);
     dispatch(loginSuccess({ token, profile }));
   };
 
-  // 🔄 Loading state
   if (loading) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
@@ -46,25 +37,21 @@ function App() {
     );
   }
 
-  // ❌ Error state
   if (error) {
     return <Error message={error} />;
   }
 
-  // 🚀 Main app render logic
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <AlertProvider>
         <ErrorSnackbar />
         {isAuthenticated ? (
-          // ✅ User is authenticated - show main app
           <Routes>
             <Route path="/" element={<Navigate to="/summary" />} />
             <Route path="/*" element={<TabsLayout />} />
           </Routes>
         ) : (
-          // ❌ User not authenticated - show auth screen
           <TelegramAuth onAuthSuccess={handleTelegramAuthSuccess} />
         )}
       </AlertProvider>

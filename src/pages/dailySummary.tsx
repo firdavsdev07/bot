@@ -17,19 +17,14 @@ export default function DailyReport({ activeTabIndex, index }: TabPageProps) {
   const { dashboard } = useSelector((state: RootState) => state.dashboard);
   const { user } = useSelector((state: RootState) => state.auth);
 
-  console.log("📊 [DailyReport] Dashboard state:", dashboard);
-  console.log("📊 [DailyReport] Balance:", dashboard?.balance);
-  console.log("📊 [DailyReport] Today:", dashboard?.today);
 
   useEffect(() => {
     if (activeTabIndex === index) {
-      console.log("🔄 [DailyReport] Fetching dashboard data...");
       dispatch(getDashboard());
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTabIndex, index]);
 
-  // ✅ Fallback qiymatlar - agar dashboard undefined yoki null bo'lsa
   const todayDollar = dashboard?.today?.dollar ?? 0;
   const todaySum = dashboard?.today?.sum ?? 0;
   const todayCount = dashboard?.today?.count ?? 0;

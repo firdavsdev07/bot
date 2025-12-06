@@ -32,7 +32,6 @@ export default function NotificationsPage({ activeTabIndex, index }: TabPageProp
 
   useEffect(() => {
     if (activeTabIndex === index) {
-      console.log("📬 [Notifications] Fetching notifications...");
       dispatch(getNotifications());
     }
   }, [activeTabIndex, index, dispatch]);

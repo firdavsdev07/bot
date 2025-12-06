@@ -90,7 +90,6 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
   });
   
   React.useEffect(() => {
-    // ✅ DEBUG: Payments o'zgarganda log chiqarish
     console.log("📦 Payments updated:", {
       totalPayments: payments.length,
       pendingPayments: payments.filter(p => p.status === 'PENDING').length,
@@ -99,7 +98,6 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
   }, [payments]);
 
   React.useEffect(() => {
-    // ✅ DEBUG: readOnly va boshqa props
     console.log("🔍 [POSTPONE] PaymentSchedule Props:", {
       readOnly,
       contractId,
@@ -114,16 +112,6 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
     const schedule: PaymentScheduleItem[] = [];
     const start = new Date(startDate);
     
-    // 🔍 DEBUG: initialPayment qiymatini tekshirish
-    // console.log('🔍 DEBUG - PaymentSchedule Props:', {
-    //   initialPayment,
-    //   initialPaymentDueDate,
-    //   startDate,
-    //   monthlyPayment,
-    //   period,
-    //   paymentsCount: payments.length,
-    //   hasInitialPaymentRecord: payments.some(p => p.paymentType === "initial")
-    // });
 
     // Boshlang'ich to'lov qilinganmi tekshirish - payments arraydan
     const initialPaymentRecord = payments.find(
@@ -235,7 +223,6 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
   };
 
   const handlePaymentSuccess = () => {
-    console.log(`✅ To'lov muvaffaqiyatli yuborildi, shartnoma ma'lumotlari yangilanmoqda...`);
     
     setPaymentModal({
       open: false,
@@ -249,7 +236,6 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
     // Bu PENDING statusni to'g'ri ko'rsatish uchun zarur
     setTimeout(() => {
       if (onPaymentSuccess) {
-        console.log("🔄 Refreshing contract data to show PENDING status...");
         onPaymentSuccess();
       } else {
         console.warn("⚠️ onPaymentSuccess callback not provided");
@@ -316,7 +302,6 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
       });
 
       if (response.ok) {
-        console.log('✅ To\'lov muvaffaqiyatli kechiktirildi');
         
         setPostponeDialog({
           open: false,
@@ -562,7 +547,6 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                     return p.status === 'PENDING' && p.targetMonth === item.month;
                   });
                   
-                  // 🔍 DEBUG: Log qilish
                   if (item.month <= 3) {
                     console.log(`🔍 [PaymentSchedule] Month ${item.month}:`, {
                       finalPendingCheck,

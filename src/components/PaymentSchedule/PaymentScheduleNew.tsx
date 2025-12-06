@@ -212,7 +212,6 @@ const PaymentScheduleNew: FC<PaymentScheduleProps> = ({
   };
 
   const handlePaymentSuccess = () => {
-    console.log(`✅ To'lov muvaffaqiyatli yuborildi, shartnoma ma'lumotlari yangilanmoqda...`);
     
     setPaymentModal({
       open: false,
@@ -228,7 +227,6 @@ const PaymentScheduleNew: FC<PaymentScheduleProps> = ({
     // Bu PENDING statusni to'g'ri ko'rsatish uchun zarur
     setTimeout(() => {
       if (onPaymentSuccess) {
-        console.log("🔄 Refreshing contract data to show PENDING status...");
         onPaymentSuccess();
       }
     }, 500); // 500ms kutamiz - backend payment yaratguncha
@@ -240,7 +238,6 @@ const PaymentScheduleNew: FC<PaymentScheduleProps> = ({
 
   // ✅ TUZATILDI: To'lovni kechiktirish funksiyasi
   const handlePostponePayment = async (paymentItem: PaymentScheduleItem) => {
-    console.log(`🔔 ESLATMA: ${paymentItem.month}-oy uchun eslatma belgilash`);
     
     // O'sha oy uchun haqiqiy payment topish
     const targetPayment = payments.find(p => 
@@ -275,12 +272,10 @@ const PaymentScheduleNew: FC<PaymentScheduleProps> = ({
           },
         });
         
-        console.log('📤 Response status:', response.status, response.statusText);
         
         if (response.ok) {
           const data = await response.json();
           existingReminderDate = data.reminderDate;
-          console.log(`📅 Month ${paymentItem.month} uchun mavjud reminder:`, data);
         } else {
           const errorData = await response.text();
           console.error(`❌ API Error ${response.status}:`, errorData);
@@ -320,7 +315,6 @@ const PaymentScheduleNew: FC<PaymentScheduleProps> = ({
         reminderDate: existingReminderDate, // ✅ YANGI: Mavjud reminder
       };
 
-      console.log(`🔄 Virtual payment yaratildi month ${paymentItem.month} uchun:`, virtualPayment);
 
       setPostponeDialog({
         open: true,
@@ -358,7 +352,6 @@ const PaymentScheduleNew: FC<PaymentScheduleProps> = ({
             // Local timezone offset'ni hisobga olish
             const timezoneOffset = localDate.getTimezoneOffset() * 60000;
             const utcDate = new Date(localDate.getTime() - timezoneOffset);
-            console.log('🕐 [TIMEZONE] Local:', newDateTime, 'UTC:', utcDate.toISOString());
             return utcDate.toISOString();
           })(),
           reason: 'Mijozning so\'rovi bo\'yicha eslatma o\'rnatildi',
@@ -374,7 +367,6 @@ const PaymentScheduleNew: FC<PaymentScheduleProps> = ({
       });
 
       if (response.ok) {
-        console.log('✅ Eslatma muvaffaqiyatli o\'rnatildi');
         
         setPostponeDialog({
           open: false,
@@ -593,7 +585,6 @@ const PaymentScheduleNew: FC<PaymentScheduleProps> = ({
               (p) => p.status === "REJECTED" && p.targetMonth === item.month
             );
 
-            // 🔍 DEBUG: PENDING payments - HAR OY UCHUN
             console.log(`🔍 [PaymentScheduleNew] Month ${item.month}:`, {
               hasPendingPayment,
               hasRejectedPayment,
@@ -615,7 +606,6 @@ const PaymentScheduleNew: FC<PaymentScheduleProps> = ({
 
             const hasShortage =
               actualPayment?.remainingAmount != null && actualPayment.remainingAmount > 0.01;
-            // ✅ ORTIQCHA badge'ni ko'rsatmaslik (foydalanuvchi uchun kerak emas)
             // const hasExcess = false;
               // actualPayment?.excessAmount != null && actualPayment.excessAmount > 0.01;
 
@@ -725,7 +715,6 @@ const PaymentScheduleNew: FC<PaymentScheduleProps> = ({
                             color={isPast ? "error" : "primary"}
                             onClick={(e) => {
                               e.stopPropagation();
-                              console.log('💰 To\'lov tugmasi bosildi:', item);
                               handlePayment(item.amount, undefined, item.month);
                             }}
                             disabled={hasPendingPayment}
@@ -747,7 +736,6 @@ const PaymentScheduleNew: FC<PaymentScheduleProps> = ({
                               onClick={(e) => {
                                 e.stopPropagation();
                                 e.preventDefault();
-                                console.log('🔔 ESLATMA tugmasi bosildi:', item);
                                 handlePostponePayment(item);
                               }}
                               sx={{ ml: 0.5 }}
@@ -874,7 +862,6 @@ const PaymentScheduleNew: FC<PaymentScheduleProps> = ({
                               startIcon={<MdNotifications size={14} />}
                               onClick={(e) => {
                                 e.stopPropagation();
-                                console.log('🔔 Mobile ESLATMA tugmasi bosildi:', item);
                                 handlePostponePayment(item);
                               }}
                               sx={{ alignSelf: "flex-start", fontSize: "0.7rem" }}

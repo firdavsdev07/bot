@@ -59,9 +59,6 @@ export const initTelegramWebApp = () => {
   // Expand to full height
   webApp.expand();
   
-  console.log('🚀 [TELEGRAM] Web App initialized');
-  console.log('📱 [TELEGRAM] initData length:', webApp.initData?.length || 0);
-  console.log('👤 [TELEGRAM] User:', getTelegramUser());
   
   return true;
 };
@@ -81,7 +78,6 @@ export const authenticateWithTelegram = async (): Promise<{
   }
   
   try {
-    console.log('🔐 [TELEGRAM] Authenticating with backend...');
     
     const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://api.craftly.uz/api/bot'}/auth/telegram`, {
       method: 'POST',
@@ -98,8 +94,6 @@ export const authenticateWithTelegram = async (): Promise<{
     }
     
     const data = await response.json();
-    console.log('✅ [TELEGRAM] Authentication successful');
-    console.log('👤 [TELEGRAM] Profile:', data.profile);
     
     return data;
   } catch (error) {

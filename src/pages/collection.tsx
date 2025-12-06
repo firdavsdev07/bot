@@ -58,15 +58,12 @@ export default function CollectedPage({ activeTabIndex, index }: TabPageProps) {
   });
 
   const handleClientClick = async (client: ICustomer) => {
-    // console.log("🔍 Collection - Client clicked:", client.firstName, client._id);
     setSelectedClient(client);
     setLoadingContracts(true);
 
     try {
       // Shartnomalarni yuklash
-      const result = await dispatch(getContract(client._id));
-      console.log("📦 Collection - Contract fetch result:", result);
-      console.log("📋 Collection - customerContracts state:", customerContracts);
+      await dispatch(getContract(client._id));
     } catch (error) {
       console.error("❌ Collection - Error fetching contracts:", error);
     }
@@ -157,12 +154,7 @@ export default function CollectedPage({ activeTabIndex, index }: TabPageProps) {
 
       {/* Shartnomalar ro'yxati */}
       {selectedClient && !loadingContracts && customerContracts && (() => {
-        // console.log("🔍 Rendering contracts:", {
-        //   hasCustomerContracts: !!customerContracts,
-        //   allContractsLength: customerContracts?.allContracts?.length,
-        //   debtorContractsLength: customerContracts?.debtorContracts?.length,
-        //   paidContractsLength: customerContracts?.paidContracts?.length,
-        // });
+        
         return (
         <Paper
           sx={{

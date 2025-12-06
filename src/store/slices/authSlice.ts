@@ -28,10 +28,8 @@ const authSlice = createSlice({
     ) {
       state.user = action.payload.profile;
 
-      // ✅ Token'ni sessionStorage'ga saqlash
       if (action.payload.token) {
         sessionStorage.setItem("accessToken", action.payload.token);
-        // console.log("✅ Bot: Token saved to sessionStorage");
       }
     },
   },
