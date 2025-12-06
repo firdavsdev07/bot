@@ -79,11 +79,16 @@ const PaymentModal: FC<PaymentModalProps> = ({
       const fetchCurrencyCourse = async () => {
         try {
           const res = await authApi.get("/dashboard/currency-course");
+          console.log("🔍 Currency API Response:", res.data);
           if (res.data && res.data.course) {
+            console.log("✅ Setting currency course:", res.data.course);
             setCurrencyCourse(res.data.course);
+          } else {
+            console.warn("⚠️ No course data received:", res.data);
           }
         } catch (err) {
           console.error("❌ Failed to load currency course:", err);
+          console.error("Error details:", err.response?.data);
         }
       };
       
