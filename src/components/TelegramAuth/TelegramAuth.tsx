@@ -20,6 +20,7 @@ import {
   getTelegramUser,
 } from '../../utils/telegram-auth';
 import { useAlert } from '../AlertSystem';
+import MockAuthDialog from '../MockAuthDialog';
 
 interface TelegramAuthProps {
   onAuthSuccess: (token: string, profile: any) => void;
@@ -27,7 +28,8 @@ interface TelegramAuthProps {
 
 const TelegramAuth: React.FC<TelegramAuthProps> = ({ onAuthSuccess }) => {
   const [loading, setLoading] = useState(true);
-  const [authStep, setAuthStep] = useState<'checking' | 'need_phone' | 'ready'>('checking');
+  const [authStep, setAuthStep] = useState<'checking' | 'need_phone' | 'ready' | 'desktop_auth'>('checking');
+  const [showMockAuth, setShowMockAuth] = useState(false);
   const { showError, showInfo } = useAlert();
 
   useEffect(() => {
@@ -38,7 +40,9 @@ const TelegramAuth: React.FC<TelegramAuthProps> = ({ onAuthSuccess }) => {
     try {
       // Check if we're in Telegram Web App
       if (!isTelegramWebApp()) {
-        setAuthStep('need_phone');
+        // Desktop'da - mock auth ko'rsatish
+        console.log('🖥️ Desktop detected - showing mock auth');
+        setAuthStep('desktop_auth');
         setLoading(false);
         return;
       }
@@ -76,6 +80,11 @@ const TelegramAuth: React.FC<TelegramAuthProps> = ({ onAuthSuccess }) => {
       `Keyin bu sahifani yangilab ko'ring.`,
       'Telefon raqam kerak'
     );
+  };
+
+  const handleMockAuth = (token: string, profile: any) => {
+    onAuthSuccess(token, profile);
+    setShowMockAuth(false);
   };
 
   if (loading) {
@@ -155,6 +164,59 @@ const TelegramAuth: React.FC<TelegramAuthProps> = ({ onAuthSuccess }) => {
           </Typography>
         </Paper>
       </Box>
+    );
+  }
+
+  if (authStep === 'desktop_auth') {
+    return (
+      <>
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          minHeight="100vh"
+          bgcolor="background.default"
+          p={2}
+        >
+          <Paper elevation={3} sx={{ p: 4, maxWidth: 400, textAlign: 'center' }}>
+            <Telegram color="primary" sx={{ fontSize: 48, mb: 2 }} />
+            
+            <Typography variant="h5" fontWeight={700} gutterBottom>
+              Desktop Manager Panel
+            </Typography>
+            
+            <Typography variant="body1" sx={{ mb: 3 }}>
+              Siz desktop'dan kirayotgansiz. Test uchun mock authentication ishlatiladi.
+            </Typography>
+            
+            <Alert severity="info" sx={{ mb: 3 }}>
+              Production'da faqat Telegram bot orqali kirish mumkin.
+            </Alert>
+            
+            <Stack spacing={2}>
+              <Button
+                variant="contained"
+                size="large"
+                startIcon={<Login />}
+                onClick={() => setShowMockAuth(true)}
+                fullWidth
+              >
+                Desktop Login
+              </Button>
+              
+              <Typography variant="caption" color="text.secondary">
+                Telefonda ishlatish uchun Telegram bot'dan foydalaning
+              </Typography>
+            </Stack>
+          </Paper>
+        </Box>
+        
+        <MockAuthDialog
+          open={showMockAuth}
+          onClose={() => setShowMockAuth(false)}
+          onAuthSuccess={handleMockAuth}
+        />
+      </>
     );
   }
 
