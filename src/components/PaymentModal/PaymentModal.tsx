@@ -52,7 +52,7 @@ const PaymentModal: FC<PaymentModalProps> = ({
 }) => {
   const dispatch = useAppDispatch();
   const [note, setNote] = useState("");
-  const [dollarAmount, setDollarAmount] = useState(amount);
+  const [dollarAmount, setDollarAmount] = useState(0); // Bo'sh boshlanadi
   const [sumAmount, setSumAmount] = useState(0);
   const [currencyCourse, setCurrencyCourse] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -72,7 +72,7 @@ const PaymentModal: FC<PaymentModalProps> = ({
         targetMonth
       });
       
-      setDollarAmount(amount);
+      setDollarAmount(0); // Bo'sh boshlanadi
       setNote("");
       setError("");
       
@@ -86,9 +86,9 @@ const PaymentModal: FC<PaymentModalProps> = ({
           } else {
             console.warn("⚠️ No course data received:", res.data);
           }
-        } catch (err) {
+        } catch (err: any) {
           console.error("❌ Failed to load currency course:", err);
-          console.error("Error details:", err.response?.data);
+          console.error("Error details:", err?.response?.data);
         }
       };
       
@@ -202,6 +202,7 @@ const PaymentModal: FC<PaymentModalProps> = ({
       setTimeout(() => {
         setLoading(false);
         setDollarAmount(0);
+        setSumAmount(0);
         setNote("");
         setError("");
       }, 100);
@@ -345,7 +346,7 @@ const PaymentModal: FC<PaymentModalProps> = ({
             fullWidth
             label="Dollar"
             type="number"
-            value={dollarAmount}
+            value={dollarAmount === 0 ? "" : dollarAmount}
             onChange={(e) => handleDollarChange(e.target.value)}
             placeholder="0.00"
             InputProps={{
@@ -367,7 +368,7 @@ const PaymentModal: FC<PaymentModalProps> = ({
             fullWidth
             label="So'm"
             type="number"
-            value={sumAmount}
+            value={sumAmount === 0 ? "" : sumAmount}
             onChange={(e) => handleSumChange(e.target.value)}
             placeholder="0"
             InputProps={{
@@ -417,10 +418,10 @@ const PaymentModal: FC<PaymentModalProps> = ({
             fullWidth
             multiline
             rows={3}
-            label="Izoh"
+            label="Izoh (ixtiyoriy)"
             value={note}
             onChange={(e) => setNote(e.target.value)}
-            placeholder="To'lov haqida qo'shimcha ma'lumot..."
+            placeholder="To'lov haqida qo'shimcha ma'lumot... (majburiy emas)"
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start" sx={{ alignSelf: "flex-start", mt: 2 }}>

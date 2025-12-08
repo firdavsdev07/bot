@@ -20,7 +20,7 @@ import {
   getTelegramUser,
 } from '../../utils/telegram-auth';
 import { useAlert } from '../AlertSystem';
-import MockAuthDialog from '../MockAuthDialog';
+import { MockAuthDialog } from '../MockAuthDialog';
 
 interface TelegramAuthProps {
   onAuthSuccess: (token: string, profile: any) => void;
@@ -213,8 +213,13 @@ const TelegramAuth: React.FC<TelegramAuthProps> = ({ onAuthSuccess }) => {
         
         <MockAuthDialog
           open={showMockAuth}
-          onClose={() => setShowMockAuth(false)}
-          onAuthSuccess={handleMockAuth}
+          onClose={(user) => {
+            if (user) {
+              handleMockAuth(`mock_token_${user._id}`, user);
+            } else {
+              setShowMockAuth(false);
+            }
+          }}
         />
       </>
     );
