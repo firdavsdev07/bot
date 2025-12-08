@@ -54,9 +54,9 @@ const TabsLayout = () => {
           backdropFilter: "blur(10px)",
           borderBottom: "1px solid rgba(0, 0, 0, 0.08)",
           zIndex: 1000,
-          px: 2,
-          pt: 1,
-          pb: 1,
+          px: { xs: 0.5, sm: 1, md: 2 },
+          pt: { xs: 0.5, sm: 1 },
+          pb: { xs: 0.5, sm: 1 },
           boxShadow: "0 2px 8px rgba(0, 0, 0, 0.05)",
         }}
       >
@@ -68,10 +68,11 @@ const TabsLayout = () => {
             mt: 1,
             "& .MuiTab-root": {
               fontWeight: 600,
-              fontSize: "0.9rem",
+              fontSize: { xs: "0.7rem", sm: "0.8rem", md: "0.9rem" },
               textTransform: "none",
-              minHeight: 44,
+              minHeight: { xs: 40, sm: 44, md: 48 },
               transition: "all 0.3s ease",
+              px: { xs: 0.5, sm: 1 },
             },
             "& .Mui-selected": {
               color: "primary.main",
@@ -97,25 +98,26 @@ const TabsLayout = () => {
                       color="error"
                       sx={{
                         "& .MuiBadge-badge": {
-                          fontSize: "0.65rem",
-                          height: 18,
-                          minWidth: 18,
+                          fontSize: { xs: "0.6rem", sm: "0.65rem" },
+                          height: { xs: 16, sm: 18 },
+                          minWidth: { xs: 16, sm: 18 },
                           padding: "0 4px",
+                          fontWeight: 700,
                         }
                       }}
                     >
-                      <Icon size={20} />
+                      <Icon size={window.innerWidth < 768 ? 18 : 20} />
                     </Badge>
                   ) : (
-                    <Icon size={20} />
+                    <Icon size={window.innerWidth < 768 ? 18 : 20} />
                   )
                 }
                 iconPosition="start"
                 sx={{
-                  minHeight: 48,
-                  fontSize: "0.75rem",
+                  minHeight: { xs: 40, sm: 44, md: 48 },
+                  fontSize: { xs: "0.65rem", sm: "0.7rem", md: "0.75rem" },
                   "& .MuiTab-iconWrapper": {
-                    marginRight: 0.5,
+                    marginRight: { xs: 0.3, sm: 0.5 },
                     marginBottom: "0 !important",
                   }
                 }}
@@ -125,7 +127,7 @@ const TabsLayout = () => {
         </Tabs>
       </Box>
 
-      <Box sx={{ flex: 1, pt: 8 }}>
+      <Box sx={{ flex: 1, pt: { xs: 7, sm: 8, md: 9 } }}>
         <Swiper
           modules={[Mousewheel, Keyboard]}
           spaceBetween={50}
@@ -146,21 +148,22 @@ const TabsLayout = () => {
               >
                 <Box
                   sx={{
-                    height: "calc(100vh - 80px)",
+                    height: { xs: "calc(100vh - 56px)", sm: "calc(100vh - 64px)", md: "calc(100vh - 80px)" },
                     overflowY: "auto",
-                    py: 2,
-                    pl: 1,
+                    overflowX: "hidden",
+                    py: { xs: 1, sm: 1.5, md: 2 },
+                    px: { xs: 0.5, sm: 1 },
                     scrollbarGutter: "stable",
                     scrollbarWidth: "thin",
                     "&::-webkit-scrollbar": {
-                      width: "1px",
+                      width: { xs: "2px", sm: "3px", md: "4px" },
                     },
                     "&::-webkit-scrollbar-thumb": {
-                      backgroundColor: "#888",
+                      backgroundColor: "rgba(0,0,0,0.2)",
                       borderRadius: "4px",
                     },
                     "&::-webkit-scrollbar-track": {
-                      backgroundColor: "#f1f1f1",
+                      backgroundColor: "transparent",
                     },
                   }}
                 >

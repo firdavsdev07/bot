@@ -14,45 +14,76 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({
     case "PAID":
       return (
         <Chip
-          icon={<MdCheckCircle size={16} />}
+          icon={<MdCheckCircle size={14} />}
           label="TO'LANDI"
           color="success"
           size={size}
-          sx={{ fontWeight: 600, fontSize: "0.75rem" }}
+          sx={{ 
+            fontWeight: 600, 
+            fontSize: { xs: "0.65rem", sm: "0.7rem", md: "0.75rem" },
+            height: { xs: 20, sm: 22, md: 24 },
+            "& .MuiChip-icon": {
+              width: { xs: 12, sm: 14, md: 16 },
+              height: { xs: 12, sm: 14, md: 16 }
+            }
+          }}
         />
       );
     
     case "UNDERPAID":
       return (
         <Chip
-          icon={<MdWarning size={16} />}
+          icon={<MdWarning size={14} />}
           label="KAM"
           color="warning"
           size={size}
-          sx={{ fontWeight: 600, fontSize: "0.75rem" }}
+          sx={{ 
+            fontWeight: 600, 
+            fontSize: { xs: "0.65rem", sm: "0.7rem", md: "0.75rem" },
+            height: { xs: 20, sm: 22, md: 24 },
+            "& .MuiChip-icon": {
+              width: { xs: 12, sm: 14, md: 16 },
+              height: { xs: 12, sm: 14, md: 16 }
+            }
+          }}
         />
       );
     
     case "OVERPAID":
       return (
         <Chip
-          icon={<MdArrowUpward size={16} />}
+          icon={<MdArrowUpward size={14} />}
           label="KO'P"
           color="info"
           size={size}
-          sx={{ fontWeight: 600, fontSize: "0.75rem" }}
+          sx={{ 
+            fontWeight: 600, 
+            fontSize: { xs: "0.65rem", sm: "0.7rem", md: "0.75rem" },
+            height: { xs: 20, sm: 22, md: 24 },
+            "& .MuiChip-icon": {
+              width: { xs: 12, sm: 14, md: 16 },
+              height: { xs: 12, sm: 14, md: 16 }
+            }
+          }}
         />
       );
     
     case "PENDING":
       return (
         <Chip
-          icon={<MdPending size={16} />}
+          icon={<MdPending size={14} />}
           label="KUTISH"
           color="default"
           size={size}
           variant="outlined"
-          sx={{ fontSize: "0.75rem" }}
+          sx={{ 
+            fontSize: { xs: "0.65rem", sm: "0.7rem", md: "0.75rem" },
+            height: { xs: 20, sm: 22, md: 24 },
+            "& .MuiChip-icon": {
+              width: { xs: 12, sm: 14, md: 16 },
+              height: { xs: 12, sm: 14, md: 16 }
+            }
+          }}
         />
       );
     

@@ -31,14 +31,14 @@ const DashboardCard: FC<DashboardCardProps> = ({
       transition={{ duration: 0.3 }}
       whileHover={{ y: -4, transition: { duration: 0.2 } }}
       sx={{
-        p: 3,
+        p: { xs: 2, sm: 2.5, md: 3 },
         borderRadius: borderRadius.lg,
         background: themeColor?.gradient || colors.primary.gradient,
         boxShadow: shadows.colored(themeColor?.shadow || colors.primary.shadow),
         color: "white",
         position: "relative",
         overflow: "hidden",
-        minHeight: 140,
+        minHeight: { xs: 120, sm: 130, md: 140 },
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
@@ -52,10 +52,10 @@ const DashboardCard: FC<DashboardCardProps> = ({
       <Box
         sx={{
           position: "absolute",
-          right: -30,
-          top: -30,
-          width: 120,
-          height: 120,
+          right: { xs: -20, md: -30 },
+          top: { xs: -20, md: -30 },
+          width: { xs: 80, sm: 100, md: 120 },
+          height: { xs: 80, sm: 100, md: 120 },
           borderRadius: "50%",
           background: "rgba(255, 255, 255, 0.1)",
           backdropFilter: "blur(10px)",
@@ -67,14 +67,14 @@ const DashboardCard: FC<DashboardCardProps> = ({
         sx={{
           display: "flex",
           alignItems: "center",
-          gap: 1.5,
+          gap: { xs: 1, md: 1.5 },
           position: "relative",
           zIndex: 1,
         }}
       >
         <Box
           sx={{
-            p: 1.5,
+            p: { xs: 1, md: 1.5 },
             bgcolor: "rgba(255, 255, 255, 0.2)",
             borderRadius: borderRadius.md,
             display: "flex",
@@ -92,7 +92,12 @@ const DashboardCard: FC<DashboardCardProps> = ({
             opacity: 0.95,
             textTransform: "uppercase",
             letterSpacing: 0.5,
-            fontSize: "0.75rem",
+            fontSize: { xs: "0.65rem", sm: "0.7rem", md: "0.75rem" },
+            display: { xs: "-webkit-box", sm: "block" },
+            WebkitLineClamp: { xs: 2, sm: "unset" },
+            WebkitBoxOrient: { xs: "vertical", sm: "unset" },
+            overflow: { xs: "hidden", sm: "visible" },
+            lineHeight: { xs: 1.1, sm: 1.2 },
           }}
         >
           {title}
@@ -100,14 +105,15 @@ const DashboardCard: FC<DashboardCardProps> = ({
       </Box>
 
       {/* Value */}
-      <Box sx={{ position: "relative", zIndex: 1, mt: 2 }}>
+      <Box sx={{ position: "relative", zIndex: 1, mt: { xs: 1, md: 2 } }}>
         <Typography
           variant="h4"
           fontWeight="bold"
           sx={{
             mb: 0.5,
-            fontSize: "2rem",
+            fontSize: { xs: "1.25rem", sm: "1.5rem", md: "2rem" },
             lineHeight: 1.2,
+            wordBreak: "break-word",
           }}
         >
           {typeof total === "number" ? total.toLocaleString() : total}
@@ -117,7 +123,11 @@ const DashboardCard: FC<DashboardCardProps> = ({
             variant="caption"
             sx={{
               opacity: 0.85,
-              fontSize: "0.8rem",
+              fontSize: { xs: "0.7rem", sm: "0.75rem", md: "0.8rem" },
+              display: "block",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
             }}
           >
             {subtitle}

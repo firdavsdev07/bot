@@ -535,21 +535,21 @@ const PaymentScheduleNew: FC<PaymentScheduleProps> = ({
           <Table size="small" stickyHeader>
             <TableHead>
               <TableRow>
-                <TableCell sx={{ fontWeight: 700, py: 1, fontSize: "0.85rem" }}>
+                <TableCell sx={{ fontWeight: 700, py: 1, fontSize: { xs: "0.7rem", sm: "0.8rem", md: "0.85rem" } }}>
                   {isMobile ? "Oy" : "To'lov"}
                 </TableCell>
-                <TableCell sx={{ fontWeight: 700, py: 1, fontSize: "0.85rem" }}>
+                <TableCell sx={{ fontWeight: 700, py: 1, fontSize: { xs: "0.7rem", sm: "0.8rem", md: "0.85rem" } }}>
                   {isMobile ? "Sana" : "Muddat"}
                 </TableCell>
-                <TableCell sx={{ fontWeight: 700, py: 1, fontSize: "0.85rem" }}>
+                <TableCell sx={{ fontWeight: 700, py: 1, fontSize: { xs: "0.7rem", sm: "0.8rem", md: "0.85rem" } }}>
                   Summa
                 </TableCell>
                 {!isMobile && (
-                  <TableCell sx={{ fontWeight: 700, py: 1, fontSize: "0.85rem" }}>
+                  <TableCell sx={{ fontWeight: 700, py: 1, fontSize: { xs: "0.7rem", sm: "0.8rem", md: "0.85rem" } }}>
                     Holat
                   </TableCell>
                 )}
-                <TableCell sx={{ fontWeight: 700, py: 1, fontSize: "0.85rem" }} align="right">
+                <TableCell sx={{ fontWeight: 700, py: 1, fontSize: { xs: "0.7rem", sm: "0.8rem", md: "0.85rem" } }} align="right">
                   Amal
                 </TableCell>
               </TableRow>
@@ -658,7 +658,7 @@ const PaymentScheduleNew: FC<PaymentScheduleProps> = ({
                         variant="body2"
                         fontWeight={600}
                         color={isPast && !item.isPaid ? "error.main" : "text.primary"}
-                        sx={{ fontSize: isMobile ? "0.75rem" : "0.875rem" }}
+                        sx={{ fontSize: { xs: "0.7rem", sm: "0.8rem", md: "0.875rem" } }}
                       >
                         {item.isInitial ? "Boshlang'ich" : `${item.month}-oy`}
                       </Typography>
@@ -670,7 +670,7 @@ const PaymentScheduleNew: FC<PaymentScheduleProps> = ({
                     <Typography 
                       variant="body2" 
                       color="text.secondary"
-                      sx={{ fontSize: isMobile ? "0.7rem" : "0.8rem" }}
+                      sx={{ fontSize: { xs: "0.65rem", sm: "0.75rem", md: "0.8rem" } }}
                     >
                       {format(new Date(item.date), isMobile ? "dd.MM" : "dd.MM.yyyy")}
                     </Typography>
@@ -681,7 +681,7 @@ const PaymentScheduleNew: FC<PaymentScheduleProps> = ({
                     <Typography 
                       variant="body2" 
                       fontWeight={600}
-                      sx={{ fontSize: isMobile ? "0.75rem" : "0.875rem" }}
+                      sx={{ fontSize: { xs: "0.7rem", sm: "0.8rem", md: "0.875rem" } }}
                     >
                       ${item.amount.toLocaleString()}
                     </Typography>
@@ -698,7 +698,11 @@ const PaymentScheduleNew: FC<PaymentScheduleProps> = ({
                           size="small"
                           color={isPast && !item.isPaid ? "error" : !item.isPaid ? "default" : "success"}
                           variant={!item.isPaid ? "outlined" : "filled"}
-                          sx={{ fontSize: "0.7rem", height: 24 }}
+                          sx={{ 
+                            fontSize: { xs: "0.65rem", sm: "0.7rem" }, 
+                            height: { xs: 22, sm: 24 },
+                            minWidth: { xs: 60, sm: 80 }
+                          }}
                         />
                       )}
                     </TableCell>
@@ -720,7 +724,7 @@ const PaymentScheduleNew: FC<PaymentScheduleProps> = ({
                             disabled={hasPendingPayment}
                             sx={{
                               minWidth: isMobile ? 50 : 60,
-                              fontSize: isMobile ? "0.65rem" : "0.7rem",
+                              fontSize: { xs: "0.6rem", sm: "0.65rem", md: "0.7rem" },
                               py: 0.25,
                               px: isMobile ? 0.5 : 1,
                             }}
@@ -763,7 +767,7 @@ const PaymentScheduleNew: FC<PaymentScheduleProps> = ({
                           }}
                           sx={{
                             minWidth: isMobile ? 45 : 55,
-                            fontSize: isMobile ? "0.6rem" : "0.7rem",
+                            fontSize: { xs: "0.55rem", sm: "0.6rem", md: "0.7rem" },
                             py: 0.25,
                           }}
                         >

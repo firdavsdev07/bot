@@ -42,8 +42,8 @@ const CustomerListItem: React.FC<CustomerListItemProps> = memo(({
       sx={{
         borderRadius: borderRadius.md,
         mb: 1.5,
-        px: 2.5,
-        py: 2,
+        px: { xs: 1.5, sm: 2, md: 2.5 },
+        py: { xs: 1.5, sm: 1.8, md: 2 },
         bgcolor: "background.paper",
         border: showDebtBadge ? "2px solid" : "1px solid",
         borderColor: showDebtBadge ? "error.main" : "divider",
@@ -58,11 +58,11 @@ const CustomerListItem: React.FC<CustomerListItemProps> = memo(({
     >
       <Avatar
         sx={{
-          mr: 2,
-          width: 48,
-          height: 48,
+          mr: { xs: 1.5, sm: 2 },
+          width: { xs: 40, sm: 44, md: 48 },
+          height: { xs: 40, sm: 44, md: 48 },
           bgcolor: showDebtBadge ? "error.main" : "primary.main",
-          fontSize: "1.1rem",
+          fontSize: { xs: "0.9rem", sm: "1rem", md: "1.1rem" },
           fontWeight: 700,
           boxShadow: shadows.sm,
         }}
@@ -72,8 +72,25 @@ const CustomerListItem: React.FC<CustomerListItemProps> = memo(({
 
       <ListItemText
         primary={
-          <Box display="flex" alignItems="center" gap={1} mb={0.5}>
-            <Typography fontWeight={700} fontSize="1rem" color="text.primary">
+          <Box 
+            display="flex" 
+            alignItems="center" 
+            gap={1} 
+            mb={0.5}
+            sx={{ flexWrap: { xs: "wrap", sm: "nowrap" } }}
+          >
+            <Typography 
+              fontWeight={700} 
+              color="text.primary"
+              sx={{
+                fontSize: { xs: "0.875rem", sm: "0.95rem", md: "1rem" },
+                lineHeight: 1.3,
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+                maxWidth: { xs: "120px", sm: "180px", md: "none" }
+              }}
+            >
               {customer.firstName} {customer.lastName}
             </Typography>
             {showDebtBadge && (
@@ -83,10 +100,17 @@ const CustomerListItem: React.FC<CustomerListItemProps> = memo(({
                 size="small"
                 color="error"
                 sx={{
-                  height: 22,
-                  fontSize: "0.7rem",
+                  height: { xs: 20, sm: 22 },
+                  fontSize: { xs: "0.65rem", sm: "0.7rem" },
                   fontWeight: 700,
-                  "& .MuiChip-icon": { ml: 0.5 },
+                  "& .MuiChip-icon": { 
+                    ml: 0.5,
+                    width: { xs: 12, sm: 14 },
+                    height: { xs: 12, sm: 14 }
+                  },
+                  "& .MuiChip-label": {
+                    px: { xs: 0.5, sm: 1 }
+                  }
                 }}
               />
             )}
@@ -99,7 +123,12 @@ const CustomerListItem: React.FC<CustomerListItemProps> = memo(({
               <Typography
                 variant="body2"
                 color="text.secondary"
-                fontSize="0.875rem"
+                sx={{
+                  fontSize: { xs: "0.75rem", sm: "0.8rem", md: "0.875rem" },
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                }}
               >
                 {customer.phoneNumber}
               </Typography>
@@ -114,10 +143,11 @@ const CustomerListItem: React.FC<CustomerListItemProps> = memo(({
                     sx={{
                       fontWeight: 600,
                       color: getDelayColor(customer.delayDays),
-                      fontSize: "0.8rem",
+                      fontSize: { xs: "0.7rem", sm: "0.75rem", md: "0.8rem" },
+                      lineHeight: 1.3,
                     }}
                   >
-                    {customer.delayDays} kun kechikkan
+                    {customer.delayDays > 99 ? "99+" : customer.delayDays} kun kechikkan
                   </Typography>
                 </Box>
               )}
