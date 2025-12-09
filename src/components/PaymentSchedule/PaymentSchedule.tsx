@@ -767,17 +767,25 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                             <Typography
                               variant="body2"
                               fontWeight="600"
-                              fontSize={{ xs: "0.75rem", sm: "0.875rem" }}
+                              fontSize={{ xs: "0.7rem", sm: "0.875rem" }}
                               color={
                                 isPast && !item.isPaid
                                   ? "error.main"
                                   : "inherit"
                               }
                             >
-                              {item.isInitial
-                                ? "Boshlang'ich"
-                                : `${item.month}-oy`}
-                              {isPast && !item.isPaid && " (Kechikkan)"}
+                              {/* Mobile: faqat raqam, Desktop: to'liq */}
+                              <Box component="span" sx={{ display: { xs: 'inline', sm: 'none' } }}>
+                                {item.isInitial ? "0" : item.month}
+                              </Box>
+                              <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>
+                                {item.isInitial ? "Boshlang'ich" : `${item.month}-oy`}
+                              </Box>
+                              {isPast && !item.isPaid && (
+                                <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>
+                                  {" (Kechikkan)"}
+                                </Box>
+                              )}
                             </Typography>
                           </Box>
                         </TableCell>

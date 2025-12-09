@@ -71,7 +71,7 @@ const ContractCard: FC<ContractCardProps> = ({
       {/* Mahsulot nomi va status */}
       <Box
         display="flex"
-        alignItems="center"
+        alignItems="flex-start"
         justifyContent="space-between"
         mb={2.5}
         gap={1}
@@ -79,7 +79,7 @@ const ContractCard: FC<ContractCardProps> = ({
         <Typography 
           variant="subtitle1" 
           fontWeight={700} 
-          fontSize={{ xs: "0.95rem", sm: "1.05rem" }}
+          fontSize={{ xs: "0.85rem", sm: "1rem" }}
           sx={{
             flex: 1,
             overflow: "hidden",
@@ -88,6 +88,7 @@ const ContractCard: FC<ContractCardProps> = ({
             WebkitLineClamp: 2,
             WebkitBoxOrient: "vertical",
             wordBreak: "break-word",
+            lineHeight: 1.3,
           }}
         >
           {contract.productName}
