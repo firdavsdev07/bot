@@ -129,7 +129,8 @@ const DialogTabPayment: FC<IProps> = ({ customerId }) => {
                   >
                     {contract.productName}
                   </Typography>
-                </Box>
+                </Box>{" "}
+                <br />
                 <Chip
                   label={`${contract.paidMonthsCount || 0}/${
                     contract.durationMonths || contract.period || 0
