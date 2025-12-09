@@ -22,6 +22,7 @@ import PaymentModal from "../PaymentModal/PaymentModal";
 import PaymentPostponeDialog from "../PaymentPostponeDialog";
 import { IPayment } from "../../types/IPayment"; // Import the IPayment interface
 import { StatusBadge } from "./StatusBadge";
+import { borderRadius, shadows } from "../../theme/colors";
 
 interface PaymentScheduleItem {
   month: number;
@@ -64,6 +65,7 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
   customerId,
   readOnly,
 }) => {
+  
   const [paymentModal, setPaymentModal] = useState<{
     open: boolean;
     amount: number;
@@ -341,7 +343,13 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
     <>
       <Paper
         elevation={0}
-        sx={{ p: { xs: 1, sm: 1.5 }, border: 1, borderColor: "divider" }}
+        sx={{ 
+          p: { xs: 1.5, sm: 2 }, 
+          border: 1, 
+          borderColor: "divider",
+          borderRadius: borderRadius.md,
+          boxShadow: shadows.sm,
+        }}
       >
         <Box
           display="flex"
@@ -402,11 +410,21 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
           )}
         </Box>
 
-        <TableContainer sx={{ maxHeight: "60vh", overflowX: "auto" }}>
+        <TableContainer sx={{ 
+          maxHeight: "60vh", 
+          overflowX: "auto",
+          "&::-webkit-scrollbar": {
+            height: { xs: "6px", sm: "8px" },
+          },
+          "&::-webkit-scrollbar-thumb": {
+            backgroundColor: "rgba(0,0,0,0.2)",
+            borderRadius: "4px",
+          },
+        }}>
           <Table
             size="small"
             stickyHeader
-            sx={{ minWidth: "100%", width: "100%" }}
+            sx={{ minWidth: { xs: "380px", md: "100%" }, width: "100%" }}
           >
             <TableHead>
               <TableRow>

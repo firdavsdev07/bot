@@ -221,14 +221,16 @@ const PaymentModal: FC<PaymentModalProps> = ({
       onClose={onClose} 
       maxWidth="sm" 
       fullWidth
+      fullScreen={window.innerWidth < 640} // Mobile uchun fullScreen
       PaperProps={{
         sx: {
-          borderRadius: borderRadius.lg,
+          borderRadius: { xs: 0, sm: borderRadius.lg },
           boxShadow: shadows.xl,
+          m: { xs: 0, sm: 2 },
         }
       }}
     >
-      <DialogTitle sx={{ pb: 1 }}>
+      <DialogTitle sx={{ pb: 1, px: { xs: 2, sm: 3 }, pt: { xs: 2, sm: 3 } }}>
         <Box display="flex" alignItems="center" gap={1.5}>
           <Box
             sx={{
@@ -249,8 +251,8 @@ const PaymentModal: FC<PaymentModalProps> = ({
           </Typography>
         </Box>
       </DialogTitle>
-      <DialogContent>
-        <Box sx={{ display: "flex", flexDirection: "column", gap: 2.5, mt: 1 }}>
+      <DialogContent sx={{ px: { xs: 2, sm: 3 } }}>
+        <Box sx={{ display: "flex", flexDirection: "column", gap: { xs: 2, sm: 2.5 }, mt: 1 }}>
           {error && (
             <motion.div
               initial={{ opacity: 0, y: -10 }}
@@ -437,16 +439,17 @@ const PaymentModal: FC<PaymentModalProps> = ({
           />
         </Box>
       </DialogContent>
-      <DialogActions sx={{ p: 3, gap: 1.5 }}>
+      <DialogActions sx={{ p: { xs: 2, sm: 3 }, gap: 1.5, flexDirection: { xs: "column", sm: "row" } }}>
         <Button 
           onClick={onClose} 
           disabled={loading} 
           fullWidth 
           variant="outlined" 
           sx={{ 
-            py: 1.5,
+            py: { xs: 1.25, sm: 1.5 },
             borderRadius: borderRadius.md,
             fontWeight: 600,
+            minWidth: { xs: "100%", sm: "auto" },
           }}
         >
           Bekor qilish
@@ -457,14 +460,19 @@ const PaymentModal: FC<PaymentModalProps> = ({
           disabled={loading || totalAmountInDollar <= 0}
           fullWidth
           sx={{ 
-            py: 1.5, 
-            fontSize: "1rem",
+            py: { xs: 1.25, sm: 1.5 },
+            fontSize: { xs: "0.9rem", sm: "1rem" },
             fontWeight: 700,
             borderRadius: borderRadius.md,
             background: "linear-gradient(135deg, #11998e 0%, #38ef7d 100%)",
             boxShadow: shadows.colored("rgba(17, 153, 142, 0.3)"),
+            minWidth: { xs: "100%", sm: "auto" },
+            whiteSpace: "nowrap",
             "&:hover": {
               background: "linear-gradient(135deg, #0d7a72 0%, #2dd46d 100%)",
+            },
+            "&:disabled": {
+              background: "rgba(0, 0, 0, 0.12)",
             },
           }}
         >

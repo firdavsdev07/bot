@@ -74,8 +74,22 @@ const ContractCard: FC<ContractCardProps> = ({
         alignItems="center"
         justifyContent="space-between"
         mb={2.5}
+        gap={1}
       >
-        <Typography variant="subtitle1" fontWeight={700} fontSize="1.05rem">
+        <Typography 
+          variant="subtitle1" 
+          fontWeight={700} 
+          fontSize={{ xs: "0.95rem", sm: "1.05rem" }}
+          sx={{
+            flex: 1,
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            display: "-webkit-box",
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: "vertical",
+            wordBreak: "break-word",
+          }}
+        >
           {contract.productName}
         </Typography>
         {variant === "paid" && (
