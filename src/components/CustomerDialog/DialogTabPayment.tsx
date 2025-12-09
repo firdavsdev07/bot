@@ -56,8 +56,6 @@ const DialogTabPayment: FC<IProps> = ({ customerId }) => {
     }
   }, [customerContracts, selectedContract]);
 
-  // handleOpenDrawer o'chirildi - PaymentSchedule ichida drawer yo'q
-
   const handleCloseDrawer = () => {
     setDrawerOpen(false);
     setSelectedContract(null);
@@ -113,51 +111,53 @@ const DialogTabPayment: FC<IProps> = ({ customerId }) => {
               <Stack
                 direction="row"
                 justifyContent="space-between"
-                alignItems="flex-start"
-                spacing={2}
+                alignItems="center"
+                sx={{ width: "100%" }}
               >
+                {/* Left side - Product name and payment info in column */}
                 <Box sx={{ flex: 1, minWidth: 0 }}>
+                  {/* 1-qator: Product nomi */}
                   <Typography
                     variant="subtitle1"
                     fontWeight={700}
                     color="primary.main"
                     sx={{
-                      fontSize: responsive.typography.body1, // Using responsive font size
+                      fontSize: responsive.typography.body1,
                       lineHeight: 1.3,
-                      mb: 0.5,
-                      wordWrap: "break-word", // Allow text wrapping
+                      mb: 1,
+                      wordWrap: "break-word",
                     }}
                   >
                     {contract.productName}
                   </Typography>
-                  <Stack direction="row" spacing={0.5} alignItems="center">
-                    <Wallet size={responsive.icon.small.xs} color="#1976d2" />
-                    <Typography
-                      variant="body2"
-                      color="text.secondary"
-                      fontWeight={500}
+                  
+                  {/* 2-qator: To'lov va Progress chiplar */}
+                  <Stack direction="row" spacing={1} alignItems="center">
+                    <Chip
+                      icon={<Wallet size={14} />}
+                      label={`${contract.monthlyPayment.toLocaleString()} $`}
+                      size="small"
                       sx={{
-                        fontSize: responsive.typography.body2, // Using responsive font size
+                        bgcolor: "primary.main",
+                        color: "white",
+                        fontWeight: 600,
+                        "& .MuiChip-icon": { color: "white" },
+                        fontSize: responsive.typography.caption,
                       }}
-                    >
-                      {contract.monthlyPayment.toLocaleString()} $
-                    </Typography>
+                    />
+                    <Chip
+                      label={`${contract.paidMonthsCount || 0}/${
+                        contract.durationMonths || contract.period || 0
+                      }`}
+                      size="small"
+                      color="success"
+                      sx={{
+                        fontWeight: 600,
+                        fontSize: responsive.typography.caption,
+                      }}
+                    />
                   </Stack>
                 </Box>
-                <Chip
-                  label={`${contract.paidMonthsCount || 0}/${
-                    contract.durationMonths || contract.period || 0
-                  }`}
-                  size="small"
-                  color="primary"
-                  variant="outlined"
-                  sx={{
-                    fontWeight: 600,
-                    minWidth: "60px",
-                    borderWidth: 2,
-                    fontSize: responsive.typography.caption, // Using responsive font size
-                  }}
-                />
               </Stack>
             </AccordionSummary>
             <AccordionDetails sx={{ pt: 0, px: { xs: 1.5, sm: 2 }, pb: 2 }}>
@@ -176,7 +176,7 @@ const DialogTabPayment: FC<IProps> = ({ customerId }) => {
                 totalPaid={contract.totalPaid || 0}
                 prepaidBalance={contract.prepaidBalance || 0}
                 readOnly={false}
-                nextPaymentDate={contract.nextPaymentDate} // ✅ To'g'rilandi: nextPaymentDate
+                nextPaymentDate={contract.nextPaymentDate}
                 onPaymentSuccess={() => {
                   dispatch(getContract(customerId));
                 }}
