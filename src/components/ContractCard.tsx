@@ -80,26 +80,25 @@ const ContractCard: FC<ContractCardProps> = ({
         mb={2.5}
         gap={1}
       >
-        <Box sx={{ flex: 1 }}>
+        <Box sx={{ flex: 1, minWidth: 0 }}>
           <Typography
             variant="subtitle1"
             fontWeight={700}
-            fontSize={{ xs: "0.4rem", sm: "0.5rem", md: "1rem" }}
             sx={{
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              whiteSpace: "nowrap",
-              lineHeight: { xs: 1.2, sm: 1.3 },
-              mb: 0.3,
+              fontSize: { xs: "0.875rem", sm: "0.95rem", md: "1rem" },
+              lineHeight: 1.3,
+              mb: 0.5,
+              wordWrap: "break-word",
             }}
           >
             {contract.productName}
-          </Typography>{" "}
-          <br />
+          </Typography>
           <Typography
             variant="caption"
             color="text.secondary"
-            fontSize={{ xs: "0.4rem", sm: "0.5rem" }}
+            sx={{
+              fontSize: { xs: "0.75rem", sm: "0.8rem", md: "0.875rem" },
+            }}
           >
             {contract.paidMonthsCount || 0}/{contract.durationMonths || 0} oy
             to'langan
