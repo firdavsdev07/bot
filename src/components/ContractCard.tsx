@@ -1,5 +1,6 @@
 import { FC } from "react";
-import { Paper, Typography, Box, Chip } from "@mui/material";
+import { Paper, Typography, Box, Chip, useMediaQuery } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 import { motion } from "framer-motion";
 import { DollarSign, Calendar, TrendingUp, CheckCircle, AlertTriangle } from "lucide-react";
 import { ICustomerContract } from "../types/ICustomer";
@@ -18,6 +19,9 @@ const ContractCard: FC<ContractCardProps> = ({
   variant = "default",
   onClick,
 }) => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  
   const totalDebt =
     (contract.monthlyPayment || 0) * (contract.durationMonths || 0);
   const totalPaid = contract.totalPaid || 0;
@@ -133,7 +137,7 @@ const ContractCard: FC<ContractCardProps> = ({
             borderRadius: borderRadius.sm,
           }}
         >
-          <DollarSign size={18} color="#667eea" />
+          <DollarSign size={isMobile ? 14 : 18} color="#667eea" />
           <Box>
             <Typography variant="caption" color="text.secondary" display="block" fontSize={{ xs: "0.65rem", sm: "0.75rem" }}>
               Oylik to'lov
@@ -154,7 +158,7 @@ const ContractCard: FC<ContractCardProps> = ({
             borderRadius: borderRadius.sm,
           }}
         >
-          <Calendar size={18} color="#4facfe" />
+          <Calendar size={isMobile ? 14 : 18} color="#4facfe" />
           <Box>
             <Typography variant="caption" color="text.secondary" display="block" fontSize={{ xs: "0.65rem", sm: "0.75rem" }}>
               Muddat
@@ -175,7 +179,7 @@ const ContractCard: FC<ContractCardProps> = ({
             borderRadius: borderRadius.sm,
           }}
         >
-          <TrendingUp size={18} color="#11998e" />
+          <TrendingUp size={isMobile ? 14 : 18} color="#11998e" />
           <Box>
             <Typography variant="caption" color="text.secondary" display="block" fontSize={{ xs: "0.65rem", sm: "0.75rem" }}>
               Jami qarz
@@ -196,7 +200,7 @@ const ContractCard: FC<ContractCardProps> = ({
             borderRadius: borderRadius.sm,
           }}
         >
-          <CheckCircle size={18} color="#f093fb" />
+          <CheckCircle size={isMobile ? 14 : 18} color="#f093fb" />
           <Box>
             <Typography variant="caption" color="text.secondary" display="block" fontSize={{ xs: "0.65rem", sm: "0.75rem" }}>
               To'langan oylar
