@@ -94,7 +94,8 @@ const ContractCard: FC<ContractCardProps> = ({
             }}
           >
             {contract.productName}
-          </Typography>
+          </Typography>{" "}
+          <br />
           <Typography
             variant="caption"
             color="text.secondary"
