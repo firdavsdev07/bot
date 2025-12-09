@@ -52,7 +52,7 @@ const ContractCard: FC<ContractCardProps> = ({
       whileTap={onClick ? { scale: 0.99 } : {}}
       onClick={onClick}
       sx={{
-        p: 2.5,
+        p: { xs: 1.5, sm: 2, md: 2.5 },
         mb: 2,
         bgcolor: "background.paper",
         border: "solid",
@@ -79,16 +79,17 @@ const ContractCard: FC<ContractCardProps> = ({
         <Typography 
           variant="subtitle1" 
           fontWeight={700} 
-          fontSize={{ xs: "0.85rem", sm: "1rem" }}
+          fontSize={{ xs: "0.75rem", sm: "0.85rem", md: "1rem" }}
           sx={{
             flex: 1,
             overflow: "hidden",
             textOverflow: "ellipsis",
             display: "-webkit-box",
-            WebkitLineClamp: 2,
+            WebkitLineClamp: { xs: 3, sm: 2 }, // Mobile da 3 qator
             WebkitBoxOrient: "vertical",
             wordBreak: "break-word",
-            lineHeight: 1.3,
+            lineHeight: { xs: 1.2, sm: 1.3 },
+            minHeight: { xs: "2.7rem", sm: "auto" }, // Mobile da minimal balandlik
           }}
         >
           {contract.productName}
@@ -117,8 +118,8 @@ const ContractCard: FC<ContractCardProps> = ({
       <Box
         sx={{
           display: "grid",
-          gridTemplateColumns: "1fr 1fr",
-          gap: 2,
+          gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" }, // Mobile da 1 kolon
+          gap: { xs: 1.5, sm: 2 },
           mb: 2.5,
         }}
       >
@@ -126,18 +127,18 @@ const ContractCard: FC<ContractCardProps> = ({
           sx={{
             display: "flex",
             alignItems: "center",
-            gap: 1,
-            p: 1.5,
+            gap: { xs: 0.5, sm: 1 },
+            p: { xs: 1, sm: 1.5 },
             bgcolor: "rgba(102, 126, 234, 0.08)",
             borderRadius: borderRadius.sm,
           }}
         >
           <DollarSign size={18} color="#667eea" />
           <Box>
-            <Typography variant="caption" color="text.secondary" display="block">
+            <Typography variant="caption" color="text.secondary" display="block" fontSize={{ xs: "0.65rem", sm: "0.75rem" }}>
               Oylik to'lov
             </Typography>
-            <Typography variant="body2" fontWeight={700}>
+            <Typography variant="body2" fontWeight={700} fontSize={{ xs: "0.75rem", sm: "0.875rem" }}>
               {contract.monthlyPayment?.toLocaleString()} $
             </Typography>
           </Box>
@@ -147,18 +148,18 @@ const ContractCard: FC<ContractCardProps> = ({
           sx={{
             display: "flex",
             alignItems: "center",
-            gap: 1,
-            p: 1.5,
+            gap: { xs: 0.5, sm: 1 },
+            p: { xs: 1, sm: 1.5 },
             bgcolor: "rgba(79, 172, 254, 0.08)",
             borderRadius: borderRadius.sm,
           }}
         >
           <Calendar size={18} color="#4facfe" />
           <Box>
-            <Typography variant="caption" color="text.secondary" display="block">
+            <Typography variant="caption" color="text.secondary" display="block" fontSize={{ xs: "0.65rem", sm: "0.75rem" }}>
               Muddat
             </Typography>
-            <Typography variant="body2" fontWeight={700}>
+            <Typography variant="body2" fontWeight={700} fontSize={{ xs: "0.75rem", sm: "0.875rem" }}>
               {contract.durationMonths} oy
             </Typography>
           </Box>
@@ -168,18 +169,18 @@ const ContractCard: FC<ContractCardProps> = ({
           sx={{
             display: "flex",
             alignItems: "center",
-            gap: 1,
-            p: 1.5,
+            gap: { xs: 0.5, sm: 1 },
+            p: { xs: 1, sm: 1.5 },
             bgcolor: "rgba(17, 153, 142, 0.08)",
             borderRadius: borderRadius.sm,
           }}
         >
           <TrendingUp size={18} color="#11998e" />
           <Box>
-            <Typography variant="caption" color="text.secondary" display="block">
+            <Typography variant="caption" color="text.secondary" display="block" fontSize={{ xs: "0.65rem", sm: "0.75rem" }}>
               Jami qarz
             </Typography>
-            <Typography variant="body2" fontWeight={700}>
+            <Typography variant="body2" fontWeight={700} fontSize={{ xs: "0.75rem", sm: "0.875rem" }}>
               {totalDebt.toLocaleString()} $
             </Typography>
           </Box>
@@ -189,18 +190,18 @@ const ContractCard: FC<ContractCardProps> = ({
           sx={{
             display: "flex",
             alignItems: "center",
-            gap: 1,
-            p: 1.5,
+            gap: { xs: 0.5, sm: 1 },
+            p: { xs: 1, sm: 1.5 },
             bgcolor: "rgba(240, 147, 251, 0.08)",
             borderRadius: borderRadius.sm,
           }}
         >
           <CheckCircle size={18} color="#f093fb" />
           <Box>
-            <Typography variant="caption" color="text.secondary" display="block">
+            <Typography variant="caption" color="text.secondary" display="block" fontSize={{ xs: "0.65rem", sm: "0.75rem" }}>
               To'langan oylar
             </Typography>
-            <Typography variant="body2" fontWeight={700}>
+            <Typography variant="body2" fontWeight={700} fontSize={{ xs: "0.75rem", sm: "0.875rem" }}>
               {contract.paidMonthsCount || 0}/{contract.durationMonths || 0}
             </Typography>
           </Box>
@@ -215,33 +216,33 @@ const ContractCard: FC<ContractCardProps> = ({
           borderTop: "2px solid",
           borderColor: "divider",
           display: "grid",
-          gridTemplateColumns: "1fr 1fr 1fr",
-          gap: 2,
+          gridTemplateColumns: { xs: "1fr 1fr 1fr", sm: "1fr 1fr 1fr" },
+          gap: { xs: 1, sm: 2 },
         }}
       >
         <Box textAlign="center">
-          <Typography variant="caption" color="text.secondary" display="block" mb={0.5}>
+          <Typography variant="caption" color="text.secondary" display="block" mb={0.5} fontSize={{ xs: "0.65rem", sm: "0.75rem" }}>
             Jami
           </Typography>
-          <Typography variant="body1" fontWeight={700} color="text.primary">
+          <Typography variant="body1" fontWeight={700} color="text.primary" fontSize={{ xs: "0.8rem", sm: "1rem" }}>
             {totalDebt.toLocaleString()} $
           </Typography>
         </Box>
 
         <Box textAlign="center">
-          <Typography variant="caption" color="text.secondary" display="block" mb={0.5}>
+          <Typography variant="caption" color="text.secondary" display="block" mb={0.5} fontSize={{ xs: "0.65rem", sm: "0.75rem" }}>
             To'langan
           </Typography>
-          <Typography variant="body1" fontWeight={700} color="success.main">
+          <Typography variant="body1" fontWeight={700} color="success.main" fontSize={{ xs: "0.8rem", sm: "1rem" }}>
             {totalPaid.toLocaleString()} $
           </Typography>
         </Box>
 
         <Box textAlign="center">
-          <Typography variant="caption" color="text.secondary" display="block" mb={0.5}>
+          <Typography variant="caption" color="text.secondary" display="block" mb={0.5} fontSize={{ xs: "0.65rem", sm: "0.75rem" }}>
             Qarz
           </Typography>
-          <Typography variant="body1" fontWeight={700} color="error.main">
+          <Typography variant="body1" fontWeight={700} color="error.main" fontSize={{ xs: "0.8rem", sm: "1rem" }}>
             {remainingDebt.toLocaleString()} $
           </Typography>
         </Box>

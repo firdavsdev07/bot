@@ -450,6 +450,9 @@ const PaymentModal: FC<PaymentModalProps> = ({
             borderRadius: borderRadius.md,
             fontWeight: 600,
             minWidth: { xs: "100%", sm: "auto" },
+            "&:disabled": {
+              opacity: 0.6,
+            },
           }}
         >
           Bekor qilish
@@ -464,20 +467,27 @@ const PaymentModal: FC<PaymentModalProps> = ({
             fontSize: { xs: "0.9rem", sm: "1rem" },
             fontWeight: 700,
             borderRadius: borderRadius.md,
-            background: "linear-gradient(135deg, #11998e 0%, #38ef7d 100%)",
-            boxShadow: shadows.colored("rgba(17, 153, 142, 0.3)"),
+            background: loading 
+              ? "rgba(0, 0, 0, 0.12)" 
+              : "linear-gradient(135deg, #11998e 0%, #38ef7d 100%)",
+            boxShadow: loading 
+              ? "none" 
+              : shadows.colored("rgba(17, 153, 142, 0.3)"),
             minWidth: { xs: "100%", sm: "auto" },
             whiteSpace: "nowrap",
             "&:hover": {
-              background: "linear-gradient(135deg, #0d7a72 0%, #2dd46d 100%)",
+              background: loading 
+                ? "rgba(0, 0, 0, 0.12)" 
+                : "linear-gradient(135deg, #0d7a72 0%, #2dd46d 100%)",
             },
             "&:disabled": {
               background: "rgba(0, 0, 0, 0.12)",
+              color: "rgba(0, 0, 0, 0.38)",
             },
           }}
         >
           {loading 
-            ? "Yuklanmoqda..." 
+            ? "Kutish..." 
             : isPayAll 
               ? "✓ Barchasini to'lash" 
               : "✓ To'lov qilish"}
