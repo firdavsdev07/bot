@@ -20,8 +20,8 @@ const ContractCard: FC<ContractCardProps> = ({
   onClick,
 }) => {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
   const totalDebt =
     (contract.monthlyPayment || 0) * (contract.durationMonths || 0);
   const totalPaid = contract.totalPaid || 0;
@@ -81,10 +81,10 @@ const ContractCard: FC<ContractCardProps> = ({
         gap={1}
       >
         <Box sx={{ flex: 1 }}>
-          <Typography 
-            variant="subtitle1" 
-            fontWeight={700} 
-            fontSize={{ xs: "0.7rem", sm: "0.85rem", md: "1rem" }}
+          <Typography
+            variant="subtitle1"
+            fontWeight={700}
+            fontSize={{ xs: "0.4rem", sm: "0.5rem", md: "1rem" }}
             sx={{
               overflow: "hidden",
               textOverflow: "ellipsis",
@@ -95,12 +95,13 @@ const ContractCard: FC<ContractCardProps> = ({
           >
             {contract.productName}
           </Typography>
-          <Typography 
-            variant="caption" 
+          <Typography
+            variant="caption"
             color="text.secondary"
-            fontSize={{ xs: "0.55rem", sm: "0.65rem" }}
+            fontSize={{ xs: "0.4rem", sm: "0.5rem" }}
           >
-            {contract.paidMonthsCount || 0}/{contract.durationMonths || 0} oy to'langan
+            {contract.paidMonthsCount || 0}/{contract.durationMonths || 0} oy
+            to'langan
           </Typography>
         </Box>
         {variant === "paid" && (
@@ -144,10 +145,19 @@ const ContractCard: FC<ContractCardProps> = ({
         >
           <TrendingUp size={isMobile ? 14 : 18} color="#11998e" />
           <Box>
-            <Typography variant="caption" color="text.secondary" display="block" fontSize={{ xs: "0.65rem", sm: "0.75rem" }}>
+            <Typography
+              variant="caption"
+              color="text.secondary"
+              display="block"
+              fontSize={{ xs: "0.65rem", sm: "0.75rem" }}
+            >
               Jami qarz
             </Typography>
-            <Typography variant="body2" fontWeight={700} fontSize={{ xs: "0.75rem", sm: "0.875rem" }}>
+            <Typography
+              variant="body2"
+              fontWeight={700}
+              fontSize={{ xs: "0.75rem", sm: "0.875rem" }}
+            >
               {totalDebt.toLocaleString()} $
             </Typography>
           </Box>
@@ -165,15 +175,23 @@ const ContractCard: FC<ContractCardProps> = ({
         >
           <Calendar size={isMobile ? 14 : 18} color="#4facfe" />
           <Box>
-            <Typography variant="caption" color="text.secondary" display="block" fontSize={{ xs: "0.65rem", sm: "0.75rem" }}>
+            <Typography
+              variant="caption"
+              color="text.secondary"
+              display="block"
+              fontSize={{ xs: "0.65rem", sm: "0.75rem" }}
+            >
               Muddat
             </Typography>
-            <Typography variant="body2" fontWeight={700} fontSize={{ xs: "0.75rem", sm: "0.875rem" }}>
+            <Typography
+              variant="body2"
+              fontWeight={700}
+              fontSize={{ xs: "0.75rem", sm: "0.875rem" }}
+            >
               {contract.durationMonths} oy
             </Typography>
           </Box>
         </Box>
-
       </Box>
 
       {/* Jami ma'lumotlar */}
@@ -189,28 +207,61 @@ const ContractCard: FC<ContractCardProps> = ({
         }}
       >
         <Box textAlign="center">
-          <Typography variant="caption" color="text.secondary" display="block" mb={0.5} fontSize={{ xs: "0.65rem", sm: "0.75rem" }}>
+          <Typography
+            variant="caption"
+            color="text.secondary"
+            display="block"
+            mb={0.5}
+            fontSize={{ xs: "0.65rem", sm: "0.75rem" }}
+          >
             Jami
           </Typography>
-          <Typography variant="body1" fontWeight={700} color="text.primary" fontSize={{ xs: "0.8rem", sm: "1rem" }}>
+          <Typography
+            variant="body1"
+            fontWeight={700}
+            color="text.primary"
+            fontSize={{ xs: "0.8rem", sm: "1rem" }}
+          >
             {totalDebt.toLocaleString()} $
           </Typography>
         </Box>
 
         <Box textAlign="center">
-          <Typography variant="caption" color="text.secondary" display="block" mb={0.5} fontSize={{ xs: "0.65rem", sm: "0.75rem" }}>
+          <Typography
+            variant="caption"
+            color="text.secondary"
+            display="block"
+            mb={0.5}
+            fontSize={{ xs: "0.65rem", sm: "0.75rem" }}
+          >
             To'langan
           </Typography>
-          <Typography variant="body1" fontWeight={700} color="success.main" fontSize={{ xs: "0.8rem", sm: "1rem" }}>
+          <Typography
+            variant="body1"
+            fontWeight={700}
+            color="success.main"
+            fontSize={{ xs: "0.8rem", sm: "1rem" }}
+          >
             {totalPaid.toLocaleString()} $
           </Typography>
         </Box>
 
         <Box textAlign="center">
-          <Typography variant="caption" color="text.secondary" display="block" mb={0.5} fontSize={{ xs: "0.65rem", sm: "0.75rem" }}>
+          <Typography
+            variant="caption"
+            color="text.secondary"
+            display="block"
+            mb={0.5}
+            fontSize={{ xs: "0.65rem", sm: "0.75rem" }}
+          >
             Qarz
           </Typography>
-          <Typography variant="body1" fontWeight={700} color="error.main" fontSize={{ xs: "0.8rem", sm: "1rem" }}>
+          <Typography
+            variant="body1"
+            fontWeight={700}
+            color="error.main"
+            fontSize={{ xs: "0.8rem", sm: "1rem" }}
+          >
             {remainingDebt.toLocaleString()} $
           </Typography>
         </Box>
