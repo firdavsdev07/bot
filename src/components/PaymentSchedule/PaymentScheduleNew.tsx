@@ -783,12 +783,16 @@ const PaymentScheduleNew: FC<PaymentScheduleProps> = ({
                       {/* Pending/Success chip uchun */}
                       {hasPendingPayment && (
                         <Chip
-                          icon={<Clock size={12} />}
-                          label="Kutish"
+                          icon={isMobile ? undefined : <Clock size={12} />}
+                          label={isMobile ? "⏳" : "Kutish"}
                           size="small"
                           color="warning"
                           variant="outlined"
-                          sx={{ fontSize: "0.65rem", height: 20 }}
+                          sx={{ 
+                            fontSize: { xs: "0.6rem", sm: "0.65rem" }, 
+                            height: { xs: 18, sm: 20 },
+                            minWidth: { xs: 22, sm: "auto" }
+                          }}
                         />
                       )}
                       

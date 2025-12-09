@@ -133,17 +133,17 @@ const ContractCard: FC<ContractCardProps> = ({
             alignItems: "center",
             gap: { xs: 0.5, sm: 1 },
             p: { xs: 1, sm: 1.5 },
-            bgcolor: "rgba(102, 126, 234, 0.08)",
+            bgcolor: "rgba(17, 153, 142, 0.08)",
             borderRadius: borderRadius.sm,
           }}
         >
-          <DollarSign size={isMobile ? 14 : 18} color="#667eea" />
+          <TrendingUp size={isMobile ? 14 : 18} color="#11998e" />
           <Box>
             <Typography variant="caption" color="text.secondary" display="block" fontSize={{ xs: "0.65rem", sm: "0.75rem" }}>
-              Oylik to'lov
+              Jami qarz
             </Typography>
             <Typography variant="body2" fontWeight={700} fontSize={{ xs: "0.75rem", sm: "0.875rem" }}>
-              {contract.monthlyPayment?.toLocaleString()} $
+              {totalDebt.toLocaleString()} $
             </Typography>
           </Box>
         </Box>
@@ -165,27 +165,6 @@ const ContractCard: FC<ContractCardProps> = ({
             </Typography>
             <Typography variant="body2" fontWeight={700} fontSize={{ xs: "0.75rem", sm: "0.875rem" }}>
               {contract.durationMonths} oy
-            </Typography>
-          </Box>
-        </Box>
-
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            gap: { xs: 0.5, sm: 1 },
-            p: { xs: 1, sm: 1.5 },
-            bgcolor: "rgba(17, 153, 142, 0.08)",
-            borderRadius: borderRadius.sm,
-          }}
-        >
-          <TrendingUp size={isMobile ? 14 : 18} color="#11998e" />
-          <Box>
-            <Typography variant="caption" color="text.secondary" display="block" fontSize={{ xs: "0.65rem", sm: "0.75rem" }}>
-              Jami qarz
-            </Typography>
-            <Typography variant="body2" fontWeight={700} fontSize={{ xs: "0.75rem", sm: "0.875rem" }}>
-              {totalDebt.toLocaleString()} $
             </Typography>
           </Box>
         </Box>
