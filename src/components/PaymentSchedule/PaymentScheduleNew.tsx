@@ -531,25 +531,25 @@ const PaymentScheduleNew: FC<PaymentScheduleProps> = ({
         )}
 
         {/* Payment Table */}
-        <TableContainer sx={{ maxHeight: isMobile ? "50vh" : "60vh" }}>
+        <TableContainer sx={{ maxHeight: isMobile ? "40vh" : "60vh" }}>
           <Table size="small" stickyHeader>
             <TableHead>
               <TableRow>
-                <TableCell sx={{ fontWeight: 700, py: 1, fontSize: { xs: "0.65rem", sm: "0.8rem", md: "0.85rem" } }}>
+                <TableCell sx={{ fontWeight: 700, py: { xs: 0.5, sm: 1 }, fontSize: { xs: "0.6rem", sm: "0.75rem", md: "0.8rem" } }}>
                   {isMobile ? "Oy" : "To'lov"}
                 </TableCell>
-                <TableCell sx={{ fontWeight: 700, py: 1, fontSize: { xs: "0.65rem", sm: "0.8rem", md: "0.85rem" } }}>
+                <TableCell sx={{ fontWeight: 700, py: { xs: 0.5, sm: 1 }, fontSize: { xs: "0.6rem", sm: "0.75rem", md: "0.8rem" } }}>
                   {isMobile ? "Sana" : "Muddat"}
                 </TableCell>
-                <TableCell sx={{ fontWeight: 700, py: 1, fontSize: { xs: "0.65rem", sm: "0.8rem", md: "0.85rem" } }}>
+                <TableCell sx={{ fontWeight: 700, py: { xs: 0.5, sm: 1 }, fontSize: { xs: "0.6rem", sm: "0.75rem", md: "0.8rem" } }}>
                   Summa
                 </TableCell>
                 {!isMobile && (
-                  <TableCell sx={{ fontWeight: 700, py: 1, fontSize: { xs: "0.65rem", sm: "0.8rem", md: "0.85rem" } }}>
+                  <TableCell sx={{ fontWeight: 700, py: { xs: 0.5, sm: 1 }, fontSize: { xs: "0.6rem", sm: "0.75rem", md: "0.8rem" } }}>
                     Holat
                   </TableCell>
                 )}
-                <TableCell sx={{ fontWeight: 700, py: 1, fontSize: { xs: "0.65rem", sm: "0.8rem", md: "0.85rem" } }} align="right">
+                <TableCell sx={{ fontWeight: 700, py: { xs: 0.5, sm: 1 }, fontSize: { xs: "0.6rem", sm: "0.75rem", md: "0.8rem" } }} align="right">
                   Amal
                 </TableCell>
               </TableRow>
@@ -650,8 +650,8 @@ const PaymentScheduleNew: FC<PaymentScheduleProps> = ({
                   onClick={() => toggleExpand(item.month)}
                 >
                   {/* Month/Type Column */}
-                  <TableCell sx={{ py: 1.5 }}>
-                    <Stack direction="row" alignItems="center" spacing={1}>
+                  <TableCell sx={{ py: { xs: 0.75, sm: 1.5 } }}>
+                    <Stack direction="row" alignItems="center" spacing={isMobile ? 0.5 : 1}>
                       {isPast && !item.isPaid && !isMobile && <AlertCircle size={16} color="#d32f2f" />}
                       {item.isPaid && !isMobile && <MdCheckCircle size={18} color="#2e7d32" />}
                       <Typography
@@ -671,22 +671,22 @@ const PaymentScheduleNew: FC<PaymentScheduleProps> = ({
                   </TableCell>
                   
                   {/* Date Column */}
-                  <TableCell sx={{ py: 1.5 }}>
+                  <TableCell sx={{ py: { xs: 0.75, sm: 1.5 } }}>
                     <Typography 
                       variant="body2" 
                       color="text.secondary"
-                      sx={{ fontSize: { xs: "0.65rem", sm: "0.75rem", md: "0.8rem" } }}
+                      sx={{ fontSize: { xs: "0.6rem", sm: "0.75rem", md: "0.8rem" } }}
                     >
                       {format(new Date(item.date), isMobile ? "dd.MM" : "dd.MM.yyyy")}
                     </Typography>
                   </TableCell>
                   
                   {/* Amount Column */}
-                  <TableCell sx={{ py: 1.5 }}>
+                  <TableCell sx={{ py: { xs: 0.75, sm: 1.5 } }}>
                     <Typography 
                       variant="body2" 
                       fontWeight={600}
-                      sx={{ fontSize: { xs: "0.7rem", sm: "0.8rem", md: "0.875rem" } }}
+                      sx={{ fontSize: { xs: "0.65rem", sm: "0.8rem", md: "0.875rem" } }}
                     >
                       ${item.amount.toLocaleString()}
                     </Typography>
@@ -694,7 +694,7 @@ const PaymentScheduleNew: FC<PaymentScheduleProps> = ({
                   
                   {/* Status Column (Desktop only) */}
                   {!isMobile && (
-                    <TableCell sx={{ py: 1.5 }}>
+                    <TableCell sx={{ py: { xs: 0.75, sm: 1.5 } }}>
                       {actualPayment?.status ? (
                         <StatusBadge status={actualPayment.status} size="small" />
                       ) : (
@@ -704,9 +704,9 @@ const PaymentScheduleNew: FC<PaymentScheduleProps> = ({
                           color={isPast && !item.isPaid ? "error" : !item.isPaid ? "default" : "success"}
                           variant={!item.isPaid ? "outlined" : "filled"}
                           sx={{ 
-                            fontSize: { xs: "0.65rem", sm: "0.7rem" }, 
-                            height: { xs: 22, sm: 24 },
-                            minWidth: { xs: 60, sm: 80 }
+                            fontSize: "0.65rem", 
+                            height: 20,
+                            minWidth: 60
                           }}
                         />
                       )}
@@ -714,8 +714,8 @@ const PaymentScheduleNew: FC<PaymentScheduleProps> = ({
                   )}
                   
                   {/* Action Column */}
-                  <TableCell sx={{ py: 1.5 }} align="right">
-                    <Stack direction="row" spacing={0.5} justifyContent="flex-end" alignItems="center">
+                  <TableCell sx={{ py: { xs: 0.75, sm: 1.5 } }} align="right">
+                    <Stack direction="row" spacing={isMobile ? 0.25 : 0.5} justifyContent="flex-end" alignItems="center">
                       {!readOnly && (contractId || debtorId) && !item.isPaid && (
                         <>
                           <Button
@@ -728,10 +728,11 @@ const PaymentScheduleNew: FC<PaymentScheduleProps> = ({
                             }}
                             disabled={hasPendingPayment}
                             sx={{
-                              minWidth: isMobile ? 45 : 60,
-                              fontSize: { xs: "0.55rem", sm: "0.65rem", md: "0.7rem" },
-                              py: 0.25,
-                              px: isMobile ? 0.5 : 1,
+                              minWidth: isMobile ? 35 : 60,
+                              fontSize: { xs: "0.5rem", sm: "0.65rem", md: "0.7rem" },
+                              py: { xs: 0.2, sm: 0.25 },
+                              px: isMobile ? 0.4 : 1,
+                              height: isMobile ? 24 : "auto",
                             }}
                           >
                             {hasPendingPayment ? (isMobile ? "⏳" : "Kutish") : "To'la"}

@@ -2,7 +2,7 @@ import { FC } from "react";
 import { Paper, Typography, Box, Chip, useMediaQuery } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { motion } from "framer-motion";
-import { DollarSign, Calendar, TrendingUp, CheckCircle, AlertTriangle } from "lucide-react";
+import { Calendar, TrendingUp, CheckCircle, AlertTriangle } from "lucide-react";
 import { ICustomerContract } from "../types/ICustomer";
 import { borderRadius, shadows } from "../theme/colors";
 
