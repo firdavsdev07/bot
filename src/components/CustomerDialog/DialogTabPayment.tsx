@@ -10,7 +10,7 @@ import {
   AccordionDetails,
 } from "@mui/material";
 import { FC, useEffect, useState } from "react";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Wallet } from "lucide-react";
 import { useAppDispatch } from "../../hooks/useAppDispatch";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store";
@@ -19,6 +19,7 @@ import { blue } from "@mui/material/colors";
 import { ICustomerContract } from "../../types/ICustomer";
 import ContractInfo from "../Drawer/ContractInfo";
 import { PaymentScheduleNew } from "../PaymentSchedule";
+import { responsive } from "../../theme/responsive";
 
 interface IProps {
   customerId: string;
@@ -121,16 +122,28 @@ const DialogTabPayment: FC<IProps> = ({ customerId }) => {
                     fontWeight={700}
                     color="primary.main"
                     sx={{
+                      fontSize: responsive.typography.body1, // Using responsive font size
+                      lineHeight: 1.3,
                       mb: 0.5,
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      whiteSpace: "nowrap",
+                      wordWrap: "break-word", // Allow text wrapping
                     }}
                   >
                     {contract.productName}
                   </Typography>
-                </Box>{" "}
-                <br />
+                  <Stack direction="row" spacing={0.5} alignItems="center">
+                    <Wallet size={responsive.icon.small.xs} color="#1976d2" />
+                    <Typography
+                      variant="body2"
+                      color="text.secondary"
+                      fontWeight={500}
+                      sx={{
+                        fontSize: responsive.typography.body2, // Using responsive font size
+                      }}
+                    >
+                      {contract.monthlyPayment.toLocaleString()} $
+                    </Typography>
+                  </Stack>
+                </Box>
                 <Chip
                   label={`${contract.paidMonthsCount || 0}/${
                     contract.durationMonths || contract.period || 0
@@ -142,6 +155,7 @@ const DialogTabPayment: FC<IProps> = ({ customerId }) => {
                     fontWeight: 600,
                     minWidth: "60px",
                     borderWidth: 2,
+                    fontSize: responsive.typography.caption, // Using responsive font size
                   }}
                 />
               </Stack>
