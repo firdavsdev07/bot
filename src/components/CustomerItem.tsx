@@ -11,6 +11,7 @@ import { motion } from "framer-motion";
 import { Phone, Clock, AlertCircle } from "lucide-react";
 import { ICustomer } from "../types/ICustomer";
 import { borderRadius, shadows } from "../theme/colors";
+import { responsive } from "../theme/responsive";
 
 interface CustomerListItemProps {
   customer: ICustomer;
@@ -31,19 +32,36 @@ const CustomerListItem: React.FC<CustomerListItemProps> = memo(({
     return "success.main";
   };
 
+  // Smart name truncation
+  const getDisplayName = (firstName: string, lastName: string) => {
+    const fullName = `${firstName} ${lastName}`;
+    if (fullName.length > 20) {
+      return `${firstName} ${lastName.charAt(0)}.`;
+    }
+    return fullName;
+  };
+
+  // Format phone number for mobile
+  const formatPhone = (phone: string) => {
+    if (phone.length > 13) {
+      return `${phone.slice(0, 13)}...`;
+    }
+    return phone;
+  };
+
   return (
     <MotionListItemButton
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.2 }}
-      whileHover={{ scale: 1.01 }}
-      whileTap={{ scale: 0.99 }}
+      whileHover={{ scale: 1.005 }}
+      whileTap={{ scale: 0.995 }}
       onClick={() => onClick(customer)}
       sx={{
         borderRadius: borderRadius.md,
         mb: 1.5,
-        px: { xs: 1.5, sm: 2, md: 2.5 },
-        py: { xs: 1.5, sm: 1.8, md: 2 },
+        px: responsive.spacing.container,
+        py: { xs: 1.5, sm: 2 },
         bgcolor: "background.paper",
         border: showDebtBadge ? "2px solid" : "1px solid",
         borderColor: showDebtBadge ? "error.main" : "divider",
@@ -56,13 +74,14 @@ const CustomerListItem: React.FC<CustomerListItemProps> = memo(({
         },
       }}
     >
+      {/* Avatar - responsive sizing */}
       <Avatar
         sx={{
-          mr: { xs: 1.5, sm: 2 },
-          width: { xs: 40, sm: 44, md: 48 },
-          height: { xs: 40, sm: 44, md: 48 },
+          mr: responsive.spacing.gap,
+          width: responsive.avatar.medium.xs,
+          height: responsive.avatar.medium.xs,
           bgcolor: showDebtBadge ? "error.main" : "primary.main",
-          fontSize: { xs: "0.9rem", sm: "1rem", md: "1.1rem" },
+          fontSize: responsive.typography.body1.xs,
           fontWeight: 700,
           boxShadow: shadows.sm,
         }}
@@ -77,36 +96,40 @@ const CustomerListItem: React.FC<CustomerListItemProps> = memo(({
             alignItems="center" 
             gap={1} 
             mb={0.5}
-            sx={{ flexWrap: { xs: "wrap", sm: "nowrap" } }}
+            sx={{ 
+              flexWrap: { xs: "wrap", sm: "nowrap" }, // Wrap on mobile
+              minHeight: { xs: 24, sm: "auto" }
+            }}
           >
+            {/* Name - responsive */}
             <Typography 
               fontWeight={700} 
               color="text.primary"
               sx={{
-                fontSize: { xs: "0.875rem", sm: "0.95rem", md: "1rem" },
+                fontSize: responsive.typography.body1,
                 lineHeight: 1.3,
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                whiteSpace: "nowrap",
-                maxWidth: { xs: "120px", sm: "180px", md: "none" }
+                flex: 1,
+                minWidth: { xs: "120px", sm: "auto" }
               }}
             >
-              {customer.firstName} {customer.lastName}
+              {getDisplayName(customer.firstName, customer.lastName)}
             </Typography>
+            
+            {/* Debt badge - responsive */}
             {showDebtBadge && (
               <Chip
-                icon={<AlertCircle size={14} />}
+                icon={<AlertCircle size={responsive.icon.small.xs} />}
                 label="QARZDOR"
                 size="small"
                 color="error"
                 sx={{
                   height: { xs: 20, sm: 22 },
-                  fontSize: { xs: "0.65rem", sm: "0.7rem" },
+                  fontSize: responsive.typography.caption,
                   fontWeight: 700,
                   "& .MuiChip-icon": { 
                     ml: 0.5,
-                    width: { xs: 12, sm: 14 },
-                    height: { xs: 12, sm: 14 }
+                    width: responsive.icon.small.xs,
+                    height: responsive.icon.small.xs,
                   },
                   "& .MuiChip-label": {
                     px: { xs: 0.5, sm: 1 }
@@ -118,32 +141,33 @@ const CustomerListItem: React.FC<CustomerListItemProps> = memo(({
         }
         secondary={
           <Box display="flex" flexDirection="column" gap={0.5}>
+            {/* Phone number */}
             <Box display="flex" alignItems="center" gap={0.5}>
-              <Phone size={14} color="#6B7280" />
+              <Phone size={responsive.icon.small.xs} color="#6B7280" />
               <Typography
                 variant="body2"
                 color="text.secondary"
                 sx={{
-                  fontSize: { xs: "0.75rem", sm: "0.8rem", md: "0.875rem" },
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  whiteSpace: "nowrap",
+                  fontSize: responsive.typography.body2,
+                  lineHeight: 1.3,
                 }}
               >
-                {customer.phoneNumber}
+                {formatPhone(customer.phoneNumber)}
               </Typography>
             </Box>
+            
+            {/* Delay info */}
             {showDebtBadge &&
               customer.delayDays !== undefined &&
               customer.delayDays > 0 && (
                 <Box display="flex" alignItems="center" gap={0.5}>
-                  <Clock size={14} />
+                  <Clock size={responsive.icon.small.xs} />
                   <Typography
                     variant="caption"
                     sx={{
                       fontWeight: 600,
                       color: getDelayColor(customer.delayDays),
-                      fontSize: { xs: "0.7rem", sm: "0.75rem", md: "0.8rem" },
+                      fontSize: responsive.typography.caption,
                       lineHeight: 1.3,
                     }}
                   >
