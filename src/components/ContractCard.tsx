@@ -84,16 +84,13 @@ const ContractCard: FC<ContractCardProps> = ({
           <Typography 
             variant="subtitle1" 
             fontWeight={700} 
-            fontSize={{ xs: "0.75rem", sm: "0.85rem", md: "1rem" }}
+            fontSize={{ xs: "0.7rem", sm: "0.85rem", md: "1rem" }}
             sx={{
               overflow: "hidden",
               textOverflow: "ellipsis",
-              display: "-webkit-box",
-              WebkitLineClamp: { xs: 2, sm: 2 },
-              WebkitBoxOrient: "vertical",
-              wordBreak: "break-word",
+              whiteSpace: "nowrap",
               lineHeight: { xs: 1.2, sm: 1.3 },
-              mb: 0.5,
+              mb: 0.3,
             }}
           >
             {contract.productName}
@@ -101,7 +98,7 @@ const ContractCard: FC<ContractCardProps> = ({
           <Typography 
             variant="caption" 
             color="text.secondary"
-            fontSize={{ xs: "0.65rem", sm: "0.75rem" }}
+            fontSize={{ xs: "0.55rem", sm: "0.65rem" }}
           >
             {contract.paidMonthsCount || 0}/{contract.durationMonths || 0} oy to'langan
           </Typography>
