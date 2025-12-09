@@ -411,7 +411,6 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
         </Box>
 
         <TableContainer sx={{ 
-          maxHeight: "60vh", 
           overflowX: "auto",
           "&::-webkit-scrollbar": {
             height: { xs: "6px", sm: "8px" },
@@ -986,15 +985,19 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                               borderBottom: "1px solid rgba(224, 224, 224, 1)",
                             }}
                           >
-                            {!item.isPaid ? (
+                            {finalPendingCheck ? (
+                              // ✅ PENDING bo'lsa, faqat badge ko'rsatamiz (Holat ustunida)
+                              <Typography variant="caption" color="text.secondary">
+                                —
+                              </Typography>
+                            ) : !item.isPaid ? (
                               <Box display="flex" flexDirection="column" gap={0.5}>
                                 <Button
                                   size="small"
                                   variant="contained"
                                   color={isPast ? "error" : "primary"}
                                   onClick={() => handlePayment(item.amount, undefined, item.month)}
-                                  disabled={finalPendingCheck}
-                                  startIcon={finalPendingCheck ? undefined : <MdPayment size={16} />}
+                                  startIcon={<MdPayment size={16} />}
                                   sx={{
                                     fontSize: { xs: "0.7rem", sm: "0.8125rem", md: "0.75rem" },
                                     px: { xs: 1, sm: 2, md: 1.5 },
@@ -1004,11 +1007,11 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                                     maxHeight: { md: '32px' }
                                   }}
                                 >
-                                  {finalPendingCheck ? "⏳ Kutilmoqda..." : "To'lash"}
+                                  To'lash
                                 </Button>
                                 
                                 {/* ✅ ASOSIY: Kechiktirish tugmasi */}
-                                {!item.isInitial && !finalPendingCheck && !readOnly && (
+                                {!item.isInitial && !readOnly && (
                                   <Button
                                     variant="contained"
                                     color="warning"
@@ -1037,12 +1040,11 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                                   </Button>
                                 )}
                               </Box>
-                            ) : hasShortage && remainingAmountToShow > 0.01 ? (
+                            ) : hasShortage && remainingAmountToShow > 0.01 && !finalPendingCheck ? (
                               <Button
                                 size="small"
                                 variant="contained"
                                 color="error"
-                                disabled={finalPendingCheck}
                                 onClick={() => {
                                   if (!actualPayment?._id) {
                                     console.error("❌ Payment ID topilmadi!");
@@ -1055,11 +1057,11 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                                   handlePayment(
                                     remainingAmountToShow,
                                     actualPayment._id
-                                );
+                                  );
                               }}
-                              startIcon={finalPendingCheck ? undefined : <MdWarning size={16} />}
+                              startIcon={<MdWarning size={16} />}
                               sx={{
-                                animation: finalPendingCheck ? "none" : "pulse 2s infinite",
+                                animation: "pulse 2s infinite",
                                 "@keyframes pulse": {
                                   "0%, 100%": { opacity: 1 },
                                   "50%": { opacity: 0.7 },
@@ -1072,7 +1074,7 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                                 maxHeight: { md: '32px' }
                               }}
                             >
-                              {finalPendingCheck ? "⏳ Kutilmoqda..." : `Qarz (${remainingAmountToShow.toLocaleString()} $)`}
+                              {`Qarz (${remainingAmountToShow.toLocaleString()} $)`}
                             </Button>
                           ) : (
                             <Chip
