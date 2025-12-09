@@ -10,7 +10,6 @@ import {
   AccordionDetails,
 } from "@mui/material";
 import { FC, useEffect, useState } from "react";
-import { MdPayment } from "react-icons/md";
 import { ChevronDown } from "lucide-react";
 import { useAppDispatch } from "../../hooks/useAppDispatch";
 import { useSelector } from "react-redux";
@@ -130,8 +129,7 @@ const DialogTabPayment: FC<IProps> = ({ customerId }) => {
                   >
                     {contract.productName}
                   </Typography>
-                </Box>{" "}
-                <br />
+                </Box>
                 <Chip
                   label={`${contract.paidMonthsCount || 0}/${
                     contract.durationMonths || contract.period || 0
