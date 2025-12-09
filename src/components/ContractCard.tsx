@@ -80,24 +80,32 @@ const ContractCard: FC<ContractCardProps> = ({
         mb={2.5}
         gap={1}
       >
-        <Typography 
-          variant="subtitle1" 
-          fontWeight={700} 
-          fontSize={{ xs: "0.75rem", sm: "0.85rem", md: "1rem" }}
-          sx={{
-            flex: 1,
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-            display: "-webkit-box",
-            WebkitLineClamp: { xs: 3, sm: 2 }, // Mobile da 3 qator
-            WebkitBoxOrient: "vertical",
-            wordBreak: "break-word",
-            lineHeight: { xs: 1.2, sm: 1.3 },
-            minHeight: { xs: "2.7rem", sm: "auto" }, // Mobile da minimal balandlik
-          }}
-        >
-          {contract.productName}
-        </Typography>
+        <Box sx={{ flex: 1 }}>
+          <Typography 
+            variant="subtitle1" 
+            fontWeight={700} 
+            fontSize={{ xs: "0.75rem", sm: "0.85rem", md: "1rem" }}
+            sx={{
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              display: "-webkit-box",
+              WebkitLineClamp: { xs: 2, sm: 2 },
+              WebkitBoxOrient: "vertical",
+              wordBreak: "break-word",
+              lineHeight: { xs: 1.2, sm: 1.3 },
+              mb: 0.5,
+            }}
+          >
+            {contract.productName}
+          </Typography>
+          <Typography 
+            variant="caption" 
+            color="text.secondary"
+            fontSize={{ xs: "0.65rem", sm: "0.75rem" }}
+          >
+            {contract.paidMonthsCount || 0}/{contract.durationMonths || 0} oy to'langan
+          </Typography>
+        </Box>
         {variant === "paid" && (
           <Chip
             icon={<CheckCircle size={14} />}
@@ -122,7 +130,7 @@ const ContractCard: FC<ContractCardProps> = ({
       <Box
         sx={{
           display: "grid",
-          gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" }, // Mobile da 1 kolon
+          gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" },
           gap: { xs: 1.5, sm: 2 },
           mb: 2.5,
         }}
@@ -169,26 +177,6 @@ const ContractCard: FC<ContractCardProps> = ({
           </Box>
         </Box>
 
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            gap: { xs: 0.5, sm: 1 },
-            p: { xs: 1, sm: 1.5 },
-            bgcolor: "rgba(240, 147, 251, 0.08)",
-            borderRadius: borderRadius.sm,
-          }}
-        >
-          <CheckCircle size={isMobile ? 14 : 18} color="#f093fb" />
-          <Box>
-            <Typography variant="caption" color="text.secondary" display="block" fontSize={{ xs: "0.65rem", sm: "0.75rem" }}>
-              To'langan oylar
-            </Typography>
-            <Typography variant="body2" fontWeight={700} fontSize={{ xs: "0.75rem", sm: "0.875rem" }}>
-              {contract.paidMonthsCount || 0}/{contract.durationMonths || 0}
-            </Typography>
-          </Box>
-        </Box>
       </Box>
 
       {/* Jami ma'lumotlar */}

@@ -652,8 +652,8 @@ const PaymentScheduleNew: FC<PaymentScheduleProps> = ({
                   {/* Month/Type Column */}
                   <TableCell sx={{ py: 1.5 }}>
                     <Stack direction="row" alignItems="center" spacing={1}>
-                      {isPast && !item.isPaid && <AlertCircle size={16} color="#d32f2f" />}
-                      {item.isPaid && <MdCheckCircle size={18} color="#2e7d32" />}
+                      {isPast && !item.isPaid && !isMobile && <AlertCircle size={16} color="#d32f2f" />}
+                      {item.isPaid && !isMobile && <MdCheckCircle size={18} color="#2e7d32" />}
                       <Typography
                         variant="body2"
                         fontWeight={600}
@@ -781,17 +781,16 @@ const PaymentScheduleNew: FC<PaymentScheduleProps> = ({
                       )}
                       
                       {/* Pending/Success chip uchun */}
-                      {hasPendingPayment && (
+                      {hasPendingPayment && !isMobile && (
                         <Chip
-                          icon={isMobile ? undefined : <Clock size={12} />}
-                          label={isMobile ? "⏳" : "Kutish"}
+                          icon={<Clock size={12} />}
+                          label="Kutish"
                           size="small"
                           color="warning"
                           variant="outlined"
                           sx={{ 
-                            fontSize: { xs: "0.6rem", sm: "0.65rem" }, 
-                            height: { xs: 18, sm: 20 },
-                            minWidth: { xs: 22, sm: "auto" }
+                            fontSize: "0.65rem", 
+                            height: 20,
                           }}
                         />
                       )}
