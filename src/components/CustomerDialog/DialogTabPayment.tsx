@@ -130,24 +130,8 @@ const DialogTabPayment: FC<IProps> = ({ customerId }) => {
                   >
                     {contract.productName}
                   </Typography>
-                  <Stack
-                    direction="row"
-                    spacing={1.5}
-                    alignItems="center"
-                    flexWrap="wrap"
-                  >
-                    <Stack direction="row" spacing={0.5} alignItems="center">
-                      <MdPayment size={16} color="#1976d2" />
-                      <Typography
-                        variant="body2"
-                        color="text.secondary"
-                        fontWeight={500}
-                      >
-                        {contract.monthlyPayment.toLocaleString()} $
-                      </Typography>
-                    </Stack>
-                  </Stack>
-                </Box>
+                </Box>{" "}
+                <br />
                 <Chip
                   label={`${contract.paidMonthsCount || 0}/${
                     contract.durationMonths || contract.period || 0
