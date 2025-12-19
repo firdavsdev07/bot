@@ -285,11 +285,24 @@ const PaymentModal: FC<PaymentModalProps> = ({
           >
             <CreditCard size={24} color="white" />
           </Box>
-          <Typography variant="h6" fontWeight={700}>
-            {isPayAll ? "Barcha qarzni to'lash" : 
-             isDebtPayment ? "Qolgan qarzni to'lash" : 
-             "To'lov qilish"}
-          </Typography>
+          <Box>
+            <Typography variant="h6" fontWeight={700}>
+              {isPayAll ? "Barcha qarzni to'lash" : 
+               isDebtPayment ? "Qolgan qarzni to'lash" : 
+               "To'lov qilish"}
+              {/* ✅ Qaysi oy uchun to'lov */}
+              {targetMonth && !isPayAll && (
+                <Typography component="span" color="primary.main" sx={{ ml: 1, fontSize: "1.1rem" }}>
+                  ({targetMonth}-oy)
+                </Typography>
+              )}
+            </Typography>
+            <Typography variant="body2" color="text.secondary" sx={{ fontSize: { xs: "0.75rem", sm: "0.875rem" } }}>
+              {isDebtPayment ? `${targetMonth}-oy uchun qolgan qism` :
+               isPayAll ? "Barcha to'lovlar" : 
+               targetMonth ? `${targetMonth}-oylik to'lov` : "To'lov ma'lumotlari"}
+            </Typography>
+          </Box>
         </Box>
       </DialogTitle>
       <DialogContent sx={{ px: { xs: 2, sm: 3 } }}>
