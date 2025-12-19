@@ -210,7 +210,26 @@ const PaymentModal: FC<PaymentModalProps> = ({
         }
       }
 
-      console.log("✅ To'lov muvaffaqiyatli yuborildi, modal yopilmoqda...");
+      console.log("✅ To'lov muvaffaqiyatli yuborildi");
+      
+      // ✅ YANGI: Agar kam to'lov bo'lsa va nextPaymentDate belgilangan bo'lsa, Reminder yaratish
+      if (isUnderpaid && nextPaymentDate && contractId && targetMonth) {
+        try {
+          console.log("📅 Kam to'lov aniqlandi, Reminder yaratilmoqda...");
+          
+          const reminderResponse = await authApi.post("/payment/postpone-payment", {
+            contractId: contractId,
+            postponeDate: new Date(nextPaymentDate).toISOString(),
+            reason: `Kam to'lov: $${remainingDebt.toFixed(2)} qoldi`,
+            targetMonth: targetMonth,
+          });
+          
+          console.log("✅ Reminder muvaffaqiyatli yaratildi:", reminderResponse.data);
+        } catch (reminderErr: any) {
+          console.error("⚠️ Reminder yaratishda xatolik (to'lov qabul qilindi):", reminderErr);
+          // To'lov qabul qilingani uchun error ko'rsatmaymiz
+        }
+      }
       
       onSuccess();
       
