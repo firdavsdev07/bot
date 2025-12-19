@@ -57,7 +57,13 @@ const PaymentModal: FC<PaymentModalProps> = ({
   const [currencyCourse, setCurrencyCourse] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [nextPaymentDate, setNextPaymentDate] = useState<string>(""); // ✅ YANGI: Keyingi to'lov sanasi
+  const [nextPaymentDate, setNextPaymentDate] = useState<string>(() => {
+    // Default: Ertaga, 10:00
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    tomorrow.setHours(10, 0, 0, 0);
+    return tomorrow.toISOString().slice(0, 16); // YYYY-MM-DDTHH:MM format
+  }); // ✅ YANGI: Keyingi to'lov sanasi (sana + vaqt)
   
   // Jami summa (dollar + so'mni dollorga o'tkazgandan keyin)
   const totalAmountInDollar = dollarAmount + (sumAmount / currencyCourse);
@@ -467,17 +473,17 @@ const PaymentModal: FC<PaymentModalProps> = ({
                 </Box>
                 <TextField
                   fullWidth
-                  type="date"
+                  type="datetime-local"
                   value={nextPaymentDate}
                   onChange={(e) => setNextPaymentDate(e.target.value)}
                   required
                   error={isUnderpaid && !nextPaymentDate}
-                  helperText={isUnderpaid && !nextPaymentDate ? "Kam to'lov qilganda sana majburiy!" : `Qolgan $${remainingDebt.toFixed(2)} ni to'lash sanasi`}
+                  helperText={isUnderpaid && !nextPaymentDate ? "Kam to'lov qilganda sana va vaqt majburiy!" : `Qolgan $${remainingDebt.toFixed(2)} ni to'lash sanasi va vaqti`}
                   InputProps={{
                     inputProps: {
-                      min: new Date(new Date().setDate(new Date().getDate() + 1))
+                      min: new Date(new Date().setHours(new Date().getHours() + 1))
                         .toISOString()
-                        .split("T")[0], // Ertadan boshlab
+                        .slice(0, 16), // Hozirdan 1 soat keyin
                     },
                   }}
                   sx={{
