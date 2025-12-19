@@ -889,15 +889,15 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                                 )}
                               </Box>
                               {hasShortage && remainingAmountToShow > 0.01 && (
-                                <Box
-                                  sx={{
-                                    display: "inline-flex",
-                                    alignItems: "center",
-                                    gap: 0.5,
-                                    mt: 0.5,
-                                    px: 1,
-                                    py: 0.25,
-                                    bgcolor: "error.lighter",
+                                <Box sx={{ mt: 0.5 }}>
+                                  <Box
+                                    sx={{
+                                      display: "inline-flex",
+                                      alignItems: "center",
+                                      gap: 0.5,
+                                      px: 1,
+                                      py: 0.25,
+                                      bgcolor: "error.lighter",
                                     borderRadius: 1,
                                   }}
                                 >
@@ -914,6 +914,30 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                                     kam
                                   </Typography>
                                 </Box>
+                                {/* ✅ YANGI: Keyingi to'lov sanasi */}
+                                {actualPayment?.nextPaymentDate && (
+                                  <Box
+                                    sx={{
+                                      display: "inline-flex",
+                                      alignItems: "center",
+                                      gap: 0.5,
+                                      mt: 0.5,
+                                      px: 1,
+                                      py: 0.25,
+                                      bgcolor: "warning.lighter",
+                                      borderRadius: 1,
+                                    }}
+                                  >
+                                    <Typography
+                                      variant="caption"
+                                      fontWeight="600"
+                                      color="warning.dark"
+                                    >
+                                      📅 {format(new Date(actualPayment.nextPaymentDate), "dd.MM.yyyy")}
+                                    </Typography>
+                                  </Box>
+                                )}
+                              </Box>
                               )}
                               {hasExcess && actualPayment?.excessAmount && (
                                 <Box

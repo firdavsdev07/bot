@@ -11,6 +11,7 @@ export interface IPaydata {
   currencyDetails: ICurrencyDetails;
   currencyCourse: number;
   targetMonth?: number;
+  nextPaymentDate?: string; // ✅ YANGI: Kam to'lov bo'lsa, keyingi to'lov sanasi
 }
 
 export interface IPayment {
@@ -28,6 +29,7 @@ export interface IPayment {
     notes?: string;
     targetMonth?: number; // ✅ Qaysi oy uchun to'lov
     reminderDate?: string | Date; // ✅ YANGI: Eslatma sanasi
+    nextPaymentDate?: string | Date; // ✅ YANGI: Kam to'lov bo'lsa, qolgan qismini qachon to'lash kerak
     customerId?: any;
     managerId?: any;
 }

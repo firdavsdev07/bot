@@ -12,7 +12,7 @@ import {
   Alert,
 } from "@mui/material";
 import { motion } from "framer-motion";
-import { DollarSign, CreditCard, FileText } from "lucide-react";
+import { DollarSign, CreditCard, FileText, Calendar } from "lucide-react";
 
 import { useAppDispatch } from "../../hooks/useAppDispatch";
 import { payAllRemaining, payDebt, payNewDebt } from "../../store/actions/customerActions";
@@ -57,9 +57,14 @@ const PaymentModal: FC<PaymentModalProps> = ({
   const [currencyCourse, setCurrencyCourse] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [nextPaymentDate, setNextPaymentDate] = useState<string>(""); // ✅ YANGI: Keyingi to'lov sanasi
   
   // Jami summa (dollar + so'mni dollorga o'tkazgandan keyin)
   const totalAmountInDollar = dollarAmount + (sumAmount / currencyCourse);
+  
+  // ✅ YANGI: Kam to'lov ekanligini aniqlash
+  const isUnderpaid = totalAmountInDollar > 0 && totalAmountInDollar < amount;
+  const remainingDebt = amount - totalAmountInDollar;
 
   useEffect(() => {
     if (open) {
@@ -75,6 +80,7 @@ const PaymentModal: FC<PaymentModalProps> = ({
       setDollarAmount(0); // Bo'sh boshlanadi
       setNote("");
       setError("");
+      setNextPaymentDate(""); // ✅ YANGI: Reset next payment date
       
       const fetchCurrencyCourse = async () => {
         try {
@@ -146,6 +152,13 @@ const PaymentModal: FC<PaymentModalProps> = ({
       return;
     }
 
+    // ✅ YANGI: Kam to'lov bo'lsa, nextPaymentDate MAJBURIY
+    if (isUnderpaid && !nextPaymentDate) {
+      setError("Kam to'lov qilganda keyingi to'lov sanasini belgilang!");
+      setLoading(false);
+      return;
+    }
+
     const basePayload = {
       amount: totalAmountInDollar, // Jami summa dolarda
       notes: note.trim(),
@@ -156,6 +169,7 @@ const PaymentModal: FC<PaymentModalProps> = ({
       },
       currencyCourse,
       targetMonth: targetMonth || 1, // ✅ Backend validator talab qiladi
+      nextPaymentDate: nextPaymentDate || undefined, // ✅ YANGI: Kam to'lov bo'lsa yuboriladi
     };
 
     try {
@@ -175,6 +189,7 @@ const PaymentModal: FC<PaymentModalProps> = ({
             sum: sumAmount,
           },
           currencyCourse,
+          nextPaymentDate: nextPaymentDate || undefined, // ✅ YANGI
         });
         
         // Success notification
@@ -205,6 +220,7 @@ const PaymentModal: FC<PaymentModalProps> = ({
         setSumAmount(0);
         setNote("");
         setError("");
+        setNextPaymentDate(""); // ✅ YANGI: Reset
       }, 100);
       
     } catch (err: any) {
@@ -311,7 +327,7 @@ const PaymentModal: FC<PaymentModalProps> = ({
             )}
 
             {/* ✅ YANGI: Kam to'lash haqida ogohlantirish */}
-            {dollarAmount > 0 && dollarAmount < amount && (
+            {isUnderpaid && (
               <Box 
                 mt={1.5} 
                 p={1.5} 
@@ -320,10 +336,10 @@ const PaymentModal: FC<PaymentModalProps> = ({
                 border="1px solid rgba(235, 51, 73, 0.4)"
               >
                 <Typography variant="body2" fontWeight={600}>
-                  ⚠️ Kam to'lov: ${(amount - dollarAmount).toFixed(2)}
+                  ⚠️ Kam to'lov: ${remainingDebt.toFixed(2)}
                 </Typography>
                 <Typography variant="caption" sx={{ opacity: 0.9, display: "block", mt: 0.5 }}>
-                  Qolgan qarz keyinroq to'lanishi kerak
+                  Qolgan qarzni qachon to'lashingizni belgilang ⬇️
                 </Typography>
               </Box>
             )}
@@ -416,6 +432,50 @@ const PaymentModal: FC<PaymentModalProps> = ({
             </motion.div>
           )}
 
+          {/* ✅ YANGI: Kam to'lov bo'lsa - keyingi to'lov sanasi MAJBURIY */}
+          {isUnderpaid && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              transition={{ duration: 0.3 }}
+            >
+              <Box>
+                <Box display="flex" alignItems="center" gap={1} mb={1}>
+                  <Calendar size={20} color="#EF4444" />
+                  <Typography variant="subtitle2" fontWeight={600} color="error.main">
+                    Qolgani qachon to'laysiz? *
+                  </Typography>
+                </Box>
+                <TextField
+                  fullWidth
+                  type="date"
+                  value={nextPaymentDate}
+                  onChange={(e) => setNextPaymentDate(e.target.value)}
+                  required
+                  error={isUnderpaid && !nextPaymentDate}
+                  helperText={isUnderpaid && !nextPaymentDate ? "Kam to'lov qilganda sana majburiy!" : `Qolgan $${remainingDebt.toFixed(2)} ni to'lash sanasi`}
+                  InputProps={{
+                    inputProps: {
+                      min: new Date(new Date().setDate(new Date().getDate() + 1))
+                        .toISOString()
+                        .split("T")[0], // Ertadan boshlab
+                    },
+                  }}
+                  sx={{
+                    "& .MuiOutlinedInput-root": {
+                      borderRadius: borderRadius.md,
+                      backgroundColor: "rgba(239, 68, 68, 0.05)",
+                      borderColor: "error.main",
+                    },
+                    "& .MuiFormHelperText-root": {
+                      fontWeight: 500,
+                    },
+                  }}
+                />
+              </Box>
+            </motion.div>
+          )}
+
           <TextField
             fullWidth
             multiline
@@ -460,7 +520,7 @@ const PaymentModal: FC<PaymentModalProps> = ({
         <Button
           variant="contained"
           onClick={handleSubmit}
-          disabled={loading || totalAmountInDollar <= 0}
+          disabled={loading || totalAmountInDollar <= 0 || (isUnderpaid && !nextPaymentDate)}
           fullWidth
           sx={{ 
             py: { xs: 1.25, sm: 1.5 },
