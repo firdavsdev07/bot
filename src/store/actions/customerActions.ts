@@ -41,10 +41,14 @@ export const getCustomers = (): AppThunk => async (dispatch) => {
   }
 };
 
-export const getCustomersDebtor = (): AppThunk => async (dispatch) => {
+export const getCustomersDebtor = (filterDate?: string): AppThunk => async (dispatch) => {
   dispatch(start());
   try {
-    const res = await authApi.get("/customer/get-debtor");
+    // ✅ Agar filterDate berilgan bo'lsa, query parametr sifatida yuborish
+    const url = filterDate 
+      ? `/customer/get-debtor?date=${filterDate}` 
+      : "/customer/get-debtor";
+    const res = await authApi.get(url);
     const { data } = res;
     dispatch(setCustomersDebtor(data.data));
   } catch (error) {

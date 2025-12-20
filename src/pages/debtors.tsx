@@ -6,8 +6,9 @@ import {
   Typography,
   InputAdornment,
   Box,
+  Stack,
 } from "@mui/material";
-import { Search, AlertTriangle } from "lucide-react";
+import { Search, AlertTriangle, Calendar } from "lucide-react";
 import CustomerListItem from "../components/CustomerItem";
 import { ICustomer } from "../types/ICustomer";
 import { useAppDispatch } from "../hooks/useAppDispatch";
@@ -18,6 +19,7 @@ import Loader from "../components/Loader/Loader";
 import CustomerDialog from "../components/CustomerDialog/CustomerDialog";
 import { borderRadius, shadows } from "../theme/colors";
 import { useDebounce } from "../hooks/useDebounce";
+import dayjs from "../utils/dayjs-config";
 
 type TabPageProps = {
   activeTabIndex: number;
@@ -32,14 +34,17 @@ export default function DebtorsPage({ activeTabIndex, index }: TabPageProps) {
 
   const [selectedClient, setSelectedClient] = useState<ICustomer | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedDate, setSelectedDate] = useState<string>(
+    dayjs().format("YYYY-MM-DD")
+  );
   const debouncedSearch = useDebounce(searchTerm, 300);
 
   useEffect(() => {
     if (activeTabIndex === index) {
-      dispatch(getCustomersDebtor());
+      dispatch(getCustomersDebtor(selectedDate));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeTabIndex, index]);
+  }, [activeTabIndex, index, selectedDate]);
 
   const filteredDebtors = useMemo(() => {
     return customersDebtor.filter((customer) => {
@@ -106,29 +111,80 @@ export default function DebtorsPage({ activeTabIndex, index }: TabPageProps) {
           boxShadow: shadows.md,
         }}
       >
-        <TextField
-          fullWidth
-          placeholder="Qarzdorlarni qidirish..."
-          variant="outlined"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          size="medium"
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <Search size={20} color="#eb3349" />
-              </InputAdornment>
-            ),
-            sx: {
-              borderRadius: borderRadius.md,
-              bgcolor: "grey.50",
-              "& fieldset": { border: "none" },
-              "&:hover": {
-                bgcolor: "rgba(235, 51, 73, 0.05)",
+        <Stack spacing={2}>
+          {/* 📅 Kalendar filter */}
+          <Box>
+            <Typography 
+              variant="caption" 
+              sx={{ 
+                display: "flex", 
+                alignItems: "center", 
+                gap: 0.5, 
+                mb: 1,
+                color: "text.secondary",
+                fontWeight: 500
+              }}
+            >
+              <Calendar size={16} />
+              Sana bo'yicha filter
+            </Typography>
+            <TextField
+              fullWidth
+              type="date"
+              value={selectedDate}
+              onChange={(e) => setSelectedDate(e.target.value)}
+              size="medium"
+              InputProps={{
+                sx: {
+                  borderRadius: borderRadius.md,
+                  bgcolor: "grey.50",
+                  "& fieldset": { border: "1px solid #e0e0e0" },
+                  "&:hover fieldset": {
+                    borderColor: "#eb3349",
+                  },
+                  "& input": {
+                    fontSize: "0.95rem",
+                    fontWeight: 500,
+                  },
+                },
+              }}
+              helperText={`${dayjs(selectedDate).format("DD MMMM YYYY")} gacha bo'lgan qarzdorlar`}
+              FormHelperTextProps={{
+                sx: { 
+                  fontSize: "0.75rem",
+                  color: "#eb3349",
+                  fontWeight: 500,
+                  mt: 0.5,
+                }
+              }}
+            />
+          </Box>
+
+          {/* 🔍 Qidiruv */}
+          <TextField
+            fullWidth
+            placeholder="Qarzdorlarni qidirish..."
+            variant="outlined"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            size="medium"
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <Search size={20} color="#eb3349" />
+                </InputAdornment>
+              ),
+              sx: {
+                borderRadius: borderRadius.md,
+                bgcolor: "grey.50",
+                "& fieldset": { border: "none" },
+                "&:hover": {
+                  bgcolor: "rgba(235, 51, 73, 0.05)",
+                },
               },
-            },
-          }}
-        />
+            }}
+          />
+        </Stack>
       </Paper>
 
       {filteredDebtors.length > 0 ? (
