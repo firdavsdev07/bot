@@ -200,8 +200,8 @@ export default function DebtorsPage({ activeTabIndex, index }: TabPageProps) {
                 isShowAll
                   ? "🔍 Barcha qarzdorlar ko'rsatilmoqda"
                   : selectedDate
-                  ? `📅 Har oyda ${dayjs(selectedDate).format("DD")}-sanada to'lovi bo'lgan qarzdorlar`
-                  : "💡 Har oyda muayyan kunda to'lovi bo'lgan qarzdorlarni ko'rish uchun istalgan sanani tanlang"
+                  ? `📅 ${dayjs(selectedDate).format("MMMM")} oyining 1-kunidan ${dayjs(selectedDate).format("DD")}-kunigacha qarzdorlar`
+                  : "💡 Oyning biror kunini tanlang (masalan, 20-dekabr tanlasangiz, 1-dekabrdan 20-dekabrgacha qarzdorlar ko'rinadi)"
               }
               FormHelperTextProps={{
                 sx: { 
