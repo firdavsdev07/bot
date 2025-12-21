@@ -7,8 +7,9 @@ import {
   InputAdornment,
   Box,
   Stack,
+  Chip,
 } from "@mui/material";
-import { Search, AlertTriangle, Calendar } from "lucide-react";
+import { Search, AlertTriangle, Calendar, X } from "lucide-react";
 import CustomerListItem from "../components/CustomerItem";
 import { ICustomer } from "../types/ICustomer";
 import { useAppDispatch } from "../hooks/useAppDispatch";
@@ -34,17 +35,32 @@ export default function DebtorsPage({ activeTabIndex, index }: TabPageProps) {
 
   const [selectedClient, setSelectedClient] = useState<ICustomer | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedDate, setSelectedDate] = useState<string>(
-    dayjs().format("YYYY-MM-DD")
-  );
+  const [selectedDate, setSelectedDate] = useState<string>("");
+  const [isShowAll, setIsShowAll] = useState<boolean>(true);
   const debouncedSearch = useDebounce(searchTerm, 300);
 
   useEffect(() => {
     if (activeTabIndex === index) {
-      dispatch(getCustomersDebtor(selectedDate));
+      // ✅ Agar isShowAll true bo'lsa, filterDate yubormaymiz
+      if (isShowAll) {
+        dispatch(getCustomersDebtor());
+      } else {
+        dispatch(getCustomersDebtor(selectedDate));
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeTabIndex, index, selectedDate]);
+  }, [activeTabIndex, index, selectedDate, isShowAll]);
+
+  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newDate = e.target.value;
+    setSelectedDate(newDate);
+    setIsShowAll(false);
+  };
+
+  const handleShowAll = () => {
+    setSelectedDate("");
+    setIsShowAll(true);
+  };
 
   const filteredDebtors = useMemo(() => {
     return customersDebtor.filter((customer) => {
@@ -114,33 +130,75 @@ export default function DebtorsPage({ activeTabIndex, index }: TabPageProps) {
         <Stack spacing={2}>
           {/* 📅 Kalendar filter */}
           <Box>
-            <Typography 
-              variant="caption" 
-              sx={{ 
-                display: "flex", 
-                alignItems: "center", 
-                gap: 0.5, 
-                mb: 1,
-                color: "text.secondary",
-                fontWeight: 500
-              }}
-            >
-              <Calendar size={16} />
-              Sana bo'yicha filter
-            </Typography>
+            <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", mb: 1 }}>
+              <Typography 
+                variant="caption" 
+                sx={{ 
+                  display: "flex", 
+                  alignItems: "center", 
+                  gap: 0.5,
+                  color: "text.secondary",
+                  fontWeight: 500
+                }}
+              >
+                <Calendar size={16} />
+                Sana bo'yicha filter
+              </Typography>
+              
+              {/* ✅ "All" tugmasi */}
+              {!isShowAll && (
+                <Chip
+                  label="Barchasi"
+                  onClick={handleShowAll}
+                  onDelete={handleShowAll}
+                  deleteIcon={<X size={16} />}
+                  size="small"
+                  sx={{
+                    bgcolor: "#eb3349",
+                    color: "white",
+                    fontWeight: 600,
+                    fontSize: "0.75rem",
+                    "&:hover": {
+                      bgcolor: "#d12d3f",
+                    },
+                    "& .MuiChip-deleteIcon": {
+                      color: "white",
+                      "&:hover": {
+                        color: "rgba(255,255,255,0.8)",
+                      },
+                    },
+                  }}
+                />
+              )}
+
+              {isShowAll && (
+                <Chip
+                  label="Barchasi"
+                  size="small"
+                  sx={{
+                    bgcolor: "#e8f5e9",
+                    color: "#2e7d32",
+                    fontWeight: 600,
+                    fontSize: "0.75rem",
+                  }}
+                />
+              )}
+            </Box>
+
             <TextField
               fullWidth
               type="date"
               value={selectedDate}
-              onChange={(e) => setSelectedDate(e.target.value)}
+              onChange={handleDateChange}
               size="medium"
+              disabled={isShowAll}
               InputProps={{
                 sx: {
                   borderRadius: borderRadius.md,
-                  bgcolor: "grey.50",
+                  bgcolor: isShowAll ? "grey.100" : "grey.50",
                   "& fieldset": { border: "1px solid #e0e0e0" },
                   "&:hover fieldset": {
-                    borderColor: "#eb3349",
+                    borderColor: isShowAll ? "#e0e0e0" : "#eb3349",
                   },
                   "& input": {
                     fontSize: "0.95rem",
@@ -148,11 +206,17 @@ export default function DebtorsPage({ activeTabIndex, index }: TabPageProps) {
                   },
                 },
               }}
-              helperText={`${dayjs(selectedDate).format("DD MMMM YYYY")} gacha bo'lgan qarzdorlar`}
+              helperText={
+                isShowAll
+                  ? "Barcha qarzdorlar ko'rsatilmoqda"
+                  : selectedDate
+                  ? `${dayjs(selectedDate).format("DD MMMM")} oyidagi ${dayjs(selectedDate).format("DD")}-sanadagi qarzdorlar`
+                  : "Sana tanlang"
+              }
               FormHelperTextProps={{
                 sx: { 
                   fontSize: "0.75rem",
-                  color: "#eb3349",
+                  color: isShowAll ? "#666" : "#eb3349",
                   fontWeight: 500,
                   mt: 0.5,
                 }
