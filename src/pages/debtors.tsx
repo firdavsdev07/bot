@@ -130,56 +130,39 @@ export default function DebtorsPage({ activeTabIndex, index }: TabPageProps) {
         <Stack spacing={2}>
           {/* 📅 Kalendar filter */}
           <Box>
-            <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", mb: 1 }}>
+            <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", mb: 1.5 }}>
               <Typography 
-                variant="caption" 
+                variant="subtitle2" 
                 sx={{ 
                   display: "flex", 
                   alignItems: "center", 
                   gap: 0.5,
-                  color: "text.secondary",
-                  fontWeight: 500
+                  color: "text.primary",
+                  fontWeight: 600,
+                  fontSize: "0.9rem"
                 }}
               >
-                <Calendar size={16} />
+                <Calendar size={18} />
                 Sana bo'yicha filter
               </Typography>
               
-              {/* ✅ "All" tugmasi */}
+              {/* ✅ "Barchasi" tugmasi - faqat filter tanlanganda ko'rsatish */}
               {!isShowAll && (
                 <Chip
-                  label="Barchasi"
+                  label="Hammasini ko'rsatish"
                   onClick={handleShowAll}
+                  size="small"
+                  color="error"
+                  variant="filled"
+                  deleteIcon={<X size={14} />}
                   onDelete={handleShowAll}
-                  deleteIcon={<X size={16} />}
-                  size="small"
                   sx={{
-                    bgcolor: "#eb3349",
-                    color: "white",
                     fontWeight: 600,
-                    fontSize: "0.75rem",
-                    "&:hover": {
-                      bgcolor: "#d12d3f",
-                    },
+                    fontSize: "0.7rem",
+                    height: 28,
                     "& .MuiChip-deleteIcon": {
-                      color: "white",
-                      "&:hover": {
-                        color: "rgba(255,255,255,0.8)",
-                      },
+                      fontSize: "1rem",
                     },
-                  }}
-                />
-              )}
-
-              {isShowAll && (
-                <Chip
-                  label="Barchasi"
-                  size="small"
-                  sx={{
-                    bgcolor: "#e8f5e9",
-                    color: "#2e7d32",
-                    fontWeight: 600,
-                    fontSize: "0.75rem",
                   }}
                 />
               )}
@@ -191,34 +174,41 @@ export default function DebtorsPage({ activeTabIndex, index }: TabPageProps) {
               value={selectedDate}
               onChange={handleDateChange}
               size="medium"
-              disabled={isShowAll}
+              placeholder="Sanani tanlang"
               InputProps={{
                 sx: {
                   borderRadius: borderRadius.md,
-                  bgcolor: isShowAll ? "grey.100" : "grey.50",
-                  "& fieldset": { border: "1px solid #e0e0e0" },
+                  bgcolor: "grey.50",
+                  "& fieldset": { 
+                    border: "1.5px solid #e0e0e0",
+                  },
                   "&:hover fieldset": {
-                    borderColor: isShowAll ? "#e0e0e0" : "#eb3349",
+                    borderColor: "#eb3349",
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: "#eb3349",
+                    borderWidth: "2px",
                   },
                   "& input": {
                     fontSize: "0.95rem",
                     fontWeight: 500,
+                    cursor: "pointer",
                   },
                 },
               }}
               helperText={
                 isShowAll
-                  ? "Barcha qarzdorlar ko'rsatilmoqda"
+                  ? "🔍 Barcha qarzdorlar ko'rsatilmoqda"
                   : selectedDate
-                  ? `${dayjs(selectedDate).format("DD MMMM")} oyidagi ${dayjs(selectedDate).format("DD")}-sanadagi qarzdorlar`
-                  : "Sana tanlang"
+                  ? `📅 Har oyda ${dayjs(selectedDate).format("DD")}-sanada to'lovi bo'lgan qarzdorlar (${dayjs(selectedDate).format("MMMM")} oyi)`
+                  : "💡 Muayyan kunda to'lovi bo'lgan qarzdorlarni ko'rish uchun sana tanlang"
               }
               FormHelperTextProps={{
                 sx: { 
                   fontSize: "0.75rem",
-                  color: isShowAll ? "#666" : "#eb3349",
+                  color: isShowAll ? "success.main" : selectedDate ? "error.main" : "text.secondary",
                   fontWeight: 500,
-                  mt: 0.5,
+                  mt: 0.75,
                 }
               }}
             />
@@ -227,7 +217,7 @@ export default function DebtorsPage({ activeTabIndex, index }: TabPageProps) {
           {/* 🔍 Qidiruv */}
           <TextField
             fullWidth
-            placeholder="Qarzdorlarni qidirish..."
+            placeholder="Ism, familiya yoki telefon raqam bo'yicha qidiring..."
             variant="outlined"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -243,6 +233,9 @@ export default function DebtorsPage({ activeTabIndex, index }: TabPageProps) {
                 bgcolor: "grey.50",
                 "& fieldset": { border: "none" },
                 "&:hover": {
+                  bgcolor: "rgba(235, 51, 73, 0.05)",
+                },
+                "&.Mui-focused": {
                   bgcolor: "rgba(235, 51, 73, 0.05)",
                 },
               },
