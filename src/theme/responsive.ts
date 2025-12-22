@@ -1,8 +1,5 @@
-// Mobile-first responsive design system
 export const responsive = {
-  // Typography responsive scaling
   typography: {
-    // Mobile-optimized font sizes
     h4: {
       xs: "1.25rem", // 20px - mobile
       sm: "1.5rem",  // 24px - tablet

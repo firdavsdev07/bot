@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import {
   start,
@@ -16,13 +15,6 @@ import authApi from "../../server/auth";
 import { IPaydata } from "../../types/IPayment";
 import { setError } from "../slices/errorSlice";
 import axios from "axios";
-
-// The AppThunk type definition might need to be adjusted depending on how createAsyncThunk is used.
-// For now, we'll keep the existing AppThunk definition and ensure createAsyncThunk returns properly.
-
-// ===============================================
-// Existing Actions (keeping for context, but should be converted to createAsyncThunk too if they also need .unwrap())
-// ===============================================
 
 export const getCustomers = (): AppThunk => async (dispatch) => {
   dispatch(start());
@@ -44,7 +36,6 @@ export const getCustomers = (): AppThunk => async (dispatch) => {
 export const getCustomersDebtor = (filterDate?: string): AppThunk => async (dispatch) => {
   dispatch(start());
   try {
-    // ✅ Agar filterDate berilgan bo'lsa, query parametr sifatida yuborish
     const url = filterDate 
       ? `/customer/get-debtor?date=${filterDate}` 
       : "/customer/get-debtor";
@@ -88,10 +79,8 @@ export const getCustomer =
         const { data } = res;
         dispatch(setCustomerDetails(data.data));
       } catch (error) {
-        console.error("❌ Error fetching customer:", error);
         dispatch(failure());
         if (axios.isAxiosError(error)) {
-          console.error("❌ Error response:", error.response?.data);
           dispatch(setError({ 
             message: error.response?.data?.message || "Mijoz ma'lumotlarini yuklashda xatolik", 
             type: 'error' 
@@ -100,9 +89,6 @@ export const getCustomer =
       }
     };
 
-// ===============================================
-// Refactored Payment Actions using createAsyncThunk
-// ===============================================
 
 export const getContract = createAsyncThunk(
   "customer/getContract",
@@ -111,12 +97,10 @@ export const getContract = createAsyncThunk(
       const res = await authApi.get(`/customer/get-contract-by-id/${customerId}`);
       const { data } = res;
 
-      // This dispatch call is for the slice, not for another thunk from AppThunk
       dispatch(setCustomerContracts(data.data));
 
       return data.data;
     } catch (error: any) {
-      console.error("❌ getContract action - Error:", error);
       return rejectWithValue(error.response?.data || error.message);
     }
   }
@@ -153,7 +137,6 @@ export const payAllRemaining = createAsyncThunk(
   "customer/payAllRemaining",
   async (payData: IPaydata, { dispatch, rejectWithValue }) => {
     try {
-      // Assuming payData.id is the contractId here
       const response = await authApi.post("/payment/pay-all-remaining", {
         contractId: payData.id,
         amount: payData.amount,
@@ -161,7 +144,7 @@ export const payAllRemaining = createAsyncThunk(
         currencyDetails: payData.currencyDetails,
         currencyCourse: payData.currencyCourse,
       });
-      await dispatch(getContract(payData.customerId)); // Refresh contract data after payment
+      await dispatch(getContract(payData.customerId)); 
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data || error.message);

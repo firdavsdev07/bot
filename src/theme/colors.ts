@@ -1,7 +1,4 @@
-/**
- * Modern Theme System
- * Professional color palette and design tokens
- */
+
 
 export const colors = {
   // Primary - Purple gradient

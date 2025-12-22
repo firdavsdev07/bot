@@ -39,7 +39,7 @@ export type ICustomerContract = {
   initialPayment?: number;
   initialPaymentDueDate?: string;
   startDate?: string;
-  prepaidBalance?: number; // ✅ YANGI - Oldindan to'langan balans
+  prepaidBalance?: number; 
   payments?: Array<{
     _id?: string;
     amount: number;

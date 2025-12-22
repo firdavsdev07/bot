@@ -15,9 +15,6 @@ const CustomerDetails: FC<{
 }> = ({ customer, onClose }) => {
   const [activeTab, setActiveTab] = useState(0);
 
-  console.log("🎯 CustomerDetails rendered");
-  console.log("👤 Customer:", customer);
-  console.log("📑 Active Tab:", activeTab);
 
   return (
     <Box sx={{ py: 1, px: 0, width: "100%", maxWidth: "100%", m: 0 }}>
@@ -35,13 +32,7 @@ const CustomerDetails: FC<{
         {activeTab === 2 && <DialogTabNotes customerId={customer._id} />}
       </Box>
 
-      {/* <TimePickerModal
-        open={extensionDialogOpen}
-        onClose={() => setExtensionDialogOpen(false)}
-        onConfirm={(isoString) => {
-          console.log("Tanlangan vaqt:", isoString);
-        }}
-      /> */}
+
     </Box>
   );
 };

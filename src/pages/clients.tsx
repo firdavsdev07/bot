@@ -41,7 +41,6 @@ export default function AllClientsPage({
     if (activeTabIndex === index) {
       dispatch(getCustomers());
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTabIndex, index]);
 
   const filteredClients = useMemo(() => {
@@ -128,7 +127,6 @@ export default function AllClientsPage({
         </Typography>
       )}
 
-      {/* Mijoz ma'lumotlari dialog - Ma'lumotlar, To'lovlar, Izohlar tablari */}
       <CustomerDialog
         open={!!selectedClient}
         customer={selectedClient}

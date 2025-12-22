@@ -1,11 +1,4 @@
-import { useEffect, useState } from 'react';
-
-/**
- * Debounce hook - qiymatni berilgan vaqt davomida kutib turadi
- * @param value - Debounce qilinadigan qiymat
- * @param delay - Kutish vaqti (millisekundlarda), default: 300ms
- * @returns Debounced qiymat
- */
+import { useEffect, useState } from "react";
 export function useDebounce<T>(value: T, delay: number = 300): T {
   const [debouncedValue, setDebouncedValue] = useState<T>(value);
 

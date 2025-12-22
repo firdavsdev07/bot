@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import type { AppThunk } from "../index";
 import authApi from "../../server/auth";
 import {

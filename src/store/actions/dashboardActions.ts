@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { AppThunk } from "../index";
 import authApi from "../../server/auth";
 import {
@@ -19,10 +17,8 @@ export const getDashboard = (): AppThunk => async (dispatch) => {
     dispatch(setDashboard(data.data));
     dispatch(success());
   } catch (error) {
-    console.error("❌ Dashboard API Error:", error);
     dispatch(failure());
     if (axios.isAxiosError(error)) {
-      console.error("❌ Axios Error Response:", error.response?.data);
       dispatch(setError({ 
         message: error.response?.data?.message || "Dashboard ma'lumotlarini yuklashda xatolik", 
         type: 'error' 

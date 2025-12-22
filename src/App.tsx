@@ -17,14 +17,12 @@ function App() {
   const [error] = useState<string | null>(null);
   const { user } = useSelector((state: RootState) => state.auth);
   
-  // Check if user is authenticated
   const isAuthenticated = user.id && user.id !== "";
 
   useEffect(() => {
     setLoading(false);
   }, []);
 
-  // Handle Telegram authentication success
   const handleTelegramAuthSuccess = (token: string, profile: any) => {
     dispatch(loginSuccess({ token, profile }));
   };

@@ -1,4 +1,3 @@
-// import type { ICustomer } from "src/types/customer";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
 import { createSlice } from "@reduxjs/toolkit";

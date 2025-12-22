@@ -1,8 +1,3 @@
-/**
- * Mock Authentication Dialog
- * 
- * Localhost'da test qilish uchun
- */
 
 import React, { useState } from "react";
 import {
@@ -24,6 +19,7 @@ import {
   Chip,
 } from "@mui/material";
 import { MOCK_USERS, MockUser, setMockUser } from "../utils/mock-auth";
+import { Settings } from "lucide-react";
 
 interface MockAuthDialogProps {
   open: boolean;
@@ -65,7 +61,7 @@ export const MockAuthDialog: React.FC<MockAuthDialogProps> = ({
   return (
     <Dialog open={open} maxWidth="md" fullWidth>
       <DialogTitle>
-        🔧 Mock Authentication (Development Only)
+        <Settings />Mock Authentication (Development Only)
       </DialogTitle>
       <DialogContent>
         <Typography variant="body2" color="text.secondary" gutterBottom>

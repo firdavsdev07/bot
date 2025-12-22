@@ -44,7 +44,6 @@ const ContractInfo: FC<DrawerProps> = ({
   const handlePaymentSuccess = () => {
     setPaymentModalOpen(false); // Close modal first
     
-    // Refresh contract to get updated PENDING status
     if (customerId) {
       dispatch(getContract(customerId));
     }
@@ -81,7 +80,6 @@ const ContractInfo: FC<DrawerProps> = ({
       p.status === 'PENDING' || (p.status === 'UNDERPAID' && p.remainingAmount && p.remainingAmount > 0)
     );
     
-    // If we are paying off a deficit on an underpaid record
     if (paymentForDeficit && paymentForDeficit.remainingAmount && paymentForDeficit.remainingAmount > 0) {
       return { 
         amountToPay: paymentForDeficit.remainingAmount, 
@@ -89,7 +87,6 @@ const ContractInfo: FC<DrawerProps> = ({
       };
     }
     
-    // Otherwise, calculate for a standard monthly payment
     const lastConfirmedPayment = contract.payments
       ?.filter(p => p.status === 'PAID' || p.status === 'OVERPAID')
       .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
@@ -112,7 +109,6 @@ const ContractInfo: FC<DrawerProps> = ({
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   
-  // Faqat o'tmishni tekshirish (bugun emas!)
   if (nextPaymentDate) {
     nextPaymentDate.setHours(0, 0, 0, 0);
   }

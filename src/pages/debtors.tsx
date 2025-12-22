@@ -9,7 +9,7 @@ import {
   Stack,
   Chip,
 } from "@mui/material";
-import { Search, AlertTriangle, Calendar, X } from "lucide-react";
+import { Search, AlertTriangle, Calendar, X, CalendarDays, Lightbulb } from "lucide-react";
 import CustomerListItem from "../components/CustomerItem";
 import { ICustomer } from "../types/ICustomer";
 import { useAppDispatch } from "../hooks/useAppDispatch";
@@ -41,14 +41,12 @@ export default function DebtorsPage({ activeTabIndex, index }: TabPageProps) {
 
   useEffect(() => {
     if (activeTabIndex === index) {
-      // ✅ Agar isShowAll true bo'lsa, filterDate yubormaymiz
       if (isShowAll) {
         dispatch(getCustomersDebtor());
       } else {
         dispatch(getCustomersDebtor(selectedDate));
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTabIndex, index, selectedDate, isShowAll]);
 
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -128,7 +126,6 @@ export default function DebtorsPage({ activeTabIndex, index }: TabPageProps) {
         }}
       >
         <Stack spacing={2}>
-          {/* 📅 Kalendar filter */}
           <Box>
             <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", mb: 1.5 }}>
               <Typography 
@@ -146,7 +143,6 @@ export default function DebtorsPage({ activeTabIndex, index }: TabPageProps) {
                 Sana bo'yicha filter
               </Typography>
               
-              {/* ✅ "Barchasi" tugmasi - faqat filter tanlanganda ko'rsatish */}
               {!isShowAll && (
                 <Chip
                   label="Hammasini ko'rsatish"
@@ -198,10 +194,10 @@ export default function DebtorsPage({ activeTabIndex, index }: TabPageProps) {
               }}
               helperText={
                 isShowAll
-                  ? "🔍 Barcha qarzdorlar ko'rsatilmoqda"
+                  ? `${<Search />} Barcha qarzdorlar ko'rsatilmoqda`
                   : selectedDate
-                  ? `📅 ${dayjs(selectedDate).format("DD-MMMM")}'gacha bo'lgan qarzdorlar (tartib: ${dayjs(selectedDate).format("DD")} → 1-kun)`
-                  : "💡 Sanani tanlang (masalan, 21-dekabr tanlasangiz, 21→20→19...→1-dekabr tartibida ko'rinadi)"
+                  ? `${<CalendarDays />} ${dayjs(selectedDate).format("DD-MMMM")}'gacha bo'lgan qarzdorlar (tartib: ${dayjs(selectedDate).format("DD")} → 1-kun)`
+                  : `${<Lightbulb />} Sanani tanlang (masalan, 21-dekabr tanlasangiz, 21→20→19...→1-dekabr tartibida ko'rinadi)`
               }
               FormHelperTextProps={{
                 sx: { 
@@ -214,7 +210,6 @@ export default function DebtorsPage({ activeTabIndex, index }: TabPageProps) {
             />
           </Box>
 
-          {/* 🔍 Qidiruv */}
           <TextField
             fullWidth
             placeholder="Ism, familiya yoki telefon raqam bo'yicha qidiring..."
@@ -259,11 +254,10 @@ export default function DebtorsPage({ activeTabIndex, index }: TabPageProps) {
         </>
       ) : (
         <Typography textAlign="center" color="text.secondary" mt={4}>
-          ✅ Qarzdor mijozlar topilmadi.
+          Qarzdor mijozlar topilmadi.
         </Typography>
       )}
 
-      {/* Mijoz ma'lumotlari dialog - Ma'lumotlar, To'lovlar, Izohlar tablari */}
       <CustomerDialog
         open={!!selectedClient}
         customer={selectedClient}

@@ -1,10 +1,4 @@
-/**
- * Responsive helper utilities
- */
 
-/**
- * Smart text truncation based on screen size
- */
 export const truncateText = (text: string, mobileMax: number, desktopMax?: number) => {
   const isMobile = window.innerWidth < 768;
   const maxLength = isMobile ? mobileMax : (desktopMax || mobileMax * 2);
@@ -13,9 +7,6 @@ export const truncateText = (text: string, mobileMax: number, desktopMax?: numbe
   return text.substring(0, maxLength) + "...";
 };
 
-/**
- * Format phone number for display
- */
 export const formatPhone = (phone: string, isMobile: boolean = false) => {
   if (isMobile && phone.length > 13) {
     return `${phone.slice(0, 13)}...`;
@@ -23,9 +14,6 @@ export const formatPhone = (phone: string, isMobile: boolean = false) => {
   return phone;
 };
 
-/**
- * Smart name display
- */
 export const formatName = (firstName: string, lastName: string, isMobile: boolean = false) => {
   const fullName = `${firstName} ${lastName}`;
   
@@ -35,9 +23,7 @@ export const formatName = (firstName: string, lastName: string, isMobile: boolea
   return fullName;
 };
 
-/**
- * Format currency with smart abbreviation
- */
+
 export const formatCurrency = (amount: number, currency: "USD" | "UZS", isMobile: boolean = false) => {
   if (isMobile && amount > 1000000) {
     const millions = Math.round(amount / 1000000);
@@ -52,9 +38,7 @@ export const formatCurrency = (amount: number, currency: "USD" | "UZS", isMobile
   return `${amount.toLocaleString()} ${currency === "USD" ? "$" : "UZS"}`;
 };
 
-/**
- * Get responsive icon size
- */
+
 export const getIconSize = (size: "small" | "medium" | "large" = "medium") => {
   const isMobile = window.innerWidth < 768;
   
@@ -67,16 +51,12 @@ export const getIconSize = (size: "small" | "medium" | "large" = "medium") => {
   return isMobile ? sizes[size].mobile : sizes[size].desktop;
 };
 
-/**
- * Check if device is mobile
- */
+
 export const isMobileDevice = () => {
   return window.innerWidth < 768;
 };
 
-/**
- * Get responsive spacing
- */
+
 export const getSpacing = (size: "small" | "medium" | "large" = "medium") => {
   const isMobile = window.innerWidth < 768;
   

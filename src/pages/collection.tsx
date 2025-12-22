@@ -23,6 +23,7 @@ import { FaSearch } from "react-icons/fa";
 import ContractCard from "../components/ContractCard";
 import ContractInfo from "../components/Drawer/ContractInfo";
 import { ICustomerContract } from "../types/ICustomer";
+import { Check, TriangleAlert } from "lucide-react";
 
 type TabPageProps = {
   activeTabIndex: number;
@@ -65,9 +66,9 @@ export default function CollectedPage({ activeTabIndex, index }: TabPageProps) {
       // Shartnomalarni yuklash
       await dispatch(getContract(client._id));
     } catch (error) {
-      console.error("❌ Collection - Error fetching contracts:", error);
+      console.error("Collection - Error fetching contracts:", error);
     }
-    
+
     setLoadingContracts(false);
   };
 
@@ -153,129 +154,133 @@ export default function CollectedPage({ activeTabIndex, index }: TabPageProps) {
       )}
 
       {/* Shartnomalar ro'yxati */}
-      {selectedClient && !loadingContracts && customerContracts && (() => {
-        
-        return (
-        <Paper
-          sx={{
-            position: "fixed",
-            bottom: 0,
-            left: 0,
-            right: 0,
-            p: 3,
-            borderTopLeftRadius: 20,
-            borderTopRightRadius: 20,
-            maxHeight: "70vh",
-            overflow: "auto",
-            zIndex: 1300,
-            boxShadow: "0 -4px 20px rgba(0,0,0,0.1)",
-          }}
-        >
-          <Box
-            display="flex"
-            justifyContent="space-between"
-            alignItems="center"
-            mb={2}
-          >
-            <Typography variant="h6" fontWeight={700}>
-              {selectedClient.firstName} {selectedClient.lastName}
-            </Typography>
-            <Button onClick={handleCloseDetails} size="small">
-              Yopish
-            </Button>
-          </Box>
-
-          {/* Agar hech qanday shartnoma bo'lmasa */}
-          {(!customerContracts.allContracts || customerContracts.allContracts.length === 0) &&
-           (!customerContracts.debtorContracts || customerContracts.debtorContracts.length === 0) &&
-           (!customerContracts.paidContracts || customerContracts.paidContracts.length === 0) && (
-            <Typography textAlign="center" color="text.secondary" mt={4}>
-              Bu mijozda shartnomalar topilmadi.
-            </Typography>
-          )}
-
-          {/* Faol shartnomalar */}
-          {customerContracts.allContracts &&
-            customerContracts.allContracts.length > 0 && (
-              <Box mb={2}>
-                <Typography
-                  variant="subtitle2"
-                  color="text.secondary"
-                  mb={1}
-                  fontWeight={600}
-                >
-                  Faol shartnomalar
+      {selectedClient &&
+        !loadingContracts &&
+        customerContracts &&
+        (() => {
+          return (
+            <Paper
+              sx={{
+                position: "fixed",
+                bottom: 0,
+                left: 0,
+                right: 0,
+                p: 3,
+                borderTopLeftRadius: 20,
+                borderTopRightRadius: 20,
+                maxHeight: "70vh",
+                overflow: "auto",
+                zIndex: 1300,
+                boxShadow: "0 -4px 20px rgba(0,0,0,0.1)",
+              }}
+            >
+              <Box
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
+                mb={2}
+              >
+                <Typography variant="h6" fontWeight={700}>
+                  {selectedClient.firstName} {selectedClient.lastName}
                 </Typography>
-                {customerContracts.allContracts.map((contract) => (
-                  <ContractCard
-                    key={contract._id}
-                    contract={contract}
-                    variant="default"
-                    onClick={() => {
-                      setSelectedContract(contract);
-                      setContractDrawerOpen(true);
-                    }}
-                  />
-                ))}
+                <Button onClick={handleCloseDetails} size="small">
+                  Yopish
+                </Button>
               </Box>
-            )}
 
-          {/* Qarzdorliklar */}
-          {customerContracts.debtorContracts &&
-            customerContracts.debtorContracts.length > 0 && (
-              <Box mb={2}>
-                <Typography
-                  variant="subtitle2"
-                  color="error.main"
-                  mb={1}
-                  fontWeight={700}
-                >
-                  ⚠️ Qarzdorliklar
-                </Typography>
-                {customerContracts.debtorContracts.map((contract) => (
-                  <ContractCard
-                    key={contract._id}
-                    contract={contract}
-                    variant="debtor"
-                    onClick={() => {
-                      setSelectedContract(contract);
-                      setContractDrawerOpen(true);
-                    }}
-                  />
-                ))}
-              </Box>
-            )}
+              {/* Agar hech qanday shartnoma bo'lmasa */}
+              {(!customerContracts.allContracts ||
+                customerContracts.allContracts.length === 0) &&
+                (!customerContracts.debtorContracts ||
+                  customerContracts.debtorContracts.length === 0) &&
+                (!customerContracts.paidContracts ||
+                  customerContracts.paidContracts.length === 0) && (
+                  <Typography textAlign="center" color="text.secondary" mt={4}>
+                    Bu mijozda shartnomalar topilmadi.
+                  </Typography>
+                )}
 
-          {/* To'langan shartnomalar */}
-          {customerContracts.paidContracts &&
-            customerContracts.paidContracts.length > 0 && (
-              <Box>
-                <Typography
-                  variant="subtitle2"
-                  color="success.main"
-                  mb={1}
-                  fontWeight={600}
-                >
-                  ✅ To'langan shartnomalar
-                </Typography>
-                {customerContracts.paidContracts.map((contract) => (
-                  <ContractCard
-                    key={contract._id}
-                    contract={contract}
-                    variant="paid"
-                    onClick={() => {
-                      setSelectedContract(contract);
-                      setContractDrawerOpen(true);
-                    }}
-                  />
-                ))}
-              </Box>
-            )}
-        </Paper>
-        );
-      })()}
+              {/* Faol shartnomalar */}
+              {customerContracts.allContracts &&
+                customerContracts.allContracts.length > 0 && (
+                  <Box mb={2}>
+                    <Typography
+                      variant="subtitle2"
+                      color="text.secondary"
+                      mb={1}
+                      fontWeight={600}
+                    >
+                      Faol shartnomalar
+                    </Typography>
+                    {customerContracts.allContracts.map((contract) => (
+                      <ContractCard
+                        key={contract._id}
+                        contract={contract}
+                        variant="default"
+                        onClick={() => {
+                          setSelectedContract(contract);
+                          setContractDrawerOpen(true);
+                        }}
+                      />
+                    ))}
+                  </Box>
+                )}
 
-      {/* Shartnoma tafsilotlari - Faqat ko'rish uchun (to'lov tugmasisiz) */}
+              {/* Qarzdorliklar */}
+              {customerContracts.debtorContracts &&
+                customerContracts.debtorContracts.length > 0 && (
+                  <Box mb={2}>
+                    <Typography
+                      variant="subtitle2"
+                      color="error.main"
+                      mb={1}
+                      fontWeight={700}
+                    >
+                      <TriangleAlert /> Qarzdorliklar
+                    </Typography>
+                    {customerContracts.debtorContracts.map((contract) => (
+                      <ContractCard
+                        key={contract._id}
+                        contract={contract}
+                        variant="debtor"
+                        onClick={() => {
+                          setSelectedContract(contract);
+                          setContractDrawerOpen(true);
+                        }}
+                      />
+                    ))}
+                  </Box>
+                )}
+
+              {/* To'langan shartnomalar */}
+              {customerContracts.paidContracts &&
+                customerContracts.paidContracts.length > 0 && (
+                  <Box>
+                    <Typography
+                      variant="subtitle2"
+                      color="success.main"
+                      mb={1}
+                      fontWeight={600}
+                    >
+                      <Check /> To'langan shartnomalar
+                    </Typography>
+                    {customerContracts.paidContracts.map((contract) => (
+                      <ContractCard
+                        key={contract._id}
+                        contract={contract}
+                        variant="paid"
+                        onClick={() => {
+                          setSelectedContract(contract);
+                          setContractDrawerOpen(true);
+                        }}
+                      />
+                    ))}
+                  </Box>
+                )}
+            </Paper>
+          );
+        })()}
+
       <ContractInfo
         open={contractDrawerOpen}
         onClose={() => setContractDrawerOpen(false)}

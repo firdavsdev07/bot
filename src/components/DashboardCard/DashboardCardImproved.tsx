@@ -54,7 +54,6 @@ const DashboardCardImproved: FC<DashboardCardProps> = ({
         },
       }}
     >
-      {/* Background decorative circle - smaller on mobile */}
       <Box
         sx={{
           position: "absolute",
@@ -68,7 +67,6 @@ const DashboardCardImproved: FC<DashboardCardProps> = ({
         }}
       />
 
-      {/* Icon container - responsive */}
       <Box
         sx={{
           display: "flex",
@@ -95,7 +93,6 @@ const DashboardCardImproved: FC<DashboardCardProps> = ({
           {icon}
         </Box>
         
-        {/* Title - responsive and truncated */}
         <Typography
           variant="body2"
           fontWeight={600}
@@ -117,7 +114,6 @@ const DashboardCardImproved: FC<DashboardCardProps> = ({
         </Typography>
       </Box>
 
-      {/* Value - responsive typography */}
       <Box sx={{ position: "relative", zIndex: 1, mt: { xs: 1, md: 2 } }}>
         <Typography
           variant="h4"
@@ -126,7 +122,6 @@ const DashboardCardImproved: FC<DashboardCardProps> = ({
             mb: 0.5,
             fontSize: responsive.typography.h4,
             lineHeight: 1.2,
-            // Smart text handling for long numbers
             wordBreak: "break-word",
             display: "block",
           }}
@@ -146,7 +141,6 @@ const DashboardCardImproved: FC<DashboardCardProps> = ({
               whiteSpace: "nowrap",
             }}
           >
-            {/* Truncate subtitle on mobile */}
             {window.innerWidth < 600 ? truncateText(subtitle, 15) : subtitle}
           </Typography>
         )}

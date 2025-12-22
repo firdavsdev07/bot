@@ -22,7 +22,6 @@ export default function DailySummaryImproved({ activeTabIndex, index }: TabPageP
     if (activeTabIndex === index) {
       dispatch(getDashboard());
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTabIndex, index]);
 
   const todayDollar = dashboard?.today?.dollar ?? 0;
@@ -32,7 +31,6 @@ export default function DailySummaryImproved({ activeTabIndex, index }: TabPageP
   const balanceDollar = dashboard?.balance?.dollar ?? 0;
   const balanceSum = dashboard?.balance?.sum ?? 0;
 
-  // Smart name truncation for mobile
   const getDisplayName = (firstName: string, lastName: string) => {
     const fullName = `${firstName} ${lastName}`;
     if (fullName.length > 20) {
@@ -97,12 +95,11 @@ export default function DailySummaryImproved({ activeTabIndex, index }: TabPageP
               mt: 0.5,
             }}
           >
-            Xush kelibsiz! 👋
+            Xush kelibsiz!
           </Typography>
         </Box>
       </Box>
 
-      {/* Dashboard Cards - Improved responsive grid */}
       <Box
         sx={{
           display: "grid",

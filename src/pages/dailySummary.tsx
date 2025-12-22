@@ -22,7 +22,6 @@ export default function DailyReport({ activeTabIndex, index }: TabPageProps) {
     if (activeTabIndex === index) {
       dispatch(getDashboard());
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTabIndex, index]);
 
   const todayDollar = dashboard?.today?.dollar ?? 0;
@@ -77,10 +76,10 @@ export default function DailyReport({ activeTabIndex, index }: TabPageProps) {
         sx={{
           display: "grid",
           gridTemplateColumns: {
-            xs: "1fr",           // Mobile: 1 kolon
-            sm: "1fr",           // Small: 1 kolon
-            md: "repeat(2, 1fr)", // Tablet: 2 kolon
-            lg: "repeat(3, 1fr)", // Desktop: 3 kolon
+            xs: "1fr",          
+            sm: "1fr",          
+            md: "repeat(2, 1fr)", 
+            lg: "repeat(3, 1fr)", 
           },
           gap: 2,
         }}

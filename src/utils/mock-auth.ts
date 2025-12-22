@@ -1,9 +1,3 @@
-/**
- * Mock Authentication for Local Development
- * 
- * Localhost'da test qilish uchun
- * Production'da ishlamaydi
- */
 
 export interface MockUser {
   _id: string;
@@ -14,7 +8,6 @@ export interface MockUser {
   role: string;
 }
 
-// Get default mock user from .env
 const getDefaultMockUser = (): MockUser | null => {
   const id = import.meta.env.VITE_MOCK_USER_ID;
   const telegramId = import.meta.env.VITE_MOCK_TELEGRAM_ID;
@@ -37,7 +30,6 @@ const getDefaultMockUser = (): MockUser | null => {
   return null;
 };
 
-// Test managerlar ro'yxati (fallback)
 export const MOCK_USERS: MockUser[] = [
   {
     _id: "686e7881ab577df7c3eb3db2",
@@ -65,14 +57,11 @@ export const MOCK_USERS: MockUser[] = [
   },
 ];
 
-// Get default mock user or first from list
 export const getDefaultMockUserOrFirst = (): MockUser => {
   return getDefaultMockUser() || MOCK_USERS[0];
 };
 
-/**
- * Check if we're in development mode
- */
+
 export const isDevelopment = () => {
   return (
     import.meta.env.DEV || 
@@ -81,9 +70,6 @@ export const isDevelopment = () => {
   );
 };
 
-/**
- * Get mock user from localStorage
- */
 export const getMockUser = (): MockUser | null => {
   if (!isDevelopment()) return null;
   
@@ -97,15 +83,11 @@ export const getMockUser = (): MockUser | null => {
   }
 };
 
-/**
- * Set mock user to localStorage
- */
 export const setMockUser = (user: MockUser | null) => {
   if (!isDevelopment()) return;
   
   if (user) {
     localStorage.setItem("mockUser", JSON.stringify(user));
-    // Store token too
     localStorage.setItem("token", `mock_token_${user._id}`);
   } else {
     localStorage.removeItem("mockUser");
@@ -113,16 +95,11 @@ export const setMockUser = (user: MockUser | null) => {
   }
 };
 
-/**
- * Check if mock mode is enabled
- */
+
 export const isMockMode = (): boolean => {
   return isDevelopment() && !!getMockUser();
 };
 
-/**
- * Clear mock data
- */
 export const clearMockUser = () => {
   localStorage.removeItem("mockUser");
   localStorage.removeItem("token");

@@ -15,14 +15,20 @@ import {
   TableContainer,
 } from "@mui/material";
 import { format, addMonths } from "date-fns";
-import { MdCheckCircle, MdWarning, MdPayment, MdArrowUpward, MdArrowDownward } from "react-icons/md";
-
+import {
+  MdCheckCircle,
+  MdWarning,
+  MdPayment,
+  MdArrowUpward,
+  MdArrowDownward,
+} from "react-icons/md";
 
 import PaymentModal from "../PaymentModal/PaymentModal";
 import PaymentPostponeDialog from "../PaymentPostponeDialog";
 import { IPayment } from "../../types/IPayment"; // Import the IPayment interface
 import { StatusBadge } from "./StatusBadge";
 import { borderRadius, shadows } from "../../theme/colors";
+import { CalendarDays, Clock } from "lucide-react";
 
 interface PaymentScheduleItem {
   month: number;
@@ -43,7 +49,7 @@ interface PaymentScheduleProps {
   customerId?: string; // Specific to nasiya-bot
   remainingDebt?: number;
   totalPaid?: number;
-  prepaidBalance?: number; // ✅ YANGI: Oldindan to'langan summa
+  prepaidBalance?: number;
   payments?: IPayment[]; // Use the imported IPayment interface
   onPaymentSuccess?: () => void;
   readOnly?: boolean;
@@ -58,14 +64,13 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
   contractId,
   remainingDebt = 0,
   totalPaid = 0,
-  prepaidBalance = 0, // ✅ YANGI
+  prepaidBalance = 0,
   payments = [],
   onPaymentSuccess,
   debtorId,
   customerId,
   readOnly,
 }) => {
-  
   const [paymentModal, setPaymentModal] = useState<{
     open: boolean;
     amount: number;
@@ -80,7 +85,6 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
     month: undefined,
   });
 
-  // ✅ YANGI: To'lovni kechiktirish uchun state
   const [postponeDialog, setPostponeDialog] = useState<{
     open: boolean;
     payment: IPayment | null;
@@ -90,38 +94,16 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
     payment: null,
     loading: false,
   });
-  
-  React.useEffect(() => {
-    console.log("📦 Payments updated:", {
-      totalPayments: payments.length,
-      pendingPayments: payments.filter(p => p.status === 'PENDING').length,
-      paidPayments: payments.filter(p => p.isPaid).length,
-    });
-  }, [payments]);
 
-  React.useEffect(() => {
-    console.log("🔍 [POSTPONE] PaymentSchedule Props:", {
-      readOnly,
-      contractId,
-      debtorId,
-      customerId,
-      canShowPostponeButton: !readOnly && (!!contractId || !!debtorId)
-    });
-  }, [readOnly, contractId, debtorId, customerId]);
-
-  // To'lov jadvalini yaratish
   const generateSchedule = (): PaymentScheduleItem[] => {
     const schedule: PaymentScheduleItem[] = [];
     const start = new Date(startDate);
-    
 
-    // Boshlang'ich to'lov qilinganmi tekshirish - payments arraydan
     const initialPaymentRecord = payments.find(
       (p) => p.paymentType === "initial" && p.isPaid
     );
     const isInitialPaid = !!initialPaymentRecord;
 
-    // Boshlang'ich to'lovni qo'shish
     if (initialPayment > 0) {
       const initialDate = initialPaymentDueDate
         ? new Date(initialPaymentDueDate)
@@ -136,9 +118,6 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
       });
     }
 
-    // Oylik to'lovlarni sanasi bo'yicha tartiblash
-    // ✅ MUHIM: confirmedAt bo'yicha tartiblaymiz (haqiqatda qachon to'langan)
-    // Agar confirmedAt yo'q bo'lsa, date'dan foydalanamiz
     const monthlyPayments = payments
       .filter((p) => p.paymentType !== "initial" && p.isPaid)
       .sort((a, b) => {
@@ -151,7 +130,10 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
 
         // Agar confirmedAt bir xil bo'lsa, date bo'yicha tartiblash
         if (dateA.getTime() === dateB.getTime()) {
-          return new Date(a.date as string).getTime() - new Date(b.date as string).getTime();
+          return (
+            new Date(a.date as string).getTime() -
+            new Date(b.date as string).getTime()
+          );
         }
 
         return dateA.getTime() - dateB.getTime();
@@ -178,54 +160,57 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
   const schedule = generateSchedule();
   const today = new Date();
 
-  const handlePayment = (amount: number, paymentId?: string, month?: number) => {
+  const handlePayment = (
+    amount: number,
+    paymentId?: string,
+    month?: number
+  ) => {
     if (!contractId && !debtorId) {
-        alert("Xatolik: Shartnoma ID topilmadi");
-        return;
+      alert("Xatolik: Shartnoma ID topilmadi");
+      return;
     }
 
     if (!customerId) {
-        alert("Xatolik: Mijoz ID topilmadi");
-        return;
+      alert("Xatolik: Mijoz ID topilmadi");
+      return;
     }
-    
-    // ✅ Agar bu oy uchun allaqachon PENDING to'lov bo'lsa, qayta yuborishni oldini olish
+
     if (month) {
-      const hasPending = payments.some(p => p.status === 'PENDING' && p.targetMonth === month);
+      const hasPending = payments.some(
+        (p) => p.status === "PENDING" && p.targetMonth === month
+      );
       if (hasPending) {
-        console.warn(`⚠️ Month ${month} uchun PENDING to'lov mavjud, qayta yuborib bo'lmaydi!`);
-        alert("Bu oy uchun to'lov allaqachon kutilmoqda. Kassa tasdiqini kuting.");
+        alert(
+          "Bu oy uchun to'lov allaqachon kutilmoqda. Kassa tasdiqini kuting."
+        );
         return;
       }
     }
-    
+
     setPaymentModal({ open: true, amount, paymentId, month });
   };
 
   const handlePayAll = () => {
     if (!contractId && !debtorId) {
-        alert("Xatolik: Shartnoma ID topilmadi");
-        return;
+      alert("Xatolik: Shartnoma ID topilmadi");
+      return;
     }
 
     if (!customerId) {
-        alert("Xatolik: Mijoz ID topilmadi");
-        return;
+      alert("Xatolik: Mijoz ID topilmadi");
+      return;
     }
-    
-    // ✅ MUHIM: PENDING to'lovlar borligini tekshirish
+
     const hasPendingPayments = payments.some((p) => p.status === "PENDING");
     if (hasPendingPayments) {
-      console.warn("⚠️ PENDING to'lovlar mavjud, barcha qarzni to'lash mumkin emas!");
       alert("To'lovlar kutilmoqda. Kassa tasdiqini kuting.");
       return;
     }
-    
+
     setPaymentModal({ open: true, amount: remainingDebt || 0, isPayAll: true });
   };
 
   const handlePaymentSuccess = () => {
-    
     setPaymentModal({
       open: false,
       amount: 0,
@@ -233,25 +218,22 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
       paymentId: undefined,
       month: undefined,
     });
-    
-    // ✅ MUHIM: Backend payment yaratishi uchun biroz kutamiz
-    // Bu PENDING statusni to'g'ri ko'rsatish uchun zarur
+
     setTimeout(() => {
       if (onPaymentSuccess) {
         onPaymentSuccess();
       } else {
-        console.warn("⚠️ onPaymentSuccess callback not provided");
+        console.warn(" onPaymentSuccess callback not provided");
       }
     }, 500); // 500ms kutamiz - backend payment yaratguncha
   };
 
-  // ✅ YANGI: To'lovni kechiktirish funksiyasi
   const handlePostponePayment = (paymentItem: PaymentScheduleItem) => {
-    // Bu oyga tegishli payment record'ni topish
-    const targetPayment = payments.find(p => 
-      p.targetMonth === paymentItem.month && 
-      p.paymentType === "monthly" && 
-      !p.isPaid
+    const targetPayment = payments.find(
+      (p) =>
+        p.targetMonth === paymentItem.month &&
+        p.paymentType === "monthly" &&
+        !p.isPaid
     );
 
     if (targetPayment) {
@@ -261,7 +243,6 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
         loading: false,
       });
     } else {
-      // Agar payment record yo'q bo'lsa, virtual payment yaratamiz
       const virtualPayment: IPayment = {
         _id: `temp-${paymentItem.month}`,
         amount: paymentItem.amount,
@@ -283,28 +264,32 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
     }
   };
 
-  // ✅ YANGI: Kechiktirish tasdiqlash funksiyasi
   const handlePostponeConfirm = async (newDateTime: string) => {
     if (!postponeDialog.payment || !contractId) return;
 
-    setPostponeDialog(prev => ({ ...prev, loading: true }));
+    setPostponeDialog((prev) => ({ ...prev, loading: true }));
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/payment/postpone-payment`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${sessionStorage.getItem('accessToken') || localStorage.getItem('token')}`,
-        },
-        body: JSON.stringify({
-          contractId,
-          postponeDate: newDateTime,
-          reason: 'Mijozning so\'rovi bo\'yicha kechiktirildi',
-        }),
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/payment/postpone-payment`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${
+              sessionStorage.getItem("accessToken") ||
+              localStorage.getItem("token")
+            }`,
+          },
+          body: JSON.stringify({
+            contractId,
+            postponeDate: newDateTime,
+            reason: "Mijozning so'rovi bo'yicha kechiktirildi",
+          }),
+        }
+      );
 
       if (response.ok) {
-        
         setPostponeDialog({
           open: false,
           payment: null,
@@ -316,21 +301,18 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
           onPaymentSuccess();
         }
 
-        alert('To\'lov muvaffaqiyatli kechiktirildi!');
+        alert("To'lov muvaffaqiyatli kechiktirildi!");
       } else {
         const errorData = await response.json();
-        console.error('❌ Kechiktirish xatosi:', errorData);
-        alert(errorData.message || 'Kechiktirish amalga oshmadi');
+        alert(errorData.message || "Kechiktirish amalga oshmadi");
       }
     } catch (error) {
-      console.error('❌ API xatosi:', error);
-      alert('Xatolik yuz berdi. Qaytadan urinib ko\'ring.');
+      alert("Xatolik yuz berdi. Qaytadan urinib ko'ring.");
     } finally {
-      setPostponeDialog(prev => ({ ...prev, loading: false }));
+      setPostponeDialog((prev) => ({ ...prev, loading: false }));
     }
   };
 
-  // ✅ YANGI: Kechiktirish dialogini yopish
   const handlePostponeClose = () => {
     setPostponeDialog({
       open: false,
@@ -343,9 +325,9 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
     <>
       <Paper
         elevation={0}
-        sx={{ 
-          p: { xs: 1.5, sm: 2 }, 
-          border: 1, 
+        sx={{
+          p: { xs: 1.5, sm: 2 },
+          border: 1,
           borderColor: "divider",
           borderRadius: borderRadius.md,
           boxShadow: shadows.sm,
@@ -367,11 +349,10 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
               {period} oylik • {schedule.filter((s) => s.isPaid).length}/
               {schedule.length} to'langan
             </Typography>
-            {/* ✅ YANGI: prepaidBalance */}
             {prepaidBalance > 0 && (
-              <Box 
-                display="flex" 
-                alignItems="center" 
+              <Box
+                display="flex"
+                alignItems="center"
                 gap={0.5}
                 sx={{
                   mt: 0.5,
@@ -380,11 +361,15 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                   bgcolor: "success.lighter",
                   borderRadius: 1,
                   border: "1px solid",
-                  borderColor: "success.main"
+                  borderColor: "success.main",
                 }}
               >
                 <MdCheckCircle size={16} color="green" />
-                <Typography variant="caption" fontWeight={600} color="success.main">
+                <Typography
+                  variant="caption"
+                  fontWeight={600}
+                  color="success.main"
+                >
                   Oldindan: ${prepaidBalance.toFixed(2)}
                 </Typography>
               </Box>
@@ -398,11 +383,11 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
               onClick={handlePayAll}
               disabled={payments.some((p) => p.status === "PENDING")}
               sx={{
-                fontSize: { xs: '0.75rem', sm: '0.8125rem', md: '0.875rem' },
+                fontSize: { xs: "0.75rem", sm: "0.8125rem", md: "0.875rem" },
                 px: { xs: 1.5, sm: 2, md: 2.5 },
                 py: { xs: 0.75, sm: 1, md: 1 },
-                whiteSpace: 'nowrap',
-                minWidth: 'auto'
+                whiteSpace: "nowrap",
+                minWidth: "auto",
               }}
             >
               Barchasini to'lash ({remainingDebt.toLocaleString()} $)
@@ -410,16 +395,18 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
           )}
         </Box>
 
-        <TableContainer sx={{ 
-          overflowX: "auto",
-          "&::-webkit-scrollbar": {
-            height: { xs: "6px", sm: "8px" },
-          },
-          "&::-webkit-scrollbar-thumb": {
-            backgroundColor: "rgba(0,0,0,0.2)",
-            borderRadius: "4px",
-          },
-        }}>
+        <TableContainer
+          sx={{
+            overflowX: "auto",
+            "&::-webkit-scrollbar": {
+              height: { xs: "6px", sm: "8px" },
+            },
+            "&::-webkit-scrollbar-thumb": {
+              backgroundColor: "rgba(0,0,0,0.2)",
+              borderRadius: "4px",
+            },
+          }}
+        >
           <Table
             size="small"
             stickyHeader
@@ -528,9 +515,8 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
             </TableHead>
             <TableBody>
               {(() => {
-                let previousExcess = 0; // Oldingi oydan kelgan ortiqcha summa
+                let previousExcess = 0;
 
-                // ✅ To'lovlarni confirmedAt bo'yicha tartiblash (haqiqatda qachon to'langan)
                 const sortedPayments = [...payments].sort((a, b) => {
                   const dateA = a.confirmedAt
                     ? new Date(a.confirmedAt)
@@ -539,45 +525,30 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                     ? new Date(b.confirmedAt)
                     : new Date(b.date);
 
-                  // Agar confirmedAt bir xil bo'lsa, date bo'yicha tartiblash
                   if (dateA.getTime() === dateB.getTime()) {
                     return (
-                      new Date(a.date as string).getTime() - new Date(b.date as string).getTime()
+                      new Date(a.date as string).getTime() -
+                      new Date(b.date as string).getTime()
                     );
                   }
 
                   return dateA.getTime() - dateB.getTime();
                 });
 
-                // Oylik to'lovlarni ajratish (initial to'lovni chiqarib tashlash)
                 const monthlyPayments = sortedPayments.filter(
                   (p) => p.paymentType !== "initial" && p.isPaid
                 );
 
-                return schedule.map((item, _index) => { // Changed index to _index
+                return schedule.map((item, _index) => {
+                  // Changed index to _index
                   const isPast = new Date(item.date) < today;
 
-                  // ✅ PENDING to'lov borligini tekshirish - JUDA MUHIM!
-                  // Bu button'ni disable qiladi va qayta-qayta to'lovni oldini oladi
                   const finalPendingCheck = payments.some((p) => {
-                    // PENDING statusda bo'lgan va bu oyga tegishli to'lovni tekshirish
-                    return p.status === 'PENDING' && p.targetMonth === item.month;
+                    return (
+                      p.status === "PENDING" && p.targetMonth === item.month
+                    );
                   });
-                  
-                  if (item.month <= 3) {
-                    console.log(`🔍 [PaymentSchedule] Month ${item.month}:`, {
-                      finalPendingCheck,
-                      buttonWillBeDisabled: finalPendingCheck,
-                      pendingForThisMonth: payments.filter(p => p.status === 'PENDING' && p.targetMonth === item.month).map(p => ({
-                        _id: p._id,
-                        status: p.status,
-                        targetMonth: p.targetMonth,
-                        amount: p.amount
-                      }))
-                    });
-                  }
 
-                  // Haqiqiy to'lov ma'lumotlarini topish
                   let actualPayment;
 
                   if (item.isInitial) {
@@ -586,8 +557,6 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                       (p) => p.paymentType === "initial" && p.isPaid
                     );
                   } else {
-                    // Oylik to'lovlar uchun - index bo'yicha topish (0-indexed)
-                    // item.month 1 dan boshlanadi, shuning uchun -1 qilamiz
                     actualPayment = monthlyPayments[item.month - 1];
                   }
 
@@ -596,23 +565,20 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                     actualPayment?.excessAmount != null &&
                     actualPayment.excessAmount > 0.01;
 
-                  // ✅ KAM TO'LANGAN SUMMANI TEKSHIRISH (FIXED - ESKI TO'LOVLAR UCHUN HAM)
                   let remainingAmountToShow = 0;
                   let hasShortage = false;
 
-                  // ✅ TUZATISH: Bot'da PENDING to'lovlarni ham hisoblash
-                  // isPaid false bo'lsa ham, actualAmount mavjud bo'lishi mumkin
-                  if (actualPayment && (item.isPaid || actualPayment.status === 'PENDING')) {
-                    // PRIORITY 1: remainingAmount (backend'dan to'g'ridan-to'g'ri)
+                  if (
+                    actualPayment &&
+                    (item.isPaid || actualPayment.status === "PENDING")
+                  ) {
                     if (
                       actualPayment.remainingAmount != null &&
                       actualPayment.remainingAmount > 0.01
                     ) {
                       remainingAmountToShow = actualPayment.remainingAmount;
                       hasShortage = true;
-                    }
-                    // PRIORITY 2: actualAmount mavjud va expectedAmount'dan kam
-                    else if (
+                    } else if (
                       actualPayment.actualAmount != null &&
                       actualPayment.actualAmount !== undefined
                     ) {
@@ -641,12 +607,7 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                         remainingAmountToShow = diff;
                         hasShortage = true;
                       }
-                    }
-                    // PRIORITY 4: ESKI TO'LOVLAR UCHUN - amount'ni tekshirish
-                    // Agar actualAmount undefined bo'lsa, bu eski to'lov
-                    // Eski to'lovlarda amount = actualAmount deb hisoblaymiz
-                    // Agar amount < item.amount bo'lsa, kam to'langan
-                    else if (
+                    } else if (
                       actualPayment.actualAmount === undefined ||
                       actualPayment.actualAmount === null
                     ) {
@@ -661,13 +622,13 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                     }
                   }
 
-                  // ✅ HAQIQIY TO'LANGAN SUMMA
                   let actualPaidAmount = 0;
-                  // ✅ TUZATISH: Bot'da PENDING to'lovlarni ham ko'rsatish
-                  if ((item.isPaid || actualPayment?.status === 'PENDING') && actualPayment) {
-                    // ✅ TUZATISH #10: Har doim actualAmount ishlatish (Web bilan uyg'un)
-                    // actualAmount - haqiqatda to'langan summa (120$, 190$ emas)
-                    actualPaidAmount = actualPayment.actualAmount || actualPayment.amount || 0;
+                  if (
+                    (item.isPaid || actualPayment?.status === "PENDING") &&
+                    actualPayment
+                  ) {
+                    actualPaidAmount =
+                      actualPayment.actualAmount || actualPayment.amount || 0;
                   }
 
                   // Kechikish kunlarini hisoblash
@@ -681,24 +642,18 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                     );
                   }
 
-                  // KASKAD LOGIKA - Serverdan kelgan ma'lumotlarni ishlatish
                   const fromPreviousMonth = previousExcess; // Oldingi oydan kelgan
                   const monthlyPaymentAmount = item.amount; // Oylik to'lov
 
-                  // Agar actualPayment mavjud bo'lsa, serverdan kelgan expectedAmount ni ishlatamiz
                   const needToPay = actualPayment?.expectedAmount
                     ? actualPayment.expectedAmount
                     : Math.max(0, monthlyPaymentAmount - fromPreviousMonth); // To'lash kerak
 
                   const actuallyPaid = actualPaidAmount; // To'langan
 
-                  // Ortiqcha/Kam summani hisoblash
                   let toNextMonth = 0;
-                  // No longer need a separate 'shortage' variable here as remainingAmountToShow handles it
-                  // let shortage = 0; 
 
                   if (item.isPaid && actualPayment) {
-                    // Serverdan kelgan ma'lumotlarni ishlatish
                     if (
                       actualPayment.excessAmount &&
                       actualPayment.excessAmount > 0.01
@@ -708,14 +663,11 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                       actualPayment.remainingAmount &&
                       actualPayment.remainingAmount > 0.01
                     ) {
-                      // shortage = actualPayment.remainingAmount; // Handled by remainingAmountToShow
                     } else {
-                      // Agar server ma'lumoti bo'lmasa, o'zimiz hisoblash
                       const diff = actuallyPaid - needToPay;
                       if (diff > 0.01) {
                         toNextMonth = diff;
                       } else if (diff < -0.01) {
-                        // shortage = Math.abs(diff); // Handled by remainingAmountToShow
                       }
                     }
                   }
@@ -734,15 +686,15 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                           bgcolor: item.isPaid
                             ? "success.lighter"
                             : isPast && !item.isPaid
-                              ? "error.lighter"
-                              : "inherit",
+                            ? "error.lighter"
+                            : "inherit",
                           borderBottom: "1px solid rgba(224, 224, 224, 1)",
                           "&:hover": {
                             bgcolor: item.isPaid
                               ? "success.light"
                               : isPast && !item.isPaid
-                                ? "error.light"
-                                : "grey.100",
+                              ? "error.light"
+                              : "grey.100",
                           },
                           "&:last-child": {
                             borderBottom: "1px solid rgba(224, 224, 224, 1)",
@@ -759,10 +711,7 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                         >
                           <Box display="flex" alignItems="center" gap={0.5}>
                             {isPast && !item.isPaid && (
-                              <MdWarning
-                                size={16}
-                                color="#d32f2f"
-                              />
+                              <MdWarning size={16} color="#d32f2f" />
                             )}
                             <Typography
                               variant="body2"
@@ -775,14 +724,25 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                               }
                             >
                               {/* Mobile: faqat raqam, Desktop: to'liq */}
-                              <Box component="span" sx={{ display: { xs: 'inline', sm: 'none' } }}>
+                              <Box
+                                component="span"
+                                sx={{ display: { xs: "inline", sm: "none" } }}
+                              >
                                 {item.isInitial ? "0" : item.month}
                               </Box>
-                              <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>
-                                {item.isInitial ? "Boshlang'ich" : `${item.month}-oy`}
+                              <Box
+                                component="span"
+                                sx={{ display: { xs: "none", sm: "inline" } }}
+                              >
+                                {item.isInitial
+                                  ? "Boshlang'ich"
+                                  : `${item.month}-oy`}
                               </Box>
                               {isPast && !item.isPaid && (
-                                <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>
+                                <Box
+                                  component="span"
+                                  sx={{ display: { xs: "none", sm: "inline" } }}
+                                >
                                   {" (Kechikkan)"}
                                 </Box>
                               )}
@@ -825,16 +785,18 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                               {item.isInitial
                                 ? format(new Date(item.date), "dd.MM.yyyy")
                                 : actualPayment && actualPayment.confirmedAt
-                                  ? format(
-                                      new Date(actualPayment.confirmedAt as string),
-                                      "dd.MM.yyyy"
-                                    )
-                                  : actualPayment
-                                    ? format(
-                                        new Date(actualPayment.date as string),
-                                        "dd.MM.yyyy"
-                                      )
-                                    : format(new Date(item.date), "dd.MM.yyyy")}
+                                ? format(
+                                    new Date(
+                                      actualPayment.confirmedAt as string
+                                    ),
+                                    "dd.MM.yyyy"
+                                  )
+                                : actualPayment
+                                ? format(
+                                    new Date(actualPayment.date as string),
+                                    "dd.MM.yyyy"
+                                  )
+                                : format(new Date(item.date), "dd.MM.yyyy")}
                               {!item.isInitial &&
                                 delayDays > 0 &&
                                 ` (+${delayDays})`}
@@ -875,7 +837,12 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                         >
                           {item.isPaid ? (
                             <Box>
-                              <Box display="flex" alignItems="center" gap={0.5} justifyContent="flex-end">
+                              <Box
+                                display="flex"
+                                alignItems="center"
+                                gap={0.5}
+                                justifyContent="flex-end"
+                              >
                                 <Typography
                                   variant="body2"
                                   fontWeight="medium"
@@ -883,9 +850,11 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                                 >
                                   {actualPaidAmount.toLocaleString()} $
                                 </Typography>
-                                {/* ✅ YANGI: Status Badge */}
                                 {actualPayment?.status && (
-                                  <StatusBadge status={actualPayment.status} size="small" />
+                                  <StatusBadge
+                                    status={actualPayment.status}
+                                    size="small"
+                                  />
                                 )}
                               </Box>
                               {hasShortage && remainingAmountToShow > 0.01 && (
@@ -898,46 +867,51 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                                       px: 1,
                                       py: 0.25,
                                       bgcolor: "error.lighter",
-                                    borderRadius: 1,
-                                  }}
-                                >
-                                  <MdArrowDownward
-                                    size={14}
-                                    color="#d32f2f"
-                                  />
-                                  <Typography
-                                    variant="caption"
-                                    fontWeight="bold"
-                                    color="error.main"
-                                  >
-                                    {remainingAmountToShow.toLocaleString()} $
-                                    kam
-                                  </Typography>
-                                </Box>
-                                {/* ✅ YANGI: Keyingi to'lov sanasi */}
-                                {actualPayment?.nextPaymentDate && (
-                                  <Box
-                                    sx={{
-                                      display: "inline-flex",
-                                      alignItems: "center",
-                                      gap: 0.5,
-                                      mt: 0.5,
-                                      px: 1,
-                                      py: 0.25,
-                                      bgcolor: "warning.lighter",
                                       borderRadius: 1,
                                     }}
                                   >
+                                    <MdArrowDownward
+                                      size={14}
+                                      color="#d32f2f"
+                                    />
                                     <Typography
                                       variant="caption"
-                                      fontWeight="600"
-                                      color="warning.dark"
+                                      fontWeight="bold"
+                                      color="error.main"
                                     >
-                                      📅 {format(new Date(actualPayment.nextPaymentDate), "dd.MM.yyyy")}
+                                      {remainingAmountToShow.toLocaleString()} $
+                                      kam
                                     </Typography>
                                   </Box>
-                                )}
-                              </Box>
+                                  {actualPayment?.nextPaymentDate && (
+                                    <Box
+                                      sx={{
+                                        display: "inline-flex",
+                                        alignItems: "center",
+                                        gap: 0.5,
+                                        mt: 0.5,
+                                        px: 1,
+                                        py: 0.25,
+                                        bgcolor: "warning.lighter",
+                                        borderRadius: 1,
+                                      }}
+                                    >
+                                      <Typography
+                                        variant="caption"
+                                        fontWeight="600"
+                                        color="warning.dark"
+                                      >
+                                        <CalendarDays />{" "}
+                                        {format(
+                                          new Date(
+                                            actualPayment.nextPaymentDate
+                                          ),
+                                          "dd.MM.yyyy"
+                                        )}
+                                      </Typography>
+                                    </Box>
+                                  )}
+                                </Box>
                               )}
                               {hasExcess && actualPayment?.excessAmount && (
                                 <Box
@@ -952,10 +926,7 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                                     borderRadius: 1,
                                   }}
                                 >
-                                  <MdArrowUpward
-                                    size={14}
-                                    color="#0288d1"
-                                  />
+                                  <MdArrowUpward size={14} color="#0288d1" />
                                   <Typography
                                     variant="caption"
                                     fontWeight="bold"
@@ -988,15 +959,15 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                               item.isPaid
                                 ? "Paid"
                                 : isPast
-                                  ? "Kechikkan"
-                                  : "Kutilmoqda"
+                                ? "Kechikkan"
+                                : "Kutilmoqda"
                             }
                             color={
                               item.isPaid
                                 ? "success"
                                 : isPast
-                                  ? "error"
-                                  : "default"
+                                ? "error"
+                                : "default"
                             }
                             size="small"
                             sx={{
@@ -1018,38 +989,52 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                             }}
                           >
                             {finalPendingCheck ? (
-                              // ✅ PENDING bo'lsa, faqat badge ko'rsatamiz (Holat ustunida)
-                              <Typography variant="caption" color="text.secondary">
+                              <Typography
+                                variant="caption"
+                                color="text.secondary"
+                              >
                                 —
                               </Typography>
                             ) : !item.isPaid ? (
-                              <Box display="flex" flexDirection="column" gap={0.5}>
+                              <Box
+                                display="flex"
+                                flexDirection="column"
+                                gap={0.5}
+                              >
                                 <Button
                                   size="small"
                                   variant="contained"
                                   color={isPast ? "error" : "primary"}
-                                  onClick={() => handlePayment(item.amount, undefined, item.month)}
+                                  onClick={() =>
+                                    handlePayment(
+                                      item.amount,
+                                      undefined,
+                                      item.month
+                                    )
+                                  }
                                   startIcon={<MdPayment size={16} />}
                                   sx={{
-                                    fontSize: { xs: "0.7rem", sm: "0.8125rem", md: "0.75rem" },
+                                    fontSize: {
+                                      xs: "0.7rem",
+                                      sm: "0.8125rem",
+                                      md: "0.75rem",
+                                    },
                                     px: { xs: 1, sm: 2, md: 1.5 },
                                     py: { xs: 0.5, sm: 0.75, md: 0.5 },
                                     whiteSpace: "nowrap",
-                                    minWidth: { xs: 'auto', md: '120px' },
-                                    maxHeight: { md: '32px' }
+                                    minWidth: { xs: "auto", md: "120px" },
+                                    maxHeight: { md: "32px" },
                                   }}
                                 >
                                   To'lash
                                 </Button>
-                                
-                                {/* ✅ ASOSIY: Kechiktirish tugmasi */}
+
                                 {!item.isInitial && !readOnly && (
                                   <Button
                                     variant="contained"
                                     color="warning"
                                     fullWidth
                                     onClick={() => {
-                                      console.log('🕒 Kechiktirish tugmasi bosildi:', item);
                                       handlePostponePayment(item);
                                     }}
                                     startIcon={<MdWarning size={16} />}
@@ -1061,25 +1046,28 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                                       textTransform: "none",
                                       backgroundColor: "#ff9800",
                                       color: "white",
-                                      boxShadow: "0 2px 8px rgba(255, 152, 0, 0.3)",
+                                      boxShadow:
+                                        "0 2px 8px rgba(255, 152, 0, 0.3)",
                                       "&:hover": {
                                         backgroundColor: "#f57c00",
-                                        boxShadow: "0 4px 12px rgba(255, 152, 0, 0.4)",
+                                        boxShadow:
+                                          "0 4px 12px rgba(255, 152, 0, 0.4)",
                                       },
                                     }}
                                   >
-                                    🕒 KECHIKTIRISH
+                                    <Clock /> KECHIKTIRISH
                                   </Button>
                                 )}
                               </Box>
-                            ) : hasShortage && remainingAmountToShow > 0.01 && !finalPendingCheck ? (
+                            ) : hasShortage &&
+                              remainingAmountToShow > 0.01 &&
+                              !finalPendingCheck ? (
                               <Button
                                 size="small"
                                 variant="contained"
                                 color="error"
                                 onClick={() => {
                                   if (!actualPayment?._id) {
-                                    console.error("❌ Payment ID topilmadi!");
                                     alert(
                                       "Xatolik: To'lov ID topilmadi. Sahifani yangilang va qayta urinib ko'ring."
                                     );
@@ -1090,39 +1078,43 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                                     remainingAmountToShow,
                                     actualPayment._id
                                   );
-                              }}
-                              startIcon={<MdWarning size={16} />}
-                              sx={{
-                                animation: "pulse 2s infinite",
-                                "@keyframes pulse": {
-                                  "0%, 100%": { opacity: 1 },
-                                  "50%": { opacity: 0.7 },
-                                },
-                                fontSize: { xs: "0.65rem", sm: "0.75rem", md: "0.7rem" },
-                                px: { xs: 0.75, sm: 1.5, md: 1 },
-                                py: { xs: 0.5, sm: 0.75, md: 0.5 },
-                                whiteSpace: "nowrap",
-                                minWidth: { xs: 'auto', md: '120px' },
-                                maxHeight: { md: '32px' }
-                              }}
-                            >
-                              {`Qarz (${remainingAmountToShow.toLocaleString()} $)`}
-                            </Button>
-                          ) : (
-                            <Chip
-                              label="To'langan"
-                              color="success"
-                              size="small"
-                              icon={<MdCheckCircle size={16} />}
-                              sx={{
-                                fontSize: { xs: "0.65rem", sm: "0.75rem" },
-                                height: { xs: 24, sm: 32 },
-                              }}
-                            />
-                          )}
-                        </TableCell>
-                      )}
-                    </TableRow>
+                                }}
+                                startIcon={<MdWarning size={16} />}
+                                sx={{
+                                  animation: "pulse 2s infinite",
+                                  "@keyframes pulse": {
+                                    "0%, 100%": { opacity: 1 },
+                                    "50%": { opacity: 0.7 },
+                                  },
+                                  fontSize: {
+                                    xs: "0.65rem",
+                                    sm: "0.75rem",
+                                    md: "0.7rem",
+                                  },
+                                  px: { xs: 0.75, sm: 1.5, md: 1 },
+                                  py: { xs: 0.5, sm: 0.75, md: 0.5 },
+                                  whiteSpace: "nowrap",
+                                  minWidth: { xs: "auto", md: "120px" },
+                                  maxHeight: { md: "32px" },
+                                }}
+                              >
+                                {`Qarz (${remainingAmountToShow.toLocaleString()} $)`}
+                              </Button>
+                            ) : (
+                              <Chip
+                                label="To'langan"
+                                color="success"
+                                size="small"
+                                icon={<MdCheckCircle size={16} />}
+                                sx={{
+                                  fontSize: { xs: "0.65rem", sm: "0.75rem" },
+                                  height: { xs: 24, sm: 32 },
+                                }}
+                              />
+                            )}
+                          </TableCell>
+                        )}
+                      </TableRow>
                     </React.Fragment>
                   );
                 });
@@ -1151,7 +1143,11 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                 Umumiy
               </Typography>
               <Typography variant="body2" fontWeight="600">
-                {(monthlyPayment * period + (initialPayment || 0)).toLocaleString()} $
+                {(
+                  monthlyPayment * period +
+                  (initialPayment || 0)
+                ).toLocaleString()}{" "}
+                $
               </Typography>
             </Box>
             <Box>
@@ -1199,7 +1195,6 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
         />
       )}
 
-      {/* ✅ YANGI: To'lovni kechiktirish dialog */}
       {postponeDialog.open && postponeDialog.payment && (
         <PaymentPostponeDialog
           open={postponeDialog.open}

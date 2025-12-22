@@ -1,37 +1,20 @@
-/**
- * Real Telegram Web App Authentication
- * Production uchun haqiqiy Telegram auth tizimi
- */
-
-// Use existing telegram.d.ts types
-
-/**
- * Check if we're running inside Telegram Web App
- */
 export const isTelegramWebApp = (): boolean => {
   return !!(window?.Telegram?.WebApp?.initData);
 };
 
-/**
- * Get Telegram Web App instance
- */
 export const getTelegramWebApp = () => {
   if (!isTelegramWebApp()) return null;
   return window.Telegram!.WebApp!;
 };
 
-/**
- * Get Telegram initData for authentication
- */
+
 export const getTelegramInitData = (): string | null => {
   const webApp = getTelegramWebApp();
   if (!webApp || !webApp.initData) return null;
   return webApp.initData;
 };
 
-/**
- * Get user info from Telegram Web App
- */
+
 export const getTelegramUser = () => {
   const webApp = getTelegramWebApp();
   if (!webApp || !webApp.initDataUnsafe?.user) return null;
@@ -46,26 +29,18 @@ export const getTelegramUser = () => {
   };
 };
 
-/**
- * Initialize Telegram Web App
- */
 export const initTelegramWebApp = () => {
   const webApp = getTelegramWebApp();
   if (!webApp) return false;
   
-  // Notify Telegram that the Web App is ready
   webApp.ready();
-  
-  // Expand to full height
   webApp.expand();
   
   
   return true;
 };
 
-/**
- * Authenticate with backend using Telegram initData
- */
+
 export const authenticateWithTelegram = async (): Promise<{
   token: string;
   profile: any;
@@ -73,7 +48,7 @@ export const authenticateWithTelegram = async (): Promise<{
   const initData = getTelegramInitData();
   
   if (!initData) {
-    console.error('❌ [TELEGRAM] initData not found');
+    console.error(' [TELEGRAM] initData not found');
     return null;
   }
   
@@ -89,7 +64,7 @@ export const authenticateWithTelegram = async (): Promise<{
     
     if (!response.ok) {
       const errorData = await response.json();
-      console.error('❌ [TELEGRAM] Auth failed:', errorData);
+      console.error('[TELEGRAM] Auth failed:', errorData);
       return null;
     }
     
@@ -97,14 +72,12 @@ export const authenticateWithTelegram = async (): Promise<{
     
     return data;
   } catch (error) {
-    console.error('❌ [TELEGRAM] Auth error:', error);
+    console.error('[TELEGRAM] Auth error:', error);
     return null;
   }
 };
 
-/**
- * Check if user needs phone registration
- */
+
 export const checkUserRegistration = async (): Promise<boolean> => {
   const initData = getTelegramInitData();
   

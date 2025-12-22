@@ -2,7 +2,6 @@ import { Avatar, Box, IconButton, Typography } from "@mui/material";
 import { FC } from "react";
 import {
   MdArrowBack,
-  // , MdSchedule
 } from "react-icons/md";
 import { ICustomer } from "../../types/ICustomer";
 import { useAppDispatch } from "../../hooks/useAppDispatch";
@@ -11,13 +10,11 @@ import { setCustomerDetails } from "../../store/slices/customerSlice";
 interface IProps {
   customer: ICustomer;
   onClose: () => void;
-  // setExtensionDialogOpen: (value: boolean) => void;
 }
 
 const DialogHeader: FC<IProps> = ({
   customer,
   onClose,
-  // setExtensionDialogOpen,
 }) => {
   const dispatch = useAppDispatch();
   return (
@@ -55,13 +52,6 @@ const DialogHeader: FC<IProps> = ({
           </Box>
         </Box>
 
-        {/* <IconButton
-          size="large"
-          sx={{ pl: 0 }}
-          onClick={() => setExtensionDialogOpen(true)}
-        >
-          <MdSchedule />
-        </IconButton> */}
       </Box>
     </Box>
   );

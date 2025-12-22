@@ -1,6 +1,3 @@
-/**
- * API Response type'lari
- */
 
 export interface ApiResponse<T> {
   success: boolean;

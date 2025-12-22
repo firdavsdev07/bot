@@ -14,13 +14,9 @@ interface SmartButtonProps {
   size?: "small" | "medium" | "large";
   fullWidth?: boolean;
   tooltipText?: string; // For icon-only buttons
-  iconOnly?: boolean; // Force icon-only mode
+  iconOnly?: boolean; // Force icon
 }
 
-/**
- * SmartButton - Responsive button that automatically switches between
- * full text and icon-only based on screen size
- */
 const SmartButton: FC<SmartButtonProps> = ({
   children,
   icon,
@@ -37,10 +33,8 @@ const SmartButton: FC<SmartButtonProps> = ({
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   
-  // Auto-detect icon-only mode on mobile or when explicitly set
   const shouldShowIconOnly = iconOnly || (isMobile && icon && tooltipText);
 
-  // Loading icon
   const loadingIcon = (
     <CircularProgress 
       size={responsive.icon.small.xs} 
@@ -48,7 +42,6 @@ const SmartButton: FC<SmartButtonProps> = ({
     />
   );
 
-  // Icon-only button for mobile
   if (shouldShowIconOnly && icon) {
     const iconButton = (
       <IconButton
@@ -83,7 +76,6 @@ const SmartButton: FC<SmartButtonProps> = ({
     ) : iconButton;
   }
 
-  // Full button with text
   return (
     <Button
       variant={variant}
@@ -106,7 +98,6 @@ const SmartButton: FC<SmartButtonProps> = ({
         },
       }}
     >
-      {/* Hide text on mobile if icon exists */}
       <Box 
         component="span"
         sx={{

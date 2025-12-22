@@ -1,4 +1,5 @@
 import { Box, Typography } from "@mui/material";
+import { Check, TriangleAlert } from "lucide-react";
 import { FC } from "react";
 
 interface PaymentCalculatorProps {
@@ -32,7 +33,7 @@ export const PaymentCalculator: FC<PaymentCalculatorProps> = ({
       >
         <Box display="flex" alignItems="center" gap={1}>
           <Typography variant="h6" color="error.main">
-            ⚠️
+            <TriangleAlert />
           </Typography>
           <Typography variant="subtitle1" fontWeight="bold" color="error.main">
             Kam to'layapsiz
@@ -65,7 +66,7 @@ export const PaymentCalculator: FC<PaymentCalculatorProps> = ({
       >
         <Box display="flex" alignItems="center" gap={1}>
           <Typography variant="h6" color="info.main">
-            ✅
+            <Check />
           </Typography>
           <Typography variant="subtitle1" fontWeight="bold" color="info.main">
             Ko'p to'layapsiz

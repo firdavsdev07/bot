@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Paper,
@@ -7,20 +7,16 @@ import {
   CircularProgress,
   Alert,
   Stack,
-} from '@mui/material';
+} from "@mui/material";
+import { Phone, Telegram, Login } from "@mui/icons-material";
 import {
-  Phone,
-  Telegram,
-  Login,
-} from '@mui/icons-material';
-import { 
   isTelegramWebApp,
   initTelegramWebApp,
   authenticateWithTelegram,
   getTelegramUser,
-} from '../../utils/telegram-auth';
-import { useAlert } from '../AlertSystem';
-import { MockAuthDialog } from '../MockAuthDialog';
+} from "../../utils/telegram-auth";
+import { useAlert } from "../AlertSystem";
+import { MockAuthDialog } from "../MockAuthDialog";
 
 interface TelegramAuthProps {
   onAuthSuccess: (token: string, profile: any) => void;
@@ -28,7 +24,9 @@ interface TelegramAuthProps {
 
 const TelegramAuth: React.FC<TelegramAuthProps> = ({ onAuthSuccess }) => {
   const [loading, setLoading] = useState(true);
-  const [authStep, setAuthStep] = useState<'checking' | 'need_phone' | 'ready' | 'desktop_auth'>('checking');
+  const [authStep, setAuthStep] = useState<
+    "checking" | "need_phone" | "ready" | "desktop_auth"
+  >("checking");
   const [showMockAuth, setShowMockAuth] = useState(false);
   const { showError, showInfo } = useAlert();
 
@@ -40,35 +38,30 @@ const TelegramAuth: React.FC<TelegramAuthProps> = ({ onAuthSuccess }) => {
     try {
       // Check if we're in Telegram Web App
       if (!isTelegramWebApp()) {
-        // Desktop'da - mock auth ko'rsatish
-        console.log('🖥️ Desktop detected - showing mock auth');
-        setAuthStep('desktop_auth');
+        setAuthStep("desktop_auth");
         setLoading(false);
         return;
       }
-      
-      // Initialize Telegram Web App
+
       const isInitialized = initTelegramWebApp();
       if (!isInitialized) {
-        setAuthStep('need_phone');
+        setAuthStep("need_phone");
         setLoading(false);
         return;
       }
-      
+
       // Try to authenticate
       const authResult = await authenticateWithTelegram();
-      
+
       if (authResult) {
         onAuthSuccess(authResult.token, authResult.profile);
-        setAuthStep('ready');
+        setAuthStep("ready");
       } else {
-        setAuthStep('need_phone');
+        setAuthStep("need_phone");
       }
-      
     } catch (error) {
-      console.error('❌ [AUTH] Error during initialization:', error);
-      showError('Autentifikatsiya xatosi', 'Xatolik');
-      setAuthStep('need_phone');
+      showError("Autentifikatsiya xatosi", "Xatolik");
+      setAuthStep("need_phone");
     } finally {
       setLoading(false);
     }
@@ -77,8 +70,8 @@ const TelegramAuth: React.FC<TelegramAuthProps> = ({ onAuthSuccess }) => {
   const handlePhoneRegistration = () => {
     showInfo(
       `Iltimos, Telegram bot'ga /start buyrug'ini yuboring va telefon raqamingizni kiriting.\\\\n\\\\n` +
-      `Keyin bu sahifani yangilab ko'ring.`,
-      'Telefon raqam kerak'
+        `Keyin bu sahifani yangilab ko'ring.`,
+      "Telefon raqam kerak"
     );
   };
 
@@ -96,7 +89,7 @@ const TelegramAuth: React.FC<TelegramAuthProps> = ({ onAuthSuccess }) => {
         minHeight="100vh"
         bgcolor="background.default"
       >
-        <Paper elevation={3} sx={{ p: 4, textAlign: 'center', minWidth: 300 }}>
+        <Paper elevation={3} sx={{ p: 4, textAlign: "center", minWidth: 300 }}>
           <CircularProgress size={40} sx={{ mb: 2 }} />
           <Typography variant="h6" gutterBottom>
             Telegram Web App ishga tushirilmoqda...
@@ -109,9 +102,9 @@ const TelegramAuth: React.FC<TelegramAuthProps> = ({ onAuthSuccess }) => {
     );
   }
 
-  if (authStep === 'need_phone') {
+  if (authStep === "need_phone") {
     const user = getTelegramUser();
-    
+
     return (
       <Box
         display="flex"
@@ -121,23 +114,23 @@ const TelegramAuth: React.FC<TelegramAuthProps> = ({ onAuthSuccess }) => {
         bgcolor="background.default"
         p={2}
       >
-        <Paper elevation={3} sx={{ p: 4, maxWidth: 400, textAlign: 'center' }}>
+        <Paper elevation={3} sx={{ p: 4, maxWidth: 400, textAlign: "center" }}>
           <Telegram color="primary" sx={{ fontSize: 48, mb: 2 }} />
-          
+
           <Typography variant="h5" fontWeight={700} gutterBottom>
             Xush kelibsiz!
           </Typography>
-          
+
           {user && (
             <Typography variant="body1" sx={{ mb: 3 }}>
-              Salom, {user.firstName}! 👋
+              Salom, {user.firstName}!
             </Typography>
           )}
-          
+
           <Alert severity="info" sx={{ mb: 3 }}>
             Dasturdan foydalanish uchun telefon raqamingizni tasdiqlash kerak.
           </Alert>
-          
+
           <Stack spacing={2}>
             <Button
               variant="contained"
@@ -148,7 +141,7 @@ const TelegramAuth: React.FC<TelegramAuthProps> = ({ onAuthSuccess }) => {
             >
               Telefon raqamni tasdiqlash
             </Button>
-            
+
             <Button
               variant="outlined"
               size="small"
@@ -158,8 +151,12 @@ const TelegramAuth: React.FC<TelegramAuthProps> = ({ onAuthSuccess }) => {
               Qayta urinish
             </Button>
           </Stack>
-          
-          <Typography variant="caption" color="text.secondary" sx={{ mt: 2, display: 'block' }}>
+
+          <Typography
+            variant="caption"
+            color="text.secondary"
+            sx={{ mt: 2, display: "block" }}
+          >
             Faqat ro'yxatdan o'tgan managerlar kirishi mumkin
           </Typography>
         </Paper>
@@ -167,7 +164,7 @@ const TelegramAuth: React.FC<TelegramAuthProps> = ({ onAuthSuccess }) => {
     );
   }
 
-  if (authStep === 'desktop_auth') {
+  if (authStep === "desktop_auth") {
     return (
       <>
         <Box
@@ -178,21 +175,25 @@ const TelegramAuth: React.FC<TelegramAuthProps> = ({ onAuthSuccess }) => {
           bgcolor="background.default"
           p={2}
         >
-          <Paper elevation={3} sx={{ p: 4, maxWidth: 400, textAlign: 'center' }}>
+          <Paper
+            elevation={3}
+            sx={{ p: 4, maxWidth: 400, textAlign: "center" }}
+          >
             <Telegram color="primary" sx={{ fontSize: 48, mb: 2 }} />
-            
+
             <Typography variant="h5" fontWeight={700} gutterBottom>
               Desktop Manager Panel
             </Typography>
-            
+
             <Typography variant="body1" sx={{ mb: 3 }}>
-              Siz desktop'dan kirayotgansiz. Test uchun mock authentication ishlatiladi.
+              Siz desktop'dan kirayotgansiz. Test uchun mock authentication
+              ishlatiladi.
             </Typography>
-            
+
             <Alert severity="info" sx={{ mb: 3 }}>
               Production'da faqat Telegram bot orqali kirish mumkin.
             </Alert>
-            
+
             <Stack spacing={2}>
               <Button
                 variant="contained"
@@ -203,14 +204,14 @@ const TelegramAuth: React.FC<TelegramAuthProps> = ({ onAuthSuccess }) => {
               >
                 Desktop Login
               </Button>
-              
+
               <Typography variant="caption" color="text.secondary">
                 Telefonda ishlatish uchun Telegram bot'dan foydalaning
               </Typography>
             </Stack>
           </Paper>
         </Box>
-        
+
         <MockAuthDialog
           open={showMockAuth}
           onClose={(user) => {
@@ -225,7 +226,7 @@ const TelegramAuth: React.FC<TelegramAuthProps> = ({ onAuthSuccess }) => {
     );
   }
 
-  if (authStep === 'ready') {
+  if (authStep === "ready") {
     return (
       <Box
         display="flex"
@@ -234,7 +235,7 @@ const TelegramAuth: React.FC<TelegramAuthProps> = ({ onAuthSuccess }) => {
         minHeight="100vh"
         bgcolor="background.default"
       >
-        <Paper elevation={3} sx={{ p: 4, textAlign: 'center', minWidth: 300 }}>
+        <Paper elevation={3} sx={{ p: 4, textAlign: "center", minWidth: 300 }}>
           <CircularProgress size={40} sx={{ mb: 2 }} />
           <Typography variant="h6" gutterBottom>
             Manager panel yuklanmoqda...
