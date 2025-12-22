@@ -9,7 +9,7 @@ import {
   Stack,
   Chip,
 } from "@mui/material";
-import { Search, AlertTriangle, Calendar, X, CalendarDays, Lightbulb } from "lucide-react";
+import { Search, AlertTriangle, Calendar, X } from "lucide-react";
 import CustomerListItem from "../components/CustomerItem";
 import { ICustomer } from "../types/ICustomer";
 import { useAppDispatch } from "../hooks/useAppDispatch";
@@ -194,10 +194,10 @@ export default function DebtorsPage({ activeTabIndex, index }: TabPageProps) {
               }}
               helperText={
                 isShowAll
-                  ? `${<Search />} Barcha qarzdorlar ko'rsatilmoqda`
+                  ? "✅ Barcha kechikkan to'lovlar ko'rsatilmoqda"
                   : selectedDate
-                  ? `${<CalendarDays />} ${dayjs(selectedDate).format("DD-MMMM")}'gacha bo'lgan qarzdorlar (tartib: ${dayjs(selectedDate).format("DD")} → 1-kun)`
-                  : `${<Lightbulb />} Sanani tanlang (masalan, 21-dekabr tanlasangiz, 21→20→19...→1-dekabr tartibida ko'rinadi)`
+                  ? `📅 ${dayjs(selectedDate).format("DD-MMMM")} gacha bo'lgan BARCHA kechikkan to'lovlar`
+                  : "💡 Sanani tanlang - shu kungacha bo'lgan barcha kechikkan to'lovlar ko'rsatiladi"
               }
               FormHelperTextProps={{
                 sx: { 
