@@ -5,6 +5,7 @@ import {
   ICustomer,
   ICustomerContract,
   ICustomerDetails,
+  IDebtorContract,
 } from "../../types/ICustomer";
 
 type CustomerContracts = {
@@ -15,7 +16,7 @@ type CustomerContracts = {
 
 export interface UserState {
   customers: ICustomer[] | [];
-  customersDebtor: ICustomer[] | [];
+  customersDebtor: IDebtorContract[] | []; // ✅ YANGI: IDebtorContract type
   customersPayment: ICustomer[] | [];
   customerContracts: CustomerContracts;
   customer: ICustomer | null;
@@ -41,7 +42,7 @@ const authSlice = createSlice({
       state.isLoading = false;
       state.customers = action.payload;
     },
-    setCustomersDebtor(state, action: PayloadAction<ICustomer[] | []>) {
+    setCustomersDebtor(state, action: PayloadAction<IDebtorContract[] | []>) { // ✅ YANGI: IDebtorContract type
       state.isLoading = false;
       state.customersDebtor = action.payload;
     },

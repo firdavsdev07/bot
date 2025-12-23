@@ -8,16 +8,20 @@ import {
   Box,
   Stack,
   Chip,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  IconButton,
 } from "@mui/material";
 import { Search, AlertTriangle, Calendar, X } from "lucide-react";
-import CustomerListItem from "../components/CustomerItem";
-import { ICustomer } from "../types/ICustomer";
+import ContractDebtorItem from "../components/ContractDebtorItem";
+import { IDebtorContract, ICustomerContract } from "../types/ICustomer";
 import { useAppDispatch } from "../hooks/useAppDispatch";
 import { useSelector } from "react-redux";
 import { RootState } from "../store";
-import { getCustomersDebtor } from "../store/actions/customerActions";
+import { getCustomersDebtor, getContract } from "../store/actions/customerActions";
 import Loader from "../components/Loader/Loader";
-import CustomerDialog from "../components/CustomerDialog/CustomerDialog";
+import PaymentSchedule from "../components/PaymentSchedule/PaymentSchedule";
 import { borderRadius, shadows } from "../theme/colors";
 import { useDebounce } from "../hooks/useDebounce";
 import dayjs from "../utils/dayjs-config";
@@ -33,7 +37,9 @@ export default function DebtorsPage({ activeTabIndex, index }: TabPageProps) {
     (state: RootState) => state.customer
   );
 
-  const [selectedClient, setSelectedClient] = useState<ICustomer | null>(null);
+  const [selectedContract, setSelectedContract] = useState<IDebtorContract | null>(null);
+  const [contractDetails, setContractDetails] = useState<ICustomerContract | null>(null);
+  const [loadingDetails, setLoadingDetails] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedDate, setSelectedDate] = useState<string>("");
   const debouncedSearch = useDebounce(searchTerm, 300);
@@ -54,21 +60,50 @@ export default function DebtorsPage({ activeTabIndex, index }: TabPageProps) {
   };
 
   const filteredDebtors = useMemo(() => {
-    return customersDebtor.filter((customer) => {
-      const fullName = `${customer.firstName} ${customer.lastName}`.toLowerCase();
+    return customersDebtor.filter((contract) => {
+      const fullName = `${contract.firstName} ${contract.lastName}`.toLowerCase();
+      const productName = contract.productName?.toLowerCase() || "";
       return (
         fullName.includes(debouncedSearch.toLowerCase()) ||
-        customer.phoneNumber.includes(debouncedSearch)
+        contract.phoneNumber.includes(debouncedSearch) ||
+        productName.includes(debouncedSearch.toLowerCase())
       );
     });
   }, [customersDebtor, debouncedSearch]);
 
-  const handleClientClick = (client: ICustomer) => {
-    setSelectedClient(client);
+  const handleContractClick = async (contract: IDebtorContract) => {
+    setSelectedContract(contract);
+    setLoadingDetails(true);
+    
+    try {
+      // Mijozning barcha shartnomalarini yuklash
+      const result = await dispatch(getContract(contract.customerId));
+      
+      if (result.payload) {
+        // Tanlangan shartnomani topish
+        const allContracts = [
+          ...(result.payload.allContracts || []),
+          ...(result.payload.debtorContracts || []),
+        ];
+        
+        const foundContract = allContracts.find(
+          (c: ICustomerContract) => c._id === contract.contractId
+        );
+        
+        if (foundContract) {
+          setContractDetails(foundContract);
+        }
+      }
+    } catch (error) {
+      console.error("Shartnoma detaillarini yuklashda xatolik:", error);
+    } finally {
+      setLoadingDetails(false);
+    }
   };
 
   const handleCloseDetails = () => {
-    setSelectedClient(null);
+    setSelectedContract(null);
+    setContractDetails(null);
   };
 
   if (isLoading) {
@@ -233,12 +268,11 @@ export default function DebtorsPage({ activeTabIndex, index }: TabPageProps) {
       {filteredDebtors.length > 0 ? (
         <>
           <List disablePadding>
-            {filteredDebtors.map((customer) => (
-              <CustomerListItem
-                key={customer._id}
-                customer={customer}
-                onClick={handleClientClick}
-                showDebtBadge
+            {filteredDebtors.map((contract) => (
+              <ContractDebtorItem
+                key={contract._id}
+                contract={contract}
+                onClick={handleContractClick}
               />
             ))}
           </List>
@@ -253,22 +287,59 @@ export default function DebtorsPage({ activeTabIndex, index }: TabPageProps) {
           }}
         >
           <Typography variant="h6" color="text.secondary" gutterBottom>
-            Qarzdor mijozlar topilmadi
+            Qarzdor shartnomalar topilmadi
           </Typography>
           <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
             {selectedDate 
-              ? `${dayjs(selectedDate).format("DD MMMM YYYY")} sanasiga qadar qarzdor mijozlar yo'q`
-              : "Bugungi kunga qadar qarzdor mijozlar yo'q"}
+              ? `${dayjs(selectedDate).format("DD MMMM YYYY")} sanasiga qadar qarzdor shartnomalar yo'q`
+              : "Bugungi kunga qadar qarzdor shartnomalar yo'q"}
           </Typography>
         </Paper>
       )}
 
-      <CustomerDialog
-        open={!!selectedClient}
-        customer={selectedClient}
+      <Dialog
+        open={!!selectedContract}
         onClose={handleCloseDetails}
-        isDebtorPage
-      />
+        maxWidth="md"
+        fullWidth
+        fullScreen
+      >
+        <DialogTitle sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <Typography variant="h6">To'lov jadvali</Typography>
+          <IconButton onClick={handleCloseDetails}>
+            <X size={24} />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent>
+          {loadingDetails ? (
+            <Box sx={{ display: "flex", justifyContent: "center", py: 4 }}>
+              <Loader />
+            </Box>
+          ) : contractDetails && selectedContract ? (
+            <PaymentSchedule
+              contractId={selectedContract.contractId}
+              customerId={selectedContract.customerId}
+              startDate={contractDetails.startDate || ""}
+              monthlyPayment={contractDetails.monthlyPayment || 0}
+              period={contractDetails.period || contractDetails.durationMonths || 0}
+              initialPayment={contractDetails.initialPayment}
+              initialPaymentDueDate={contractDetails.initialPaymentDueDate}
+              remainingDebt={contractDetails.remainingDebt}
+              totalPaid={contractDetails.totalPaid}
+              prepaidBalance={contractDetails.prepaidBalance}
+              payments={contractDetails.payments}
+              onPaymentSuccess={() => {
+                handleCloseDetails();
+                dispatch(getCustomersDebtor(selectedDate));
+              }}
+            />
+          ) : (
+            <Typography color="text.secondary" align="center" sx={{ py: 4 }}>
+              Shartnoma ma'lumotlari yuklanmadi
+            </Typography>
+          )}
+        </DialogContent>
+      </Dialog>
     </Box>
   );
 }

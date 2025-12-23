@@ -56,3 +56,19 @@ export type ICustomerContract = {
     targetMonth?: number;
   }>;
 };
+
+// ✅ YANGI: Qarzdor shartnomalar uchun type (har bir shartnoma alohida)
+export type IDebtorContract = {
+  _id: string; // Contract ID
+  customerId: string; // Customer ID
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
+  productName: string; // ✅ Shartnoma nomi
+  contractId: string; // ✅ Shartnoma ID (click uchun)
+  remainingDebt: number; // ✅ Shu shartnomaning qarzi
+  delayDays: number; // ✅ Shu shartnomaning kechikishi
+  nextPaymentDate: string;
+  totalPrice: number;
+  totalPaid: number;
+};
