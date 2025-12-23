@@ -28,7 +28,7 @@ export interface IPayment {
     confirmedAt?: Date | string;
     notes?: string;
     targetMonth?: number; 
-    reminderDate?: string | Date; 
+ 
     nextPaymentDate?: string | Date; 
     customerId?: any;
     managerId?: any;

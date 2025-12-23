@@ -25,12 +25,10 @@ import {
   MdArrowDownward,
   MdExpandMore,
   MdExpandLess,
-  MdNotifications,
 } from "react-icons/md";
 import { AlertCircle, Clock } from "lucide-react";
 import { useAlert } from "../AlertSystem";
 import PaymentModal from "../PaymentModal/PaymentModal";
-import PaymentPostponeDialog from "../PaymentPostponeDialog";
 import { IPayment } from "../../types/IPayment";
 import { StatusBadge } from "./StatusBadge";
 
@@ -79,7 +77,7 @@ const PaymentScheduleNew: FC<PaymentScheduleProps> = ({
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [expandedMonth, setExpandedMonth] = useState<number | null>(null);
-  const { showError, showWarning, showSuccess } = useAlert();
+  const { showError, showWarning } = useAlert();
   const [paymentModal, setPaymentModal] = useState<{
     open: boolean;
     amount: number;
@@ -98,16 +96,6 @@ const PaymentScheduleNew: FC<PaymentScheduleProps> = ({
     originalAmount: undefined,
   });
 
-  // ✅ YANGI: To'lovni kechiktirish uchun state
-  const [postponeDialog, setPostponeDialog] = useState<{
-    open: boolean;
-    payment: IPayment | null;
-    loading: boolean;
-  }>({
-    open: false,
-    payment: null,
-    loading: false,
-  });
 
   // To'lov jadvalini yaratish
   const generateSchedule = (): PaymentScheduleItem[] => {
@@ -237,168 +225,6 @@ const PaymentScheduleNew: FC<PaymentScheduleProps> = ({
   };
 
   // ✅ TUZATILDI: To'lovni kechiktirish funksiyasi
-  const handlePostponePayment = async (paymentItem: PaymentScheduleItem) => {
-    
-    // O'sha oy uchun haqiqiy payment topish
-    const targetPayment = payments.find(p => 
-      p.targetMonth === paymentItem.month && 
-      p.paymentType === "monthly" && 
-      !p.isPaid
-    );
-
-    // ✅ YANGI: Backend'dan o'sha oy uchun reminder tekshiruvi
-    let existingReminderDate = null;
-    
-    if (contractId) {
-      try {
-        // ✅ TUZATISH: Mock auth token olish
-        const mockToken = import.meta.env.VITE_MOCK_USER_ID ? 
-          `mock_token_${import.meta.env.VITE_MOCK_USER_ID}` : 
-          sessionStorage.getItem('accessToken') || localStorage.getItem('token');
-          
-        const apiUrl = `${import.meta.env.VITE_API_URL}/reminder/check-month?contractId=${contractId}&targetMonth=${paymentItem.month}`;
-        
-        console.log('🔍 DEBUG API Call:', {
-          apiUrl,
-          token: mockToken ? `${mockToken.substring(0, 20)}...` : 'NO_TOKEN',
-          contractId,
-          targetMonth: paymentItem.month,
-          isMockAuth: !!import.meta.env.VITE_MOCK_USER_ID,
-        });
-
-        const response = await fetch(apiUrl, {
-          headers: {
-            'Authorization': `Bearer ${mockToken}`,
-          },
-        });
-        
-        
-        if (response.ok) {
-          const data = await response.json();
-          existingReminderDate = data.reminderDate;
-        } else {
-          const errorData = await response.text();
-          console.error(`❌ API Error ${response.status}:`, errorData);
-        }
-      } catch (error) {
-        console.warn(`⚠️ Reminder tekshiruvi muvaffaqiyatsiz month ${paymentItem.month}:`, error);
-      }
-    }
-
-    console.log(`📊 Month ${paymentItem.month} uchun ma'lumotlar:`, {
-      targetPayment: targetPayment ? { _id: targetPayment._id, targetMonth: targetPayment.targetMonth } : null,
-      existingReminderDate: existingReminderDate,
-    });
-
-    if (targetPayment) {
-      setPostponeDialog({
-        open: true,
-        payment: {
-          ...targetPayment,
-          reminderDate: existingReminderDate || targetPayment.reminderDate, // ✅ TUZATISH
-        },
-        loading: false,
-      });
-    } else {
-      // Virtual payment yaratish - haqiqiy to'lov yo'q uchun
-      const virtualPayment: IPayment = {
-        _id: `temp-${paymentItem.month}`,
-        amount: paymentItem.amount,
-        date: paymentItem.date,
-        isPaid: false,
-        paymentType: "monthly",
-        targetMonth: paymentItem.month, // ✅ MUHIM: To'g'ri oy raqami
-        status: "PENDING",
-        notes: {} as any,
-        customerId: {} as any,
-        managerId: {} as any,
-        reminderDate: existingReminderDate, // ✅ YANGI: Mavjud reminder
-      };
-
-
-      setPostponeDialog({
-        open: true,
-        payment: virtualPayment,
-        loading: false,
-      });
-    }
-  };
-
-  // ✅ YANGI: Kechiktirish tasdiqlash funksiyasi
-  const handlePostponeConfirm = async (newDateTime: string) => {
-    if (!postponeDialog.payment || !contractId) return;
-
-    console.log('🚀 [API] Eslatma yuborilmoqda:', {
-      contractId,
-      postponeDate: newDateTime,
-      reason: 'Mijozning so\'rovi bo\'yicha eslatma o\'rnatildi',
-      apiUrl: `${import.meta.env.VITE_API_URL}/payment/postpone-payment`
-    });
-
-    setPostponeDialog(prev => ({ ...prev, loading: true }));
-
-    try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/payment/postpone-payment`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${sessionStorage.getItem('accessToken') || localStorage.getItem('token')}`,
-        },
-        body: JSON.stringify({
-          contractId,
-          postponeDate: (() => {
-            // ✅ Local vaqtni UTC'ga to'g'ri aylantirish
-            const localDate = new Date(newDateTime);
-            // Local timezone offset'ni hisobga olish
-            const timezoneOffset = localDate.getTimezoneOffset() * 60000;
-            const utcDate = new Date(localDate.getTime() - timezoneOffset);
-            return utcDate.toISOString();
-          })(),
-          reason: 'Mijozning so\'rovi bo\'yicha eslatma o\'rnatildi',
-          targetMonth: postponeDialog.payment?.targetMonth, // ✅ YANGI: Qaysi oy uchun
-        }),
-      });
-
-      const responseData = await response.json();
-      console.log('📤 [API RESPONSE]:', {
-        status: response.status,
-        ok: response.ok,
-        data: responseData
-      });
-
-      if (response.ok) {
-        
-        setPostponeDialog({
-          open: false,
-          payment: null,
-          loading: false,
-        });
-
-        if (onPaymentSuccess) {
-          onPaymentSuccess();
-        }
-
-        showSuccess('Eslatma vaqti muvaffaqiyatli belgilandi!', 'Muvaffaqiyat');
-      } else {
-        console.error('❌ Eslatma xatosi:', responseData);
-        showError(responseData.message || 'Eslatma o\'rnatishda xatolik', 'Xatolik');
-      }
-    } catch (error) {
-      console.error('❌ API xatosi:', error);
-      showError('Xatolik yuz berdi. Qaytadan urinib ko\'ring.', 'Xatolik');
-    } finally {
-      setPostponeDialog(prev => ({ ...prev, loading: false }));
-    }
-  };
-
-  // ✅ YANGI: Kechiktirish dialogini yopish
-  const handlePostponeClose = () => {
-    setPostponeDialog({
-      open: false,
-      payment: null,
-      loading: false,
-    });
-  };
 
   return (
     <>
@@ -738,21 +564,6 @@ const PaymentScheduleNew: FC<PaymentScheduleProps> = ({
                             {hasPendingPayment ? (isMobile ? "⏳" : "Kutish") : "To'la"}
                           </Button>
                           
-                          {/* Eslatma tugmasi - faqat desktop'da ko'rsatish */}
-                          {!isMobile && !item.isInitial && !hasPendingPayment && (
-                            <IconButton
-                              size="small"
-                              color="warning"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                e.preventDefault();
-                                handlePostponePayment(item);
-                              }}
-                              sx={{ ml: 0.5 }}
-                            >
-                              <MdNotifications size={16} />
-                            </IconButton>
-                          )}
                         </>
                       )}
                       
@@ -866,22 +677,6 @@ const PaymentScheduleNew: FC<PaymentScheduleProps> = ({
                             </Typography>
                           )}
                           
-                          {/* Mobile eslatma tugmasi */}
-                          {isMobile && !readOnly && !item.isPaid && !item.isInitial && !hasPendingPayment && (contractId || debtorId) && (
-                            <Button
-                              size="small"
-                              variant="outlined"
-                              color="warning"
-                              startIcon={<MdNotifications size={14} />}
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handlePostponePayment(item);
-                              }}
-                              sx={{ alignSelf: "flex-start", fontSize: "0.7rem" }}
-                            >
-                              Eslatma o'rnatish
-                            </Button>
-                          )}
                         </Stack>
                       </Box>
                     </Collapse>
@@ -923,21 +718,6 @@ const PaymentScheduleNew: FC<PaymentScheduleProps> = ({
         />
       )}
 
-      {/* ✅ TUZATILDI: To'lovni kechiktirish dialog */}
-      {postponeDialog.open && postponeDialog.payment && (
-        <PaymentPostponeDialog
-          open={postponeDialog.open}
-          onClose={handlePostponeClose}
-          onConfirm={handlePostponeConfirm}
-          payment={{
-            amount: postponeDialog.payment.amount,
-            date: postponeDialog.payment.date.toString(),
-            isPostponedOnce: !!postponeDialog.payment.reminderDate, // ✅ TUZATISH: Reminder mavjudligini tekshirish
-          }}
-          loading={postponeDialog.loading}
-          currentPostponeDate={postponeDialog.payment.reminderDate?.toString()} // ✅ TUZATILDI: Har oy uchun alohida reminder
-        />
-      )}
     </>
   );
 };

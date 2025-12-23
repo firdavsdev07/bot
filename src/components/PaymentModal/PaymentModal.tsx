@@ -190,21 +190,6 @@ const PaymentModal: FC<PaymentModalProps> = ({
         }
       }
 
-      if (isUnderpaid && nextPaymentDate && contractId && targetMonth) {
-        try {
-          await authApi.post(
-            "/payment/postpone-payment",
-            {
-              contractId: contractId,
-              postponeDate: new Date(nextPaymentDate).toISOString(),
-              reason: `Kam to'lov: $${remainingDebt.toFixed(2)} qoldi`,
-              targetMonth: targetMonth,
-            }
-          );
-        } catch (reminderErr: any) {
-          console.error(reminderErr);
-        }
-      }
 
       onSuccess();
 
