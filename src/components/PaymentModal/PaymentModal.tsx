@@ -492,11 +492,7 @@ const PaymentModal: FC<PaymentModalProps> = ({
                   }
                   InputProps={{
                     inputProps: {
-                      min: new Date(
-                        new Date().setHours(new Date().getHours() + 1)
-                      )
-                        .toISOString()
-                        .slice(0, 16), // Hozirdan 1 soat keyin
+                      min: new Date().toISOString().slice(0, 16), // Bugundan boshlab
                     },
                   }}
                   sx={{
