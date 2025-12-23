@@ -36,34 +36,23 @@ export default function DebtorsPage({ activeTabIndex, index }: TabPageProps) {
   const [selectedClient, setSelectedClient] = useState<ICustomer | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedDate, setSelectedDate] = useState<string>("");
-  const [isShowAll, setIsShowAll] = useState<boolean>(true);
   const debouncedSearch = useDebounce(searchTerm, 300);
 
+  // ✅ Soddalashtirilgan: har safar sahifa ochilganda yoki sana o'zgarganda qayta yuklash
   useEffect(() => {
     if (activeTabIndex === index) {
-      // ✅ TUZATISH: Bo'sh string yuborilmasligi uchun qo'shimcha tekshiruv
-      if (isShowAll || !selectedDate || selectedDate.trim() === "") {
-        dispatch(getCustomersDebtor());
-      } else {
-        dispatch(getCustomersDebtor(selectedDate));
-      }
+      // Bo'sh sana bo'lsa yoki bo'sh string bo'lsa - undefined yuborish (backend default bugungi kun ishlatadi)
+      const dateFilter = selectedDate && selectedDate.trim() !== "" ? selectedDate : undefined;
+      dispatch(getCustomersDebtor(dateFilter));
     }
-  }, [activeTabIndex, index, selectedDate, isShowAll, dispatch]);
+  }, [activeTabIndex, index, selectedDate, dispatch]);
 
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newDate = e.target.value;
-    setSelectedDate(newDate);
-    // ✅ TUZATISH: Agar sana bo'sh bo'lsa, "hammasini ko'rsatish" holatiga o'tish
-    if (!newDate || newDate.trim() === "") {
-      setIsShowAll(true);
-    } else {
-      setIsShowAll(false);
-    }
+    setSelectedDate(e.target.value);
   };
 
   const handleShowAll = () => {
     setSelectedDate("");
-    setIsShowAll(true);
   };
 
   const filteredDebtors = useMemo(() => {
@@ -149,9 +138,9 @@ export default function DebtorsPage({ activeTabIndex, index }: TabPageProps) {
                 Sana bo'yicha filter
               </Typography>
               
-              {!isShowAll && (
+              {selectedDate && (
                 <Chip
-                  label="Hammasini ko'rsatish"
+                  label="Tozalash"
                   onClick={handleShowAll}
                   size="small"
                   color="error"
@@ -199,16 +188,14 @@ export default function DebtorsPage({ activeTabIndex, index }: TabPageProps) {
                 },
               }}
               helperText={
-                isShowAll
-                  ? "✅ Barcha kechikkan to'lovlar ko'rsatilmoqda"
-                  : selectedDate
-                  ? `📅 ${dayjs(selectedDate).format("DD-MMMM")} gacha bo'lgan BARCHA kechikkan to'lovlar`
-                  : "💡 Sanani tanlang - shu kungacha bo'lgan barcha kechikkan to'lovlar ko'rsatiladi"
+                selectedDate
+                  ? `📅 ${dayjs(selectedDate).format("DD MMMM YYYY")} gacha bo'lgan kechikkan to'lovlar`
+                  : "✅ Bugungi kungacha barcha kechikkan to'lovlar ko'rsatilmoqda"
               }
               FormHelperTextProps={{
                 sx: { 
                   fontSize: "0.75rem",
-                  color: isShowAll ? "success.main" : selectedDate ? "error.main" : "text.secondary",
+                  color: selectedDate ? "error.main" : "success.main",
                   fontWeight: 500,
                   mt: 0.75,
                 }

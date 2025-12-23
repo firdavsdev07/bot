@@ -36,22 +36,19 @@ export const getCustomers = (): AppThunk => async (dispatch) => {
 export const getCustomersDebtor = (filterDate?: string): AppThunk => async (dispatch) => {
   dispatch(start());
   try {
-    // ✅ TUZATISH: Bo'sh string tekshiruvi qo'shish
-    const cleanDate = filterDate && filterDate.trim() !== "" ? filterDate.trim() : undefined;
-    const url = cleanDate
-      ? `/customer/get-debtor?date=${cleanDate}`
+    // ✅ Sodda logika: agar sana bor bo'lsa query param qo'shamiz
+    const url = filterDate 
+      ? `/customer/get-debtor?date=${filterDate}`
       : "/customer/get-debtor";
 
-    console.log("🔍 Fetching debtors with URL:", url);
-    console.log("📅 filterDate:", filterDate, "-> cleanDate:", cleanDate);
+    console.log("🔍 Fetching debtors:", url);
 
     const res = await authApi.get(url);
     const { data } = res;
 
-    console.log("✅ Response received:", data);
-    console.log("📊 Debtors count:", data.data?.length);
+    console.log(`✅ Loaded ${data.data?.length || 0} debtors`);
 
-    dispatch(setCustomersDebtor(data.data));
+    dispatch(setCustomersDebtor(data.data || []));
   } catch (error) {
     console.error("❌ Error fetching debtors:", error);
     dispatch(failure());
