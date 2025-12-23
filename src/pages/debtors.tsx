@@ -41,7 +41,8 @@ export default function DebtorsPage({ activeTabIndex, index }: TabPageProps) {
 
   useEffect(() => {
     if (activeTabIndex === index) {
-      if (isShowAll) {
+      // ✅ TUZATISH: Bo'sh string yuborilmasligi uchun qo'shimcha tekshiruv
+      if (isShowAll || !selectedDate || selectedDate.trim() === "") {
         dispatch(getCustomersDebtor());
       } else {
         dispatch(getCustomersDebtor(selectedDate));
@@ -52,7 +53,12 @@ export default function DebtorsPage({ activeTabIndex, index }: TabPageProps) {
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newDate = e.target.value;
     setSelectedDate(newDate);
-    setIsShowAll(false);
+    // ✅ TUZATISH: Agar sana bo'sh bo'lsa, "hammasini ko'rsatish" holatiga o'tish
+    if (!newDate || newDate.trim() === "") {
+      setIsShowAll(true);
+    } else {
+      setIsShowAll(false);
+    }
   };
 
   const handleShowAll = () => {
