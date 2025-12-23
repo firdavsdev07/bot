@@ -83,7 +83,7 @@ const theme = createTheme({
   },
 
   shape: {
-    borderRadius: 6,
+    borderRadius: 4,
   },
 
   components: {
@@ -98,8 +98,8 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           border: "none",
-          boxShadow: "0 1px 3px rgba(0, 0, 0, 0.08)",
-          borderRadius: 8,
+          boxShadow: "0 1px 2px rgba(0, 0, 0, 0.06)",
+          borderRadius: 6,
           transition: "all 0.2s ease",
         },
       },
@@ -121,14 +121,14 @@ const theme = createTheme({
     MuiPaper: {
       styleOverrides: {
         root: {
-          borderRadius: 8,
+          borderRadius: 6,
         },
       },
     },
     MuiButton: {
       styleOverrides: {
         root: {
-          borderRadius: 6,
+          borderRadius: 4,
           boxShadow: "none",
           textTransform: "none",
           fontWeight: 600,
@@ -139,7 +139,7 @@ const theme = createTheme({
     MuiInputBase: {
       styleOverrides: {
         root: {
-          borderRadius: 6,
+          borderRadius: 4,
           backgroundColor: "#fff",
           paddingLeft: "12px",
         },

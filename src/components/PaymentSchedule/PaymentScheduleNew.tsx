@@ -8,7 +8,6 @@ import {
   Stack,
   Collapse,
   IconButton,
-  LinearProgress,
   Table,
   TableBody,
   TableCell,
@@ -150,7 +149,6 @@ const PaymentScheduleNew: FC<PaymentScheduleProps> = ({
   const schedule = generateSchedule();
   const today = new Date();
   const paidCount = schedule.filter((s) => s.isPaid).length;
-  const progress = (paidCount / schedule.length) * 100;
 
   const handlePayment = (amount: number, paymentId?: string, month?: number, isDebtPayment = false, originalAmount?: number) => {
     if (!contractId && !debtorId) {
@@ -231,50 +229,26 @@ const PaymentScheduleNew: FC<PaymentScheduleProps> = ({
         sx={{
           border: 1,
           borderColor: "divider",
-          borderRadius: 2,
+          borderRadius: 1,
           overflow: "hidden",
         }}
       >
         {/* Header */}
         <Box
           sx={{
-            p: 2,
+            p: 1.5,
             bgcolor: "primary.main",
             color: "white",
           }}
         >
-          <Stack direction="row" justifyContent="space-between" alignItems="center" mb={1}>
-            <Typography variant="h6" fontWeight={700}>
+          <Stack direction="row" justifyContent="space-between" alignItems="center">
+            <Typography variant="subtitle1" fontWeight={600}>
               To'lov jadvali
             </Typography>
-            <Chip
-              label={`${paidCount}/${schedule.length}`}
-              size="small"
-              sx={{
-                bgcolor: "rgba(255,255,255,0.2)",
-                color: "white",
-                fontWeight: 700,
-              }}
-            />
+            <Typography variant="body2" fontWeight={600}>
+              {paidCount}/{schedule.length}
+            </Typography>
           </Stack>
-          
-          <LinearProgress
-            variant="determinate"
-            value={progress}
-            sx={{
-              height: 8,
-              borderRadius: 4,
-              bgcolor: "rgba(255,255,255,0.2)",
-              "& .MuiLinearProgress-bar": {
-                bgcolor: "success.light",
-                borderRadius: 4,
-              },
-            }}
-          />
-          
-          <Typography variant="caption" sx={{ mt: 0.5, opacity: 0.9 }}>
-            {progress.toFixed(0)}% bajarildi
-          </Typography>
 
           {prepaidBalance > 0 && (
             <Box
@@ -282,7 +256,7 @@ const PaymentScheduleNew: FC<PaymentScheduleProps> = ({
                 mt: 1.5,
                 p: 1,
                 bgcolor: "rgba(76, 175, 80, 0.2)",
-                borderRadius: 1,
+                borderRadius: 0.5,
                 border: "1px solid rgba(76, 175, 80, 0.5)",
               }}
             >
@@ -296,63 +270,59 @@ const PaymentScheduleNew: FC<PaymentScheduleProps> = ({
           )}
         </Box>
 
-        {/* Summary Stats */}
+        {/* Summary Stats with Pay All Button */}
         <Box
           sx={{
-            p: 2,
+            p: 1.5,
             bgcolor: "grey.50",
-            display: "grid",
-            gridTemplateColumns: "repeat(3, 1fr)",
-            gap: 1,
+            display: "flex",
+            alignItems: "center",
+            gap: 1.5,
           }}
         >
-          <Box textAlign="center">
-            <Typography variant="caption" color="text.secondary" display="block">
-              Umumiy
-            </Typography>
-            <Typography variant="body2" fontWeight={700}>
-              ${(monthlyPayment * period + (initialPayment || 0)).toLocaleString()}
-            </Typography>
+          {/* Stats Grid */}
+          <Box sx={{ flex: 1, display: "grid", gridTemplateColumns: "1fr 1fr", gap: 2 }}>
+            <Box>
+              <Typography variant="caption" color="text.secondary" sx={{ fontSize: "0.7rem", display: "block" }}>
+                To'langan
+              </Typography>
+              <Typography variant="body2" fontWeight={700} color="success.main" sx={{ fontSize: "0.9rem" }}>
+                ${totalPaid?.toLocaleString()}
+              </Typography>
+            </Box>
+            <Box>
+              <Typography variant="caption" color="text.secondary" sx={{ fontSize: "0.7rem", display: "block" }}>
+                Qolgan
+              </Typography>
+              <Typography variant="body2" fontWeight={700} color="error.main" sx={{ fontSize: "0.9rem" }}>
+                ${remainingDebt?.toLocaleString()}
+              </Typography>
+            </Box>
           </Box>
-          <Box textAlign="center">
-            <Typography variant="caption" color="text.secondary" display="block">
-              To'langan
-            </Typography>
-            <Typography variant="body2" fontWeight={700} color="success.main">
-              ${totalPaid?.toLocaleString()}
-            </Typography>
-          </Box>
-          <Box textAlign="center">
-            <Typography variant="caption" color="text.secondary" display="block">
-              Qolgan
-            </Typography>
-            <Typography variant="body2" fontWeight={700} color="error.main">
-              ${remainingDebt?.toLocaleString()}
-            </Typography>
-          </Box>
-        </Box>
 
-        {/* Pay All Button */}
-        {remainingDebt > 0 && (contractId || debtorId) && !readOnly && (
-          <Box sx={{ p: 2, pt: 0, bgcolor: "grey.50" }}>
-            <Button
-              fullWidth
-              variant="contained"
-              color="success"
-              size="large"
+          {/* Pay All Icon Button */}
+          {remainingDebt > 0 && (contractId || debtorId) && !readOnly && (
+            <IconButton
               onClick={handlePayAll}
               disabled={payments.some((p) => p.status === "PENDING")}
-              startIcon={<MdPayment size={20} />}
               sx={{
-                py: 1.5,
-                fontWeight: 700,
-                fontSize: "0.9rem",
+                bgcolor: "success.main",
+                color: "white",
+                width: 46,
+                height: 46,
+                "&:hover": {
+                  bgcolor: "success.dark",
+                },
+                "&:disabled": {
+                  bgcolor: "grey.300",
+                  color: "grey.500",
+                },
               }}
             >
-              Barchasini to'lash (${remainingDebt.toLocaleString()})
-            </Button>
-          </Box>
-        )}
+              <MdPayment size={22} />
+            </IconButton>
+          )}
+        </Box>
 
         {/* Payment Table */}
         <TableContainer sx={{ maxHeight: isMobile ? "40vh" : "60vh" }}>
