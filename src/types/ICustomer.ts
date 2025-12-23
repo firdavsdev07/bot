@@ -1,15 +1,13 @@
 export type ICustomer = {
   _id: string;
-  firstName: string;
-  lastName: string;
+  fullName: string;
   phoneNumber: string;
   delayDays?: number;
 };
 
 export type ICustomerDetails = {
   _id: string;
-  firstName: string;
-  lastName: string;
+  fullName: string;
   phoneNumber: string;
   address: string;
   totalDebt: number;
@@ -61,8 +59,7 @@ export type ICustomerContract = {
 export type IDebtorContract = {
   _id: string; // Contract ID
   customerId: string; // Customer ID
-  firstName: string;
-  lastName: string;
+  fullName: string;
   phoneNumber: string;
   productName: string; // ✅ Shartnoma nomi
   contractId: string; // ✅ Shartnoma ID (click uchun)
@@ -71,4 +68,5 @@ export type IDebtorContract = {
   nextPaymentDate: string;
   totalPrice: number;
   totalPaid: number;
+  startDate?: string; // ✅ Shartnoma boshlangan sana
 };

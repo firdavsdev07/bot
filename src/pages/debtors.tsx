@@ -55,7 +55,7 @@ export default function DebtorsPage({ activeTabIndex, index }: TabPageProps) {
 
   const filteredDebtors = useMemo(() => {
     const filtered = customersDebtor.filter((contract) => {
-      const fullName = `${contract.firstName} ${contract.lastName}`.toLowerCase();
+      const fullName = contract.fullName.toLowerCase();
       const productName = contract.productName?.toLowerCase() || "";
       return (
         fullName.includes(debouncedSearch.toLowerCase()) ||
@@ -79,8 +79,7 @@ export default function DebtorsPage({ activeTabIndex, index }: TabPageProps) {
     // Mijozni CustomerDialog'da ochish uchun ICustomer formatiga o'tkazish
     const customer: ICustomer = {
       _id: contract.customerId,
-      firstName: contract.firstName,
-      lastName: contract.lastName,
+      fullName: contract.fullName,
       phoneNumber: contract.phoneNumber,
     };
     setSelectedCustomer(customer);

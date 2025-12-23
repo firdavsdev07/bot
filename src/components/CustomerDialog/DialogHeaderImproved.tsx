@@ -26,11 +26,14 @@ const DialogHeaderImproved: FC<IProps> = ({
   };
 
   // Smart name display for mobile
-  const getDisplayName = (firstName: string, lastName: string) => {
-    if (isMobile && (firstName + lastName).length > 15) {
-      return `${firstName} ${lastName.charAt(0)}.`;
+  const getDisplayName = (fullName: string) => {
+    if (isMobile && fullName.length > 15) {
+      const parts = fullName.split(' ');
+      if (parts.length > 1) {
+        return `${parts[0]} ${parts[parts.length - 1].charAt(0)}.`;
+      }
     }
-    return `${firstName} ${lastName}`;
+    return fullName;
   };
 
   // Smart phone display
@@ -91,7 +94,7 @@ const DialogHeaderImproved: FC<IProps> = ({
               fontWeight: 700,
             }}
           >
-            {customer.firstName.charAt(0)}
+            {customer.fullName.charAt(0)}
           </Avatar>
           
           <Box sx={{ minWidth: 0, flex: 1 }}>
@@ -108,7 +111,7 @@ const DialogHeaderImproved: FC<IProps> = ({
                 whiteSpace: "nowrap",
               }}
             >
-              {getDisplayName(customer.firstName, customer.lastName)}
+              {getDisplayName(customer.fullName)}
             </Typography>
             
             {/* Phone - responsive */}

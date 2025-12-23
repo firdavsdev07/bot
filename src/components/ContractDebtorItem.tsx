@@ -31,10 +31,12 @@ const ContractDebtorItem: React.FC<ContractDebtorItemProps> = memo(({
   };
 
   // Smart name truncation
-  const getDisplayName = (firstName: string, lastName: string) => {
-    const fullName = `${firstName} ${lastName}`;
+  const getDisplayName = (fullName: string) => {
     if (fullName.length > 20) {
-      return `${firstName} ${lastName.charAt(0)}.`;
+      const parts = fullName.split(' ');
+      if (parts.length > 1) {
+        return `${parts[0]} ${parts[parts.length - 1].charAt(0)}.`;
+      }
     }
     return fullName;
   };
@@ -85,7 +87,7 @@ const ContractDebtorItem: React.FC<ContractDebtorItemProps> = memo(({
           boxShadow: shadows.sm,
         }}
       >
-        {contract.firstName.charAt(0)}
+        {contract.fullName.charAt(0)}
       </Avatar>
 
       <ListItemText
@@ -100,6 +102,25 @@ const ContractDebtorItem: React.FC<ContractDebtorItemProps> = memo(({
               minHeight: { xs: 24, sm: "auto" }
             }}
           >
+            {/* Day badge - NEW */}
+            {contract.startDate && (
+              <Chip
+                label={new Date(contract.startDate).getDate().toString().padStart(2, "0")}
+                size="small"
+                sx={{
+                  height: { xs: 22, sm: 24 },
+                  minWidth: { xs: 28, sm: 32 },
+                  fontSize: { xs: "0.7rem", sm: "0.75rem" },
+                  fontWeight: 700,
+                  bgcolor: "primary.main",
+                  color: "white",
+                  "& .MuiChip-label": {
+                    px: { xs: 0.5, sm: 0.75 }
+                  }
+                }}
+              />
+            )}
+            
             {/* Name - responsive */}
             <Typography 
               fontWeight={700} 
@@ -111,7 +132,7 @@ const ContractDebtorItem: React.FC<ContractDebtorItemProps> = memo(({
                 minWidth: { xs: "120px", sm: "auto" }
               }}
             >
-              {getDisplayName(contract.firstName, contract.lastName)}
+              {getDisplayName(contract.fullName)}
             </Typography>
             
             {/* Delay days badge - responsive */}

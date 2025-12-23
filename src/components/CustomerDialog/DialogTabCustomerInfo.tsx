@@ -69,8 +69,7 @@ const DialogTabCustomerInfo: FC<IProps> = ({ customerId }) => {
   }
 
   const {
-    firstName,
-    lastName,
+    fullName,
     phoneNumber,
     address,
     totalDebt = 0,
@@ -86,7 +85,7 @@ const DialogTabCustomerInfo: FC<IProps> = ({ customerId }) => {
         <InfoCard 
           icon={<User size={20} />} 
           label="Ism" 
-          value={`${firstName} ${lastName}`} 
+          value={fullName} 
         />
         
         {/* Telefon - faqat agar bor bo'lsa */}

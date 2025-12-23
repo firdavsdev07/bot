@@ -45,7 +45,7 @@ export default function AllClientsPage({
 
   const filteredClients = useMemo(() => {
     return customers.filter((customer) => {
-      const fullName = `${customer.firstName} ${customer.lastName}`.toLowerCase();
+      const fullName = customer.fullName.toLowerCase();
       return (
         fullName.includes(debouncedSearch.toLowerCase()) ||
         customer.phoneNumber.includes(debouncedSearch)

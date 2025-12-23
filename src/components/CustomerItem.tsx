@@ -33,10 +33,12 @@ const CustomerListItem: React.FC<CustomerListItemProps> = memo(({
   };
 
   // Smart name truncation
-  const getDisplayName = (firstName: string, lastName: string) => {
-    const fullName = `${firstName} ${lastName}`;
+  const getDisplayName = (fullName: string) => {
     if (fullName.length > 20) {
-      return `${firstName} ${lastName.charAt(0)}.`;
+      const parts = fullName.split(' ');
+      if (parts.length > 1) {
+        return `${parts[0]} ${parts[parts.length - 1].charAt(0)}.`;
+      }
     }
     return fullName;
   };
@@ -86,7 +88,7 @@ const CustomerListItem: React.FC<CustomerListItemProps> = memo(({
           boxShadow: shadows.sm,
         }}
       >
-        {customer.firstName.charAt(0)}
+        {customer.fullName.charAt(0)}
       </Avatar>
 
       <ListItemText
@@ -112,7 +114,7 @@ const CustomerListItem: React.FC<CustomerListItemProps> = memo(({
                 minWidth: { xs: "120px", sm: "auto" }
               }}
             >
-              {getDisplayName(customer.firstName, customer.lastName)}
+              {getDisplayName(customer.fullName)}
             </Typography>
             
             {/* Debt badge - responsive */}

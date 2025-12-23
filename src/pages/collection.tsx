@@ -51,7 +51,7 @@ export default function CollectedPage({ activeTabIndex, index }: TabPageProps) {
   }, [activeTabIndex, index]);
 
   const filteredDebtors = customersPayment.filter((customer) => {
-    const fullName = `${customer.firstName} ${customer.lastName}`.toLowerCase();
+    const fullName = customer.fullName.toLowerCase();
     return (
       fullName.includes(searchTerm.toLowerCase()) ||
       customer.phoneNumber.includes(searchTerm)
@@ -181,7 +181,7 @@ export default function CollectedPage({ activeTabIndex, index }: TabPageProps) {
                 mb={2}
               >
                 <Typography variant="h6" fontWeight={700}>
-                  {selectedClient.firstName} {selectedClient.lastName}
+                  {selectedClient.fullName}
                 </Typography>
                 <Button onClick={handleCloseDetails} size="small">
                   Yopish

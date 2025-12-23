@@ -40,11 +40,11 @@ const DialogHeader: FC<IProps> = ({
           <Avatar
             sx={{ width: 40, height: 40, mr: 2, bgcolor: "primary.main" }}
           >
-            {customer.firstName.charAt(0)}
+            {customer.fullName.charAt(0)}
           </Avatar>
           <Box>
             <Typography variant="h6" color="primary.main">
-              {customer.firstName} {customer.lastName}
+              {customer.fullName}
             </Typography>
             <Typography variant="body2" color="text.secondary">
               {customer.phoneNumber}

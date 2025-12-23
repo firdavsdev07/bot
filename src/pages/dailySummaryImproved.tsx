@@ -31,10 +31,12 @@ export default function DailySummaryImproved({ activeTabIndex, index }: TabPageP
   const balanceDollar = dashboard?.balance?.dollar ?? 0;
   const balanceSum = dashboard?.balance?.sum ?? 0;
 
-  const getDisplayName = (firstName: string, lastName: string) => {
-    const fullName = `${firstName} ${lastName}`;
+  const getDisplayName = (fullName: string) => {
     if (fullName.length > 20) {
-      return `${firstName} ${lastName.charAt(0)}.`;
+      const parts = fullName.split(' ');
+      if (parts.length > 1) {
+        return `${parts[0]} ${parts[parts.length - 1].charAt(0)}.`;
+      }
     }
     return fullName;
   };
@@ -85,7 +87,7 @@ export default function DailySummaryImproved({ activeTabIndex, index }: TabPageP
               whiteSpace: "nowrap",
             }}
           >
-            {getDisplayName(user.firstname || "Foydalanuvchi", user.lastname || "")}
+            {getDisplayName(`${user.firstname} ${user.lastname}`.trim() || "Foydalanuvchi")}
           </Typography>
           <Typography 
             variant="body2" 

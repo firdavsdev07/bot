@@ -1,7 +1,6 @@
 export interface ICustomer {
   _id: string;
-  firstName: string;
-  lastName: string;
+  fullName: string;
   passportSeries: string;
   phoneNumber: string;
   percent: number;
@@ -17,8 +16,7 @@ export interface ICustomer {
 }
 
 export interface IAddCustomer {
-  firstName: string;
-  lastName: string;
+  fullName: string;
   passportSeries: string;
   phoneNumber: string;
   birthDate: Date;
@@ -29,8 +27,7 @@ export interface IAddCustomer {
 
 export interface IEditCustomer {
   _id: string;
-  firstName: string;
-  lastName: string;
+  fullName: string;
   passportSeries: string;
   phoneNumber: string;
   birthDate: Date;

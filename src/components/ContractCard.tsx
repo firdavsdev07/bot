@@ -81,18 +81,37 @@ const ContractCard: FC<ContractCardProps> = ({
         gap={1}
       >
         <Box sx={{ flex: 1, minWidth: 0 }}>
-          <Typography
-            variant="subtitle1"
-            fontWeight={700}
-            sx={{
-              fontSize: { xs: "0.875rem", sm: "0.95rem", md: "1rem" },
-              lineHeight: 1.3,
-              mb: 0.5,
-              wordWrap: "break-word",
-            }}
-          >
-            {contract.productName}
-          </Typography>
+          <Box display="flex" alignItems="center" gap={1} mb={0.5}>
+            {/* Day badge - NEW */}
+            {contract.startDate && (
+              <Chip
+                label={new Date(contract.startDate).getDate().toString().padStart(2, "0")}
+                size="small"
+                sx={{
+                  height: { xs: 20, sm: 22 },
+                  minWidth: { xs: 26, sm: 30 },
+                  fontSize: { xs: "0.65rem", sm: "0.7rem" },
+                  fontWeight: 700,
+                  bgcolor: "primary.main",
+                  color: "white",
+                  "& .MuiChip-label": {
+                    px: { xs: 0.4, sm: 0.6 }
+                  }
+                }}
+              />
+            )}
+            <Typography
+              variant="subtitle1"
+              fontWeight={700}
+              sx={{
+                fontSize: { xs: "0.875rem", sm: "0.95rem", md: "1rem" },
+                lineHeight: 1.3,
+                wordWrap: "break-word",
+              }}
+            >
+              {contract.productName}
+            </Typography>
+          </Box>
           <Typography
             variant="caption"
             color="text.secondary"
