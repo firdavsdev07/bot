@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { CssBaseline, ThemeProvider, CircularProgress } from "@mui/material";
+import { Toaster } from "react-hot-toast";
 import theme from "./theme";
 import TabsLayout from "./layouts/TabLayout";
 import { AlertProvider } from "./components/AlertSystem";
@@ -42,6 +43,17 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
+      <Toaster 
+        position="top-center"
+        toastOptions={{
+          duration: 3000,
+          style: {
+            borderRadius: '6px',
+            fontSize: '14px',
+            fontWeight: 500,
+          },
+        }}
+      />
       <AlertProvider>
         <ErrorSnackbar />
         {isAuthenticated ? (

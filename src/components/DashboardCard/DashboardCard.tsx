@@ -33,7 +33,7 @@ const DashboardCard: FC<DashboardCardProps> = ({
       sx={{
         p: { xs: 2, sm: 2.5, md: 3 },
         borderRadius: borderRadius.lg,
-        background: themeColor?.gradient || colors.primary.gradient,
+        background: themeColor?.main || colors.primary.main,
         boxShadow: shadows.colored(themeColor?.shadow || colors.primary.shadow),
         color: "white",
         position: "relative",

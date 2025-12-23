@@ -80,10 +80,10 @@ export default function ExpensesView({ activeTabIndex, index }: TabPageProps) {
         <Paper
           sx={{
             p: 2.5,
-            background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+            background: "#2563eb",
             borderRadius: borderRadius.lg,
             color: "white",
-            boxShadow: shadows.colored("rgba(102, 126, 234, 0.3)"),
+            boxShadow: shadows.colored("rgba(37, 99, 235, 0.15)"),
           }}
         >
           <Box display="flex" alignItems="center" gap={1} mb={1}>
@@ -100,10 +100,10 @@ export default function ExpensesView({ activeTabIndex, index }: TabPageProps) {
         <Paper
           sx={{
             p: 2.5,
-            background: "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)",
+            background: "#0ea5e9",
             borderRadius: borderRadius.lg,
             color: "white",
-            boxShadow: shadows.colored("rgba(79, 172, 254, 0.3)"),
+            boxShadow: shadows.colored("rgba(14, 165, 233, 0.15)"),
           }}
         >
           <Box display="flex" alignItems="center" gap={1} mb={1}>
@@ -131,10 +131,10 @@ export default function ExpensesView({ activeTabIndex, index }: TabPageProps) {
             px: 3,
             borderRadius: borderRadius.md,
             fontWeight: 700,
-            background: "linear-gradient(135deg, #11998e 0%, #38ef7d 100%)",
-            boxShadow: shadows.colored("rgba(17, 153, 142, 0.3)"),
+            background: "#10b981",
+            boxShadow: shadows.colored("rgba(16, 185, 129, 0.15)"),
             "&:hover": {
-              background: "linear-gradient(135deg, #0d7a72 0%, #2dd46d 100%)",
+              background: "#059669",
             },
           }}
         >

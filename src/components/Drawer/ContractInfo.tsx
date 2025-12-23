@@ -222,7 +222,7 @@ const ContractInfo: FC<DrawerProps> = ({
                 mx: { md: 'auto' }
               }}
             >
-              To'lov qilish
+              To'lov
             </Button>
           )
         )}

@@ -284,14 +284,14 @@ const TimePickerModal: React.FC<TimePickerModalProps> = ({
             py: 1.5,
             borderRadius: borderRadius.md,
             fontWeight: 700,
-            background: "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)",
-            boxShadow: shadows.colored("rgba(79, 172, 254, 0.3)"),
+            background: "#0ea5e9",
+            boxShadow: shadows.colored("rgba(14, 165, 233, 0.15)"),
             "&:hover": {
-              background: "linear-gradient(135deg, #3d8bd4 0%, #00d4e0 100%)",
+              background: "#0284c7",
             },
           }}
         >
-          ✓ Tasdiqlash
+          Tasdiqlash
         </Button>
       </DialogActions>
     </Dialog>

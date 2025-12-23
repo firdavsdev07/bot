@@ -138,10 +138,10 @@ const SimpleDateTimePicker: FC<SimpleDateTimePickerProps> = ({
             borderRadius: borderRadius.md,
             fontWeight: 700,
             fontSize: { xs: "0.875rem", md: "1rem" },
-            background: colors.success.gradient,
+            background: colors.success.main,
             boxShadow: shadows.colored(colors.success.shadow),
             "&:hover": {
-              background: "linear-gradient(135deg, #0d7a72 0%, #2dd46d 100%)",
+              background: "#059669",
             },
           }}
         >

@@ -4,35 +4,35 @@ const theme = createTheme({
   palette: {
     mode: "light",
     primary: {
-      main: "#667eea", // Modern purple
-      light: "#8b9bff",
-      dark: "#4c63d2",
+      main: "#2563eb", // Professional blue
+      light: "#60a5fa",
+      dark: "#1e40af",
     },
     secondary: {
-      main: "#f093fb", // Pink accent
-      light: "#f5576c",
-      dark: "#d87aed",
+      main: "#f59e0b", // Professional orange
+      light: "#fbbf24",
+      dark: "#d97706",
     },
     success: {
-      main: "#11998e", // Teal green
-      light: "#38ef7d",
-      dark: "#0d7a72",
+      main: "#10b981", // Professional green
+      light: "#34d399",
+      dark: "#059669",
       // @ts-ignore - Custom MUI colors
-      lighter: "#e8f5f4",
+      lighter: "#d1fae5",
     },
     error: {
-      main: "#eb3349", // Modern red
-      light: "#f45c43",
-      dark: "#c42a3d",
+      main: "#ef4444", // Professional red
+      light: "#f87171",
+      dark: "#dc2626",
       // @ts-ignore - Custom MUI colors
-      lighter: "#fdeaee",
+      lighter: "#fee2e2",
     },
     info: {
-      main: "#4facfe", // Sky blue
-      light: "#00f2fe",
-      dark: "#3d8bd4",
+      main: "#0ea5e9", // Professional cyan
+      light: "#38bdf8",
+      dark: "#0284c7",
       // @ts-ignore - Custom MUI colors
-      lighter: "#e3f2fd",
+      lighter: "#e0f2fe",
     },
     background: {
       default: "#fafbfc", // Subtle gray
@@ -83,7 +83,7 @@ const theme = createTheme({
   },
 
   shape: {
-    borderRadius: 12,
+    borderRadius: 6,
   },
 
   components: {
@@ -98,9 +98,9 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           border: "none",
-          boxShadow: "0 4px 20px rgba(0, 0, 0, 0.08)",
-          borderRadius: 12,
-          transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+          boxShadow: "0 1px 3px rgba(0, 0, 0, 0.08)",
+          borderRadius: 8,
+          transition: "all 0.2s ease",
         },
       },
     },
@@ -121,25 +121,25 @@ const theme = createTheme({
     MuiPaper: {
       styleOverrides: {
         root: {
-          borderRadius: 16,
+          borderRadius: 8,
         },
       },
     },
     MuiButton: {
       styleOverrides: {
         root: {
-          borderRadius: 12,
+          borderRadius: 6,
           boxShadow: "none",
           textTransform: "none",
           fontWeight: 600,
-          padding: "10px 20px",
+          padding: "8px 16px",
         },
       },
     },
     MuiInputBase: {
       styleOverrides: {
         root: {
-          borderRadius: 12,
+          borderRadius: 6,
           backgroundColor: "#fff",
           paddingLeft: "12px",
         },

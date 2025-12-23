@@ -240,10 +240,10 @@ const PaymentModal: FC<PaymentModalProps> = ({
           <Box>
             <Typography variant="h6" fontWeight={700}>
               {isPayAll
-                ? "Barcha qarzni to'lash"
+                ? "Barchasini to'lash"
                 : isDebtPayment
-                ? "Qolgan qarzni to'lash"
-                : "To'lov qilish"}
+                ? "Qarzni to'lash"
+                : "To'lov"}
               {targetMonth && !isPayAll && (
                 <Typography
                   component="span"
@@ -293,10 +293,10 @@ const PaymentModal: FC<PaymentModalProps> = ({
           <Box
             sx={{
               p: 2.5,
-              background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+              background: "#2563eb",
               borderRadius: borderRadius.md,
               color: "white",
-              boxShadow: shadows.colored("rgba(102, 126, 234, 0.3)"),
+              boxShadow: shadows.colored("rgba(37, 99, 235, 0.15)"),
             }}
           >
             <Box display="flex" alignItems="center" gap={1} mb={1}>
@@ -333,7 +333,7 @@ const PaymentModal: FC<PaymentModalProps> = ({
                 border="1px solid rgba(56, 239, 125, 0.4)"
               >
                 <Typography variant="body2" fontWeight={600}>
-                  💰 Ortiqcha: ${(dollarAmount - amount).toFixed(2)}
+                  Ortiqcha: ${(dollarAmount - amount).toFixed(2)}
                 </Typography>
                 <Typography
                   variant="caption"
@@ -576,16 +576,16 @@ const PaymentModal: FC<PaymentModalProps> = ({
             borderRadius: borderRadius.md,
             background: loading
               ? "rgba(0, 0, 0, 0.12)"
-              : "linear-gradient(135deg, #11998e 0%, #38ef7d 100%)",
+              : "#10b981",
             boxShadow: loading
               ? "none"
-              : shadows.colored("rgba(17, 153, 142, 0.3)"),
+              : shadows.colored("rgba(16, 185, 129, 0.15)"),
             minWidth: { xs: "100%", sm: "auto" },
             whiteSpace: "nowrap",
             "&:hover": {
               background: loading
                 ? "rgba(0, 0, 0, 0.12)"
-                : "linear-gradient(135deg, #0d7a72 0%, #2dd46d 100%)",
+                : "#059669",
             },
             "&:disabled": {
               background: "rgba(0, 0, 0, 0.12)",
@@ -596,8 +596,8 @@ const PaymentModal: FC<PaymentModalProps> = ({
           {loading
             ? "Kutish..."
             : isPayAll
-            ? "✓ Barchasini to'lash"
-            : "✓ To'lov qilish"}
+            ? "To'lash"
+            : "To'lash"}
         </Button>
       </DialogActions>
     </Dialog>

@@ -39,7 +39,7 @@ const DashboardCardImproved: FC<DashboardCardProps> = ({
       sx={{
         p: responsive.spacing.card,
         borderRadius: borderRadius.lg,
-        background: themeColor?.gradient || colors.primary.gradient,
+        background: themeColor?.main || colors.primary.main,
         boxShadow: shadows.colored(themeColor?.shadow || colors.primary.shadow),
         color: "white",
         position: "relative",

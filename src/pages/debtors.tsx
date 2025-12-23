@@ -106,7 +106,7 @@ export default function DebtorsPage({ activeTabIndex, index }: TabPageProps) {
         sx={{ 
           p: { xs: 2, sm: 2.5 },
           mb: 3,
-          background: "linear-gradient(135deg, #eb3349 0%, #f45c43 100%)",
+          background: "#ef4444",
           borderRadius: borderRadius.lg,
           color: "white",
           boxShadow: shadows.colored("rgba(235, 51, 73, 0.3)"),
@@ -206,8 +206,8 @@ export default function DebtorsPage({ activeTabIndex, index }: TabPageProps) {
               }}
               helperText={
                 selectedDate
-                  ? `📅 ${dayjs(selectedDate).format("DD MMMM YYYY")} gacha bo'lgan kechikkan to'lovlar`
-                  : "✅ Bugungi kungacha barcha kechikkan to'lovlar ko'rsatilmoqda"
+                  ? `${dayjs(selectedDate).format("DD MMMM YYYY")} gacha bo'lgan kechikkan to'lovlar`
+                  : "Bugungi kungacha barcha kechikkan to'lovlar"
               }
               FormHelperTextProps={{
                 sx: { 

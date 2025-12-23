@@ -17,7 +17,7 @@ html, body, #root {
 
 /* ===== BODY STYLING ===== */
 body {
-  background: linear-gradient(135deg, #fafbfc 0%, #f0f4f8 100%);
+  background: #fafbfc;
   overflow: hidden;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',

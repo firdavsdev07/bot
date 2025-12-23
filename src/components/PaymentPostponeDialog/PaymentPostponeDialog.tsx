@@ -355,13 +355,13 @@ const PaymentPostponeDialog: React.FC<PaymentPostponeDialogProps> = ({
             py: 1.5,
             borderRadius: 2,
             fontWeight: 700,
-            background: "linear-gradient(135deg, #ff9800 0%, #f57c00 100%)",
+            background: "#f59e0b",
             "&:hover": {
-              background: "linear-gradient(135deg, #f57c00 0%, #ef6c00 100%)",
+              background: "#d97706",
             },
           }}
         >
-          {loading ? "Saqlanmoqda..." : "🔔 Eslatma o'rnatish"}
+          {loading ? "Saqlanmoqda..." : "Eslatma o'rnatish"}
         </Button>
       </DialogActions>
     </Dialog>

@@ -94,7 +94,7 @@ const DrawerItem: FC<{
       display: "flex",
       alignItems: "center",
       borderRadius: 2,
-      background: "linear-gradient(135deg, #f0f4ff, #ffffff)",
+      background: "#f9fafb",
       boxShadow: "0px 6px 20px rgba(0,0,0,0.1)",
     }}
   >

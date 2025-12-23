@@ -1,49 +1,44 @@
 
 
 export const colors = {
-  // Primary - Purple gradient
+  // Primary - Professional Blue (no gradient)
   primary: {
-    main: '#667eea',
-    light: '#8b9bff',
-    dark: '#4c63d2',
-    gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-    shadow: 'rgba(102, 126, 234, 0.3)',
+    main: '#2563eb',
+    light: '#60a5fa',
+    dark: '#1e40af',
+    shadow: 'rgba(37, 99, 235, 0.15)',
   },
   
-  // Success - Green gradient
+  // Success - Professional Green (no gradient)
   success: {
-    main: '#11998e',
-    light: '#38ef7d',
-    dark: '#0d7a72',
-    gradient: 'linear-gradient(135deg, #11998e 0%, #38ef7d 100%)',
-    shadow: 'rgba(17, 153, 142, 0.3)',
+    main: '#10b981',
+    light: '#34d399',
+    dark: '#059669',
+    shadow: 'rgba(16, 185, 129, 0.15)',
   },
   
-  // Error - Red gradient
+  // Error - Professional Red (no gradient)
   error: {
-    main: '#eb3349',
-    light: '#f45c43',
-    dark: '#c42a3d',
-    gradient: 'linear-gradient(135deg, #eb3349 0%, #f45c43 100%)',
-    shadow: 'rgba(235, 51, 73, 0.3)',
+    main: '#ef4444',
+    light: '#f87171',
+    dark: '#dc2626',
+    shadow: 'rgba(239, 68, 68, 0.15)',
   },
   
-  // Warning - Pink/Orange gradient
+  // Warning - Professional Orange (no gradient)
   warning: {
-    main: '#f093fb',
-    light: '#f5576c',
-    dark: '#d87aed',
-    gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
-    shadow: 'rgba(240, 147, 251, 0.3)',
+    main: '#f59e0b',
+    light: '#fbbf24',
+    dark: '#d97706',
+    shadow: 'rgba(245, 158, 11, 0.15)',
   },
   
-  // Info - Blue gradient
+  // Info - Professional Cyan (no gradient)
   info: {
-    main: '#4facfe',
-    light: '#00f2fe',
-    dark: '#3d8bd4',
-    gradient: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
-    shadow: 'rgba(79, 172, 254, 0.3)',
+    main: '#0ea5e9',
+    light: '#38bdf8',
+    dark: '#0284c7',
+    shadow: 'rgba(14, 165, 233, 0.15)',
   },
   
   // Neutrals
@@ -78,10 +73,10 @@ export const shadows = {
 };
 
 export const borderRadius = {
-  sm: '8px',
-  md: '12px',
-  lg: '16px',
-  xl: '20px',
+  sm: '4px',
+  md: '6px',
+  lg: '8px',
+  xl: '12px',
   full: '9999px',
 };
 

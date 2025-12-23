@@ -15,7 +15,7 @@ const DialogTab: FC<IProps> = ({ activeTab, setActiveTab }) => {
         mb: 2,
         borderRadius: 2,
         overflow: "hidden",
-        background: "linear-gradient(135deg, #f0f4ff, #ffffff)",
+        background: "#f9fafb",
         boxShadow: "0px 6px 20px rgba(0,0,0,0.1)",
       }}
     >

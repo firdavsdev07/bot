@@ -37,7 +37,7 @@ const DialogTabCustomerInfo: FC<IProps> = ({ customerId }) => {
       >
         <Box textAlign="center">
           <Typography variant="h6" color="primary.main" mb={2}>
-            ⏳ Yuklanmoqda...
+            Yuklanmoqda...
           </Typography>
         </Box>
       </Box>
@@ -59,7 +59,7 @@ const DialogTabCustomerInfo: FC<IProps> = ({ customerId }) => {
         }}
       >
         <Typography variant="h6" color="error.main" mb={2}>
-          ⚠️ Ma'lumot topilmadi
+          Ma'lumot topilmadi
         </Typography>
         <Typography variant="body2" color="text.secondary">
           Mijoz ma'lumotlari yuklanmadi yoki xatolik yuz berdi.
@@ -142,10 +142,10 @@ const DialogTabCustomerInfo: FC<IProps> = ({ customerId }) => {
                 borderRadius: borderRadius.md,
                 background:
                   delayDays > 30
-                    ? "linear-gradient(135deg, rgba(235, 51, 73, 0.1) 0%, rgba(244, 92, 67, 0.1) 100%)"
+                    ? "rgba(239, 68, 68, 0.1)"
                     : delayDays > 7
-                    ? "linear-gradient(135deg, rgba(240, 147, 251, 0.1) 0%, rgba(245, 87, 108, 0.1) 100%)"
-                    : "linear-gradient(135deg, rgba(17, 153, 142, 0.1) 0%, rgba(56, 239, 125, 0.1) 100%)",
+                    ? "rgba(245, 158, 11, 0.1)"
+                    : "rgba(16, 185, 129, 0.1)",
                 border: "2px solid",
                 borderColor:
                   delayDays > 30

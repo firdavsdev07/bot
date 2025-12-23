@@ -446,13 +446,13 @@ const ModernDateTimePicker: FC<ModernDateTimePickerProps> = ({
             <IconButton
               onClick={handleConfirm}
               sx={{
-                bgcolor: colors.success.gradient,
+                bgcolor: colors.success.main,
                 color: "white",
                 boxShadow: shadows.colored(colors.success.shadow),
                 minWidth: 56,
                 minHeight: 56,
                 "&:hover": {
-                  bgcolor: "#0d7a72",
+                  bgcolor: colors.success.dark,
                   transform: "scale(1.05)",
                 },
                 transition: "all 0.2s ease",

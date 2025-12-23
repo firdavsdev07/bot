@@ -169,7 +169,6 @@ const PaymentScheduleNew: FC<PaymentScheduleProps> = ({
       );
       
       if (hasPending) {
-        console.warn(`⚠️ Month ${month} uchun PENDING to'lov mavjud, qayta yuborib bo'lmaydi!`);
         showWarning("Bu oy uchun to'lov allaqachon kutilmoqda. Kassa tasdiqini kuting.", "Kutilmoqda");
         return;
       }
@@ -191,7 +190,6 @@ const PaymentScheduleNew: FC<PaymentScheduleProps> = ({
     // ✅ MUHIM: PENDING to'lovlar borligini tekshirish
     const hasPendingPayments = payments.some((p) => p.status === "PENDING");
     if (hasPendingPayments) {
-      console.warn("⚠️ PENDING to'lovlar mavjud, barcha qarzni to'lash mumkin emas!");
       alert("To'lovlar kutilmoqda. Kassa tasdiqini kuting.");
       return;
     }
@@ -407,28 +405,12 @@ const PaymentScheduleNew: FC<PaymentScheduleProps> = ({
             );
 
             // ✅ REJECTED payment check - rad etilgan to'lov (yana to'lash mumkin)
+            // Check if payment was rejected
             const hasRejectedPayment = payments.some(
               (p) => p.status === "REJECTED" && p.targetMonth === item.month
             );
-
-            console.log(`🔍 [PaymentScheduleNew] Month ${item.month}:`, {
-              hasPendingPayment,
-              hasRejectedPayment,
-              buttonWillBeDisabled: hasPendingPayment,
-              totalPayments: payments.length,
-              pendingPaymentsAll: payments.filter(p => p.status === "PENDING").map(p => ({
-                _id: p._id,
-                targetMonth: p.targetMonth,
-                status: p.status,
-                amount: p.amount,
-              })),
-              thisMonthPayments: payments.filter(p => p.targetMonth === item.month).map(p => ({
-                _id: p._id,
-                status: p.status,
-                isPaid: p.isPaid,
-                amount: p.amount,
-              })),
-            });
+            // Can be used later for UI indicators
+            void hasRejectedPayment;
 
             const hasShortage =
               actualPayment?.remainingAmount != null && actualPayment.remainingAmount > 0.01;
@@ -561,7 +543,7 @@ const PaymentScheduleNew: FC<PaymentScheduleProps> = ({
                               height: isMobile ? 24 : "auto",
                             }}
                           >
-                            {hasPendingPayment ? (isMobile ? "⏳" : "Kutish") : "To'la"}
+                            {hasPendingPayment ? "Kutish" : "To'la"}
                           </Button>
                           
                         </>
