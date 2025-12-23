@@ -47,7 +47,7 @@ export default function DebtorsPage({ activeTabIndex, index }: TabPageProps) {
         dispatch(getCustomersDebtor(selectedDate));
       }
     }
-  }, [activeTabIndex, index, selectedDate, isShowAll]);
+  }, [activeTabIndex, index, selectedDate, isShowAll, dispatch]);
 
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newDate = e.target.value;

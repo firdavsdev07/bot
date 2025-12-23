@@ -166,7 +166,7 @@ const PaymentModal: FC<PaymentModalProps> = ({
         const payload = { ...basePayload, id: contractId };
         await dispatch(payAllRemaining(payload)).unwrap();
       } else if (paymentId) {
-        const response = await authApi.post("/payment/pay-remaining", {
+        await authApi.post("/payment/pay-remaining", {
           paymentId: paymentId,
           amount: totalAmountInDollar,
           notes: note.trim(),
@@ -192,7 +192,7 @@ const PaymentModal: FC<PaymentModalProps> = ({
 
       if (isUnderpaid && nextPaymentDate && contractId && targetMonth) {
         try {
-          const reminderResponse = await authApi.post(
+          await authApi.post(
             "/payment/postpone-payment",
             {
               contractId: contractId,
