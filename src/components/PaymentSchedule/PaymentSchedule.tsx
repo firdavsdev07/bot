@@ -24,11 +24,10 @@ import {
 } from "react-icons/md";
 
 import PaymentModal from "../PaymentModal/PaymentModal";
-import PaymentPostponeDialog from "../PaymentPostponeDialog";
 import { IPayment } from "../../types/IPayment"; // Import the IPayment interface
 import { StatusBadge } from "./StatusBadge";
 import { borderRadius, shadows } from "../../theme/colors";
-import { CalendarDays, Clock } from "lucide-react";
+import { CalendarDays } from "lucide-react";
 
 interface PaymentScheduleItem {
   month: number;
@@ -85,15 +84,6 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
     month: undefined,
   });
 
-  const [postponeDialog, setPostponeDialog] = useState<{
-    open: boolean;
-    payment: IPayment | null;
-    loading: boolean;
-  }>({
-    open: false,
-    payment: null,
-    loading: false,
-  });
 
   const generateSchedule = (): PaymentScheduleItem[] => {
     const schedule: PaymentScheduleItem[] = [];
@@ -228,105 +218,13 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
     }, 500); // 500ms kutamiz - backend payment yaratguncha
   };
 
-  const handlePostponePayment = (paymentItem: PaymentScheduleItem) => {
-    const targetPayment = payments.find(
-      (p) =>
-        p.targetMonth === paymentItem.month &&
-        p.paymentType === "monthly" &&
-        !p.isPaid
-    );
-
-    if (targetPayment) {
-      setPostponeDialog({
-        open: true,
-        payment: targetPayment,
-        loading: false,
-      });
-    } else {
-      const virtualPayment: IPayment = {
-        _id: `temp-${paymentItem.month}`,
-        amount: paymentItem.amount,
-        date: paymentItem.date,
-        isPaid: false,
-        paymentType: "monthly",
-        targetMonth: paymentItem.month,
-        status: "PENDING",
-        notes: {} as any,
-        customerId: {} as any,
-        managerId: {} as any,
-      };
-
-      setPostponeDialog({
-        open: true,
-        payment: virtualPayment,
-        loading: false,
-      });
-    }
-  };
-
-  const handlePostponeConfirm = async (newDateTime: string) => {
-    if (!postponeDialog.payment || !contractId) return;
-
-    setPostponeDialog((prev) => ({ ...prev, loading: true }));
-
-    try {
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/payment/postpone-payment`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${
-              sessionStorage.getItem("accessToken") ||
-              localStorage.getItem("token")
-            }`,
-          },
-          body: JSON.stringify({
-            contractId,
-            postponeDate: newDateTime,
-            reason: "Mijozning so'rovi bo'yicha kechiktirildi",
-          }),
-        }
-      );
-
-      if (response.ok) {
-        setPostponeDialog({
-          open: false,
-          payment: null,
-          loading: false,
-        });
-
-        // Contractni yangilash
-        if (onPaymentSuccess) {
-          onPaymentSuccess();
-        }
-
-        alert("To'lov muvaffaqiyatli kechiktirildi!");
-      } else {
-        const errorData = await response.json();
-        alert(errorData.message || "Kechiktirish amalga oshmadi");
-      }
-    } catch (error) {
-      alert("Xatolik yuz berdi. Qaytadan urinib ko'ring.");
-    } finally {
-      setPostponeDialog((prev) => ({ ...prev, loading: false }));
-    }
-  };
-
-  const handlePostponeClose = () => {
-    setPostponeDialog({
-      open: false,
-      payment: null,
-      loading: false,
-    });
-  };
 
   return (
     <>
       <Paper
         elevation={0}
         sx={{
-          p: { xs: 1.5, sm: 2 },
+          p: { xs: 1, sm: 1.5, md: 2 },
           border: 1,
           borderColor: "divider",
           borderRadius: borderRadius.md,
@@ -398,19 +296,27 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
         <TableContainer
           sx={{
             overflowX: "auto",
+            overflowY: "visible",
+            WebkitOverflowScrolling: "touch",
             "&::-webkit-scrollbar": {
-              height: { xs: "6px", sm: "8px" },
+              height: { xs: "4px", sm: "6px" },
+            },
+            "&::-webkit-scrollbar-track": {
+              backgroundColor: "rgba(0,0,0,0.05)",
+              borderRadius: "4px",
             },
             "&::-webkit-scrollbar-thumb": {
               backgroundColor: "rgba(0,0,0,0.2)",
               borderRadius: "4px",
+              "&:hover": {
+                backgroundColor: "rgba(0,0,0,0.3)",
+              },
             },
           }}
         >
           <Table
             size="small"
-            stickyHeader
-            sx={{ minWidth: { xs: "380px", md: "100%" }, width: "100%" }}
+            sx={{ minWidth: { xs: "600px", sm: "700px", md: "100%" }, width: "100%" }}
           >
             <TableHead>
               <TableRow>
@@ -418,9 +324,9 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                   sx={{
                     fontWeight: 600,
                     bgcolor: "grey.50",
-                    py: 1,
-                    px: { xs: 0.5, sm: 1, md: 2 },
-                    fontSize: { xs: "0.75rem", sm: "0.875rem" },
+                    py: { xs: 0.75, sm: 1 },
+                    px: { xs: 1, sm: 1.5, md: 2 },
+                    fontSize: { xs: "0.7rem", sm: "0.75rem", md: "0.875rem" },
                     borderBottom: "1px solid rgba(224, 224, 224, 1)",
                     whiteSpace: "nowrap",
                   }}
@@ -431,36 +337,36 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                   sx={{
                     fontWeight: 600,
                     bgcolor: "grey.50",
-                    py: 1,
-                    px: { xs: 0.5, sm: 1, md: 2 },
-                    fontSize: { xs: "0.75rem", sm: "0.875rem" },
+                    py: { xs: 0.75, sm: 1 },
+                    px: { xs: 1, sm: 1.5, md: 2 },
+                    fontSize: { xs: "0.7rem", sm: "0.75rem", md: "0.875rem" },
                     borderBottom: "1px solid rgba(224, 224, 224, 1)",
                     whiteSpace: "nowrap",
                   }}
                 >
-                  Belgilangan sana
+                  Belgilangan
                 </TableCell>
                 <TableCell
                   sx={{
                     fontWeight: 600,
                     bgcolor: "grey.50",
-                    py: 1,
-                    px: { xs: 0.5, sm: 1, md: 2 },
-                    fontSize: { xs: "0.75rem", sm: "0.875rem" },
+                    py: { xs: 0.75, sm: 1 },
+                    px: { xs: 1, sm: 1.5, md: 2 },
+                    fontSize: { xs: "0.7rem", sm: "0.75rem", md: "0.875rem" },
                     borderBottom: "1px solid rgba(224, 224, 224, 1)",
                     whiteSpace: "nowrap",
                   }}
                 >
-                  To'langan sana
+                  To'langan
                 </TableCell>
                 <TableCell
                   align="right"
                   sx={{
                     fontWeight: 600,
                     bgcolor: "grey.50",
-                    py: 1,
-                    px: { xs: 0.5, sm: 1, md: 2 },
-                    fontSize: { xs: "0.75rem", sm: "0.875rem" },
+                    py: { xs: 0.75, sm: 1 },
+                    px: { xs: 1, sm: 1.5, md: 2 },
+                    fontSize: { xs: "0.7rem", sm: "0.75rem", md: "0.875rem" },
                     borderBottom: "1px solid rgba(224, 224, 224, 1)",
                     whiteSpace: "nowrap",
                   }}
@@ -472,23 +378,23 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                   sx={{
                     fontWeight: 600,
                     bgcolor: "grey.50",
-                    py: 1,
-                    px: { xs: 0.5, sm: 1, md: 2 },
-                    fontSize: { xs: "0.75rem", sm: "0.875rem" },
+                    py: { xs: 0.75, sm: 1 },
+                    px: { xs: 1, sm: 1.5, md: 2 },
+                    fontSize: { xs: "0.7rem", sm: "0.75rem", md: "0.875rem" },
                     borderBottom: "1px solid rgba(224, 224, 224, 1)",
                     whiteSpace: "nowrap",
                   }}
                 >
-                  To&apos;langan
+                  To'landi
                 </TableCell>
                 <TableCell
                   align="center"
                   sx={{
                     fontWeight: 600,
                     bgcolor: "grey.50",
-                    py: 1,
-                    px: { xs: 0.5, sm: 1, md: 2 },
-                    fontSize: { xs: "0.75rem", sm: "0.875rem" },
+                    py: { xs: 0.75, sm: 1 },
+                    px: { xs: 1, sm: 1.5, md: 2 },
+                    fontSize: { xs: "0.7rem", sm: "0.75rem", md: "0.875rem" },
                     borderBottom: "1px solid rgba(224, 224, 224, 1)",
                     whiteSpace: "nowrap",
                   }}
@@ -501,9 +407,9 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                     sx={{
                       fontWeight: 600,
                       bgcolor: "grey.50",
-                      py: 1,
-                      px: { xs: 0.5, sm: 1, md: 2 },
-                      fontSize: { xs: "0.75rem", sm: "0.875rem" },
+                      py: { xs: 0.75, sm: 1 },
+                      px: { xs: 1, sm: 1.5, md: 2 },
+                      fontSize: { xs: "0.7rem", sm: "0.75rem", md: "0.875rem" },
                       borderBottom: "1px solid rgba(224, 224, 224, 1)",
                       whiteSpace: "nowrap",
                     }}
@@ -704,44 +610,30 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                         {/* # */}
                         <TableCell
                           sx={{
-                            py: 1,
-                            px: { xs: 0.5, sm: 1, md: 2 },
+                            py: { xs: 0.75, sm: 1 },
+                            px: { xs: 1, sm: 1.5, md: 2 },
                             borderBottom: "1px solid rgba(224, 224, 224, 1)",
                           }}
                         >
                           <Box display="flex" alignItems="center" gap={0.5}>
                             {isPast && !item.isPaid && (
-                              <MdWarning size={16} color="#d32f2f" />
+                              <MdWarning size={14} color="#d32f2f" />
                             )}
                             <Typography
                               variant="body2"
                               fontWeight="600"
-                              fontSize={{ xs: "0.7rem", sm: "0.875rem" }}
+                              fontSize={{ xs: "0.75rem", sm: "0.8rem", md: "0.875rem" }}
                               color={
                                 isPast && !item.isPaid
                                   ? "error.main"
                                   : "inherit"
                               }
                             >
-                              {/* Mobile: faqat raqam, Desktop: to'liq */}
-                              <Box
-                                component="span"
-                                sx={{ display: { xs: "inline", sm: "none" } }}
-                              >
-                                {item.isInitial ? "0" : item.month}
-                              </Box>
-                              <Box
-                                component="span"
-                                sx={{ display: { xs: "none", sm: "inline" } }}
-                              >
-                                {item.isInitial
-                                  ? "Boshlang'ich"
-                                  : `${item.month}-oy`}
-                              </Box>
+                              {item.isInitial ? "0" : item.month}
                               {isPast && !item.isPaid && (
                                 <Box
                                   component="span"
-                                  sx={{ display: { xs: "none", sm: "inline" } }}
+                                  sx={{ display: { xs: "none", md: "inline" } }}
                                 >
                                   {" (Kechikkan)"}
                                 </Box>
@@ -753,56 +645,54 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                         {/* Belgilangan sana */}
                         <TableCell
                           sx={{
-                            py: 1,
-                            px: { xs: 0.5, sm: 1, md: 2 },
+                            py: { xs: 0.75, sm: 1 },
+                            px: { xs: 1, sm: 1.5, md: 2 },
                             borderBottom: "1px solid rgba(224, 224, 224, 1)",
                           }}
                         >
                           <Typography
                             variant="body2"
-                            fontSize={{ xs: "0.75rem", sm: "0.875rem" }}
+                            fontSize={{ xs: "0.7rem", sm: "0.75rem", md: "0.875rem" }}
                           >
-                            {format(new Date(item.date), "dd.MM.yyyy")}
+                            {format(new Date(item.date), "dd.MM")}
                           </Typography>
                         </TableCell>
 
                         {/* To'langan sana */}
                         <TableCell
                           sx={{
-                            py: 1,
-                            px: { xs: 0.5, sm: 1, md: 2 },
+                            py: { xs: 0.75, sm: 1 },
+                            px: { xs: 1, sm: 1.5, md: 2 },
                             borderBottom: "1px solid rgba(224, 224, 224, 1)",
                           }}
                         >
                           {item.isPaid ? (
                             <Typography
                               variant="body2"
-                              fontSize="0.875rem"
+                              fontSize={{ xs: "0.7rem", sm: "0.75rem", md: "0.875rem" }}
                               color={
                                 delayDays > 0 ? "error.main" : "success.main"
                               }
                             >
-                              {item.isInitial
-                                ? format(new Date(item.date), "dd.MM.yyyy")
-                                : actualPayment && actualPayment.confirmedAt
+                              {actualPayment && actualPayment.confirmedAt
                                 ? format(
                                     new Date(
                                       actualPayment.confirmedAt as string
                                     ),
-                                    "dd.MM.yyyy"
+                                    "dd.MM"
                                   )
                                 : actualPayment
                                 ? format(
                                     new Date(actualPayment.date as string),
-                                    "dd.MM.yyyy"
+                                    "dd.MM"
                                   )
-                                : format(new Date(item.date), "dd.MM.yyyy")}
+                                : format(new Date(item.date), "dd.MM")}
                               {!item.isInitial &&
                                 delayDays > 0 &&
                                 ` (+${delayDays})`}
                             </Typography>
                           ) : (
-                            <Typography variant="body2" color="text.disabled">
+                            <Typography variant="body2" color="text.disabled" fontSize={{ xs: "0.7rem", sm: "0.875rem" }}>
                               —
                             </Typography>
                           )}
@@ -812,17 +702,17 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                         <TableCell
                           align="right"
                           sx={{
-                            py: 1,
-                            px: { xs: 0.5, sm: 1, md: 2 },
+                            py: { xs: 0.75, sm: 1 },
+                            px: { xs: 1, sm: 1.5, md: 2 },
                             borderBottom: "1px solid rgba(224, 224, 224, 1)",
                           }}
                         >
                           <Typography
                             variant="body2"
                             fontWeight="medium"
-                            fontSize={{ xs: "0.75rem", sm: "0.875rem" }}
+                            fontSize={{ xs: "0.7rem", sm: "0.75rem", md: "0.875rem" }}
                           >
-                            {item.amount.toLocaleString()} $
+                            {item.amount.toLocaleString()}
                           </Typography>
                         </TableCell>
 
@@ -830,8 +720,8 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                         <TableCell
                           align="right"
                           sx={{
-                            py: 1,
-                            px: { xs: 0.5, sm: 1, md: 2 },
+                            py: { xs: 0.75, sm: 1 },
+                            px: { xs: 1, sm: 1.5, md: 2 },
                             borderBottom: "1px solid rgba(224, 224, 224, 1)",
                           }}
                         >
@@ -996,69 +886,32 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                                 —
                               </Typography>
                             ) : !item.isPaid ? (
-                              <Box
-                                display="flex"
-                                flexDirection="column"
-                                gap={0.5}
+                              <Button
+                                size="small"
+                                variant="contained"
+                                color={isPast ? "error" : "primary"}
+                                onClick={() =>
+                                  handlePayment(
+                                    item.amount,
+                                    undefined,
+                                    item.month
+                                  )
+                                }
+                                startIcon={<MdPayment size={16} />}
+                                sx={{
+                                  fontSize: {
+                                    xs: "0.7rem",
+                                    sm: "0.8125rem",
+                                    md: "0.875rem",
+                                  },
+                                  px: { xs: 1.5, sm: 2, md: 2.5 },
+                                  py: { xs: 0.75, sm: 1, md: 1 },
+                                  whiteSpace: "nowrap",
+                                  minWidth: { xs: "80px", md: "120px" },
+                                }}
                               >
-                                <Button
-                                  size="small"
-                                  variant="contained"
-                                  color={isPast ? "error" : "primary"}
-                                  onClick={() =>
-                                    handlePayment(
-                                      item.amount,
-                                      undefined,
-                                      item.month
-                                    )
-                                  }
-                                  startIcon={<MdPayment size={16} />}
-                                  sx={{
-                                    fontSize: {
-                                      xs: "0.7rem",
-                                      sm: "0.8125rem",
-                                      md: "0.75rem",
-                                    },
-                                    px: { xs: 1, sm: 2, md: 1.5 },
-                                    py: { xs: 0.5, sm: 0.75, md: 0.5 },
-                                    whiteSpace: "nowrap",
-                                    minWidth: { xs: "auto", md: "120px" },
-                                    maxHeight: { md: "32px" },
-                                  }}
-                                >
-                                  To'lash
-                                </Button>
-
-                                {!item.isInitial && !readOnly && (
-                                  <Button
-                                    variant="contained"
-                                    color="warning"
-                                    fullWidth
-                                    onClick={() => {
-                                      handlePostponePayment(item);
-                                    }}
-                                    startIcon={<MdWarning size={16} />}
-                                    sx={{
-                                      mt: 1,
-                                      fontSize: "0.8rem",
-                                      fontWeight: 700,
-                                      minHeight: 40,
-                                      textTransform: "none",
-                                      backgroundColor: "#ff9800",
-                                      color: "white",
-                                      boxShadow:
-                                        "0 2px 8px rgba(255, 152, 0, 0.3)",
-                                      "&:hover": {
-                                        backgroundColor: "#f57c00",
-                                        boxShadow:
-                                          "0 4px 12px rgba(255, 152, 0, 0.4)",
-                                      },
-                                    }}
-                                  >
-                                    <Clock /> KECHIKTIRISH
-                                  </Button>
-                                )}
-                              </Box>
+                                To'lash
+                              </Button>
                             ) : hasShortage &&
                               remainingAmountToShow > 0.01 &&
                               !finalPendingCheck ? (
@@ -1195,19 +1048,6 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
         />
       )}
 
-      {postponeDialog.open && postponeDialog.payment && (
-        <PaymentPostponeDialog
-          open={postponeDialog.open}
-          onClose={handlePostponeClose}
-          onConfirm={handlePostponeConfirm}
-          payment={{
-            amount: postponeDialog.payment.amount,
-            date: postponeDialog.payment.date.toString(),
-            isPostponedOnce: false, // Bu backend'dan kelishi kerak
-          }}
-          loading={postponeDialog.loading}
-        />
-      )}
     </>
   );
 };
