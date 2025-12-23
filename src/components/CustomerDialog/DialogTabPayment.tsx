@@ -116,20 +116,39 @@ const DialogTabPayment: FC<IProps> = ({ customerId }) => {
               >
                 {/* Left side - Product name and payment info in column */}
                 <Box sx={{ flex: 1, minWidth: 0 }}>
-                  {/* 1-qator: Product nomi */}
-                  <Typography
-                    variant="subtitle1"
-                    fontWeight={700}
-                    color="primary.main"
-                    sx={{
-                      fontSize: responsive.typography.body1,
-                      lineHeight: 1.3,
-                      mb: 1,
-                      wordWrap: "break-word",
-                    }}
-                  >
-                    {contract.productName}
-                  </Typography>
+                  {/* 1-qator: Product nomi with Day badge */}
+                  <Box display="flex" alignItems="center" gap={1} mb={1}>
+                    {/* Day badge - NEW */}
+                    {contract.startDate && (
+                      <Chip
+                        label={new Date(contract.startDate).getDate().toString().padStart(2, "0")}
+                        size="small"
+                        sx={{
+                          height: { xs: 20, sm: 22 },
+                          minWidth: { xs: 26, sm: 30 },
+                          fontSize: { xs: "0.65rem", sm: "0.7rem" },
+                          fontWeight: 700,
+                          bgcolor: "primary.main",
+                          color: "white",
+                          "& .MuiChip-label": {
+                            px: { xs: 0.4, sm: 0.6 }
+                          }
+                        }}
+                      />
+                    )}
+                    <Typography
+                      variant="subtitle1"
+                      fontWeight={700}
+                      color="primary.main"
+                      sx={{
+                        fontSize: responsive.typography.body1,
+                        lineHeight: 1.3,
+                        wordWrap: "break-word",
+                      }}
+                    >
+                      {contract.productName}
+                    </Typography>
+                  </Box>
                   
                   {/* 2-qator: To'lov va Progress chiplar */}
                   <Stack direction="row" spacing={1} alignItems="center">
