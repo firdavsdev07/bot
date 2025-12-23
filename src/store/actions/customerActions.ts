@@ -36,21 +36,15 @@ export const getCustomers = (): AppThunk => async (dispatch) => {
 export const getCustomersDebtor = (filterDate?: string): AppThunk => async (dispatch) => {
   dispatch(start());
   try {
-    // ✅ Sodda logika: agar sana bor bo'lsa query param qo'shamiz
     const url = filterDate 
       ? `/customer/get-debtor?date=${filterDate}`
       : "/customer/get-debtor";
 
-    console.log("🔍 Fetching debtors:", url);
-
     const res = await authApi.get(url);
     const { data } = res;
 
-    console.log(`✅ Loaded ${data.data?.length || 0} debtors`);
-
     dispatch(setCustomersDebtor(data.data || []));
   } catch (error) {
-    console.error("❌ Error fetching debtors:", error);
     dispatch(failure());
     if (axios.isAxiosError(error)) {
       dispatch(setError({

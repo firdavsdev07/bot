@@ -38,10 +38,8 @@ export default function DebtorsPage({ activeTabIndex, index }: TabPageProps) {
   const [selectedDate, setSelectedDate] = useState<string>("");
   const debouncedSearch = useDebounce(searchTerm, 300);
 
-  // ✅ Soddalashtirilgan: har safar sahifa ochilganda yoki sana o'zgarganda qayta yuklash
   useEffect(() => {
     if (activeTabIndex === index) {
-      // Bo'sh sana bo'lsa yoki bo'sh string bo'lsa - undefined yuborish (backend default bugungi kun ishlatadi)
       const dateFilter = selectedDate && selectedDate.trim() !== "" ? selectedDate : undefined;
       dispatch(getCustomersDebtor(dateFilter));
     }
@@ -73,7 +71,7 @@ export default function DebtorsPage({ activeTabIndex, index }: TabPageProps) {
     setSelectedClient(null);
   };
 
-  if (customersDebtor.length === 0 && isLoading) {
+  if (isLoading) {
     return <Loader />;
   }
 
@@ -246,9 +244,23 @@ export default function DebtorsPage({ activeTabIndex, index }: TabPageProps) {
           </List>
         </>
       ) : (
-        <Typography textAlign="center" color="text.secondary" mt={4}>
-          Qarzdor mijozlar topilmadi.
-        </Typography>
+        <Paper
+          sx={{
+            p: 3,
+            textAlign: "center",
+            borderRadius: borderRadius.lg,
+            bgcolor: "grey.50",
+          }}
+        >
+          <Typography variant="h6" color="text.secondary" gutterBottom>
+            Qarzdor mijozlar topilmadi
+          </Typography>
+          <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+            {selectedDate 
+              ? `${dayjs(selectedDate).format("DD MMMM YYYY")} sanasiga qadar qarzdor mijozlar yo'q`
+              : "Bugungi kunga qadar qarzdor mijozlar yo'q"}
+          </Typography>
+        </Paper>
       )}
 
       <CustomerDialog
