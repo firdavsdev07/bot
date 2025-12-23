@@ -281,7 +281,15 @@ const PaymentScheduleNew: FC<PaymentScheduleProps> = ({
           }}
         >
           {/* Stats Grid */}
-          <Box sx={{ flex: 1, display: "grid", gridTemplateColumns: "1fr 1fr", gap: 2 }}>
+          <Box sx={{ flex: 1, display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 2 }}>
+            <Box>
+              <Typography variant="caption" color="text.secondary" sx={{ fontSize: "0.7rem", display: "block" }}>
+                Umumiy
+              </Typography>
+              <Typography variant="body2" fontWeight={700} color="primary.main" sx={{ fontSize: "0.9rem" }}>
+                ${(totalPaid + remainingDebt)?.toLocaleString()}
+              </Typography>
+            </Box>
             <Box>
               <Typography variant="caption" color="text.secondary" sx={{ fontSize: "0.7rem", display: "block" }}>
                 To'langan

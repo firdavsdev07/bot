@@ -42,7 +42,7 @@ const authSlice = createSlice({
       state.isLoading = false;
       state.customers = action.payload;
     },
-    setCustomersDebtor(state, action: PayloadAction<IDebtorContract[] | []>) { // ✅ YANGI: IDebtorContract type
+    setCustomersDebtor(state, action: PayloadAction<IDebtorContract[] | []>) { 
       state.isLoading = false;
       state.customersDebtor = action.payload;
     },
