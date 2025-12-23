@@ -25,9 +25,9 @@ export const getCustomers = (): AppThunk => async (dispatch) => {
   } catch (error) {
     dispatch(failure());
     if (axios.isAxiosError(error)) {
-      dispatch(setError({ 
-        message: error.response?.data?.message || "Mijozlarni yuklashda xatolik", 
-        type: 'error' 
+      dispatch(setError({
+        message: error.response?.data?.message || "Mijozlarni yuklashda xatolik",
+        type: 'error'
       }));
     }
   }
@@ -36,18 +36,27 @@ export const getCustomers = (): AppThunk => async (dispatch) => {
 export const getCustomersDebtor = (filterDate?: string): AppThunk => async (dispatch) => {
   dispatch(start());
   try {
-    const url = filterDate 
-      ? `/customer/get-debtor?date=${filterDate}` 
+    const url = filterDate
+      ? `/customer/get-debtor?date=${filterDate}`
       : "/customer/get-debtor";
+
+    console.log("🔍 Fetching debtors with URL:", url);
+    console.log("📅 filterDate:", filterDate);
+
     const res = await authApi.get(url);
     const { data } = res;
+
+    console.log("✅ Response received:", data);
+    console.log("📊 Debtors count:", data.data?.length);
+
     dispatch(setCustomersDebtor(data.data));
   } catch (error) {
+    console.error("❌ Error fetching debtors:", error);
     dispatch(failure());
     if (axios.isAxiosError(error)) {
-      dispatch(setError({ 
-        message: error.response?.data?.message || "Qarzdorlarni yuklashda xatolik", 
-        type: 'error' 
+      dispatch(setError({
+        message: error.response?.data?.message || "Qarzdorlarni yuklashda xatolik",
+        type: 'error'
       }));
     }
   }
@@ -62,9 +71,9 @@ export const getCustomersPayment = (): AppThunk => async (dispatch) => {
   } catch (error) {
     dispatch(failure());
     if (axios.isAxiosError(error)) {
-      dispatch(setError({ 
-        message: error.response?.data?.message || "To'lovlarni yuklashda xatolik", 
-        type: 'error' 
+      dispatch(setError({
+        message: error.response?.data?.message || "To'lovlarni yuklashda xatolik",
+        type: 'error'
       }));
     }
   }
@@ -81,9 +90,9 @@ export const getCustomer =
       } catch (error) {
         dispatch(failure());
         if (axios.isAxiosError(error)) {
-          dispatch(setError({ 
-            message: error.response?.data?.message || "Mijoz ma'lumotlarini yuklashda xatolik", 
-            type: 'error' 
+          dispatch(setError({
+            message: error.response?.data?.message || "Mijoz ma'lumotlarini yuklashda xatolik",
+            type: 'error'
           }));
         }
       }
@@ -144,7 +153,7 @@ export const payAllRemaining = createAsyncThunk(
         currencyDetails: payData.currencyDetails,
         currencyCourse: payData.currencyCourse,
       });
-      await dispatch(getContract(payData.customerId)); 
+      await dispatch(getContract(payData.customerId));
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data || error.message);
