@@ -54,7 +54,7 @@ export default function DebtorsPage({ activeTabIndex, index }: TabPageProps) {
   };
 
   const filteredDebtors = useMemo(() => {
-    return customersDebtor.filter((contract) => {
+    const filtered = customersDebtor.filter((contract) => {
       const fullName = `${contract.firstName} ${contract.lastName}`.toLowerCase();
       const productName = contract.productName?.toLowerCase() || "";
       return (
@@ -62,6 +62,16 @@ export default function DebtorsPage({ activeTabIndex, index }: TabPageProps) {
         contract.phoneNumber.includes(debouncedSearch) ||
         productName.includes(debouncedSearch.toLowerCase())
       );
+    });
+    
+    // Yangi qarzdorlar (kam kechikkan) birinchi bo'lsin
+    return filtered.sort((a, b) => {
+      // Avval delayDays bo'yicha (kichik -> katta)
+      if (a.delayDays !== b.delayDays) {
+        return a.delayDays - b.delayDays;
+      }
+      // Agar delayDays teng bo'lsa, qarzi bo'yicha (katta -> kichik)
+      return b.remainingDebt - a.remainingDebt;
     });
   }, [customersDebtor, debouncedSearch]);
 
