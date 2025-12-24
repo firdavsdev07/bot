@@ -589,10 +589,20 @@ const PaymentScheduleNew: FC<PaymentScheduleProps> = ({
                               size="small"
                               onClick={(e) => {
                                 e.stopPropagation();
+                                // ✅ MUHIM: targetMonth'ni DB dagi payment'dan olamiz
+                                const foundPayment = payments.find(
+                                  (p) => p.paymentType !== "initial" && p.targetMonth === item.month
+                                );
+
+                                if (!foundPayment) {
+                                  showError("Bu oy uchun to'lov topilmadi", "Xatolik");
+                                  return;
+                                }
+
                                 handleOpenReminderDialog(
-                                  item.month,
-                                  item.date,
-                                  paymentWithReminder?.reminderDate
+                                  foundPayment.targetMonth!,
+                                  (foundPayment.date as string) || item.date,
+                                  foundPayment.reminderDate || paymentWithReminder?.reminderDate
                                 );
                               }}
                               sx={{
