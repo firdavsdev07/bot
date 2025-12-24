@@ -11,7 +11,7 @@ const paymentApi = axios.create({
 
 // Token'ni har bir request'ga qo'shish
 paymentApi.interceptors.request.use((config) => {
-  const token = localStorage.getItem("token");
+  const token = sessionStorage.getItem("accessToken") || localStorage.getItem("token");
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
