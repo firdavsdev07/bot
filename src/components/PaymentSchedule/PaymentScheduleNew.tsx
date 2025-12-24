@@ -25,9 +25,10 @@ import {
   MdExpandMore,
   MdExpandLess,
 } from "react-icons/md";
-import { AlertCircle, Clock } from "lucide-react";
+import { AlertCircle, Clock, Bell } from "lucide-react";
 import { useAlert } from "../AlertSystem";
 import PaymentModal from "../PaymentModal/PaymentModal";
+import PaymentReminderDialog from "../PaymentReminderDialog";
 import { IPayment } from "../../types/IPayment";
 import { StatusBadge } from "./StatusBadge";
 
@@ -93,6 +94,19 @@ const PaymentScheduleNew: FC<PaymentScheduleProps> = ({
     month: undefined,
     isDebtPayment: false,
     originalAmount: undefined,
+  });
+
+  // ✅ YANGI: Reminder dialog state
+  const [reminderDialog, setReminderDialog] = useState<{
+    open: boolean;
+    targetMonth: number;
+    paymentDate: string;
+    currentReminderDate?: string | Date | null;
+  }>({
+    open: false,
+    targetMonth: 0,
+    paymentDate: "",
+    currentReminderDate: null,
   });
 
 
@@ -218,6 +232,37 @@ const PaymentScheduleNew: FC<PaymentScheduleProps> = ({
 
   const toggleExpand = (month: number) => {
     setExpandedMonth(expandedMonth === month ? null : month);
+  };
+
+  // ✅ YANGI: Reminder dialog ochish
+  const handleOpenReminderDialog = (month: number, paymentDate: string, currentReminder?: string | Date | null) => {
+    if (!contractId) {
+      showError("Shartnoma ID topilmadi", "Xatolik");
+      return;
+    }
+    
+    setReminderDialog({
+      open: true,
+      targetMonth: month,
+      paymentDate,
+      currentReminderDate: currentReminder,
+    });
+  };
+
+  const handleCloseReminderDialog = () => {
+    setReminderDialog({
+      open: false,
+      targetMonth: 0,
+      paymentDate: "",
+      currentReminderDate: null,
+    });
+  };
+
+  const handleReminderSuccess = () => {
+    // Refresh data to show new reminder
+    if (onPaymentSuccess) {
+      onPaymentSuccess();
+    }
   };
 
   // ✅ TUZATILDI: To'lovni kechiktirish funksiyasi
@@ -390,6 +435,12 @@ const PaymentScheduleNew: FC<PaymentScheduleProps> = ({
             // Can be used later for UI indicators
             void hasRejectedPayment;
 
+            // ✅ YANGI: Reminder check
+            const paymentWithReminder = payments.find(
+              (p) => p.targetMonth === item.month && p.reminderDate
+            );
+            const hasReminder = !!paymentWithReminder?.reminderDate;
+
             const hasShortage =
               actualPayment?.remainingAmount != null && actualPayment.remainingAmount > 0.01;
             // const hasExcess = false;
@@ -524,6 +575,30 @@ const PaymentScheduleNew: FC<PaymentScheduleProps> = ({
                             {hasPendingPayment ? "Kutish" : "To'la"}
                           </Button>
                           
+                          {/* ✅ YANGI: Reminder button */}
+                          {!item.isInitial && contractId && (
+                            <IconButton
+                              size="small"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleOpenReminderDialog(
+                                  item.month,
+                                  item.date,
+                                  paymentWithReminder?.reminderDate
+                                );
+                              }}
+                              sx={{
+                                color: hasReminder ? "warning.main" : "action.disabled",
+                                p: isMobile ? 0.3 : 0.5,
+                                "&:hover": {
+                                  color: "warning.main",
+                                  bgcolor: "warning.lighter",
+                                },
+                              }}
+                            >
+                              <Bell size={isMobile ? 14 : 16} />
+                            </IconButton>
+                          )}
                         </>
                       )}
                       
@@ -637,6 +712,18 @@ const PaymentScheduleNew: FC<PaymentScheduleProps> = ({
                             </Typography>
                           )}
                           
+                          {/* ✅ YANGI: Reminder info */}
+                          {hasReminder && paymentWithReminder?.reminderDate && (
+                            <Box sx={{ mt: 1, p: 1, bgcolor: "warning.lighter", borderRadius: 1, border: "1px solid", borderColor: "warning.main" }}>
+                              <Stack direction="row" alignItems="center" spacing={0.5}>
+                                <Bell size={14} color="#ed6c02" />
+                                <Typography variant="caption" fontWeight={600} color="warning.dark">
+                                  Eslatma: {format(new Date(paymentWithReminder.reminderDate), "dd.MM.yyyy")}
+                                </Typography>
+                              </Stack>
+                            </Box>
+                          )}
+                          
                         </Stack>
                       </Box>
                     </Collapse>
@@ -675,6 +762,19 @@ const PaymentScheduleNew: FC<PaymentScheduleProps> = ({
           customerId={customerId}
           debtorId={debtorId}
           targetMonth={paymentModal.month}
+        />
+      )}
+
+      {/* ✅ YANGI: Reminder Dialog */}
+      {contractId && (
+        <PaymentReminderDialog
+          open={reminderDialog.open}
+          onClose={handleCloseReminderDialog}
+          contractId={contractId}
+          targetMonth={reminderDialog.targetMonth}
+          paymentDate={reminderDialog.paymentDate}
+          currentReminderDate={reminderDialog.currentReminderDate}
+          onSuccess={handleReminderSuccess}
         />
       )}
 

@@ -30,6 +30,7 @@ export interface IPayment {
     targetMonth?: number; 
  
     nextPaymentDate?: string | Date; 
+    reminderDate?: string | Date; // ✅ YANGI - Manager tomonidan belgilangan eslatma sanasi
     customerId?: any;
     managerId?: any;
 }
