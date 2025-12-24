@@ -52,6 +52,7 @@ export type ICustomerContract = {
     confirmedAt?: Date | string;
     notes?: string;
     targetMonth?: number;
+    reminderDate?: Date | string; // ✅ YANGI - Eslatma sanasi
   }>;
 };
 
