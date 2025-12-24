@@ -210,6 +210,7 @@ const DialogTabPayment: FC<IProps> = ({ customerId }) => {
                 readOnly={false}
                 nextPaymentDate={contract.nextPaymentDate}
                 onPaymentSuccess={() => {
+                  // ✅ TUZATISH: Force refresh - eslatma saqlanganidan keyin yangi ma'lumot olish
                   dispatch(getContract(customerId));
                 }}
               />

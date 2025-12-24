@@ -589,20 +589,22 @@ const PaymentScheduleNew: FC<PaymentScheduleProps> = ({
                               size="small"
                               onClick={(e) => {
                                 e.stopPropagation();
-                                // ✅ MUHIM: targetMonth'ni DB dagi payment'dan olamiz
+                                
+                                // ✅ TUZATISH: Avval DB dagi payment'ni topamiz
                                 const foundPayment = payments.find(
                                   (p) => p.paymentType !== "initial" && p.targetMonth === item.month
                                 );
 
-                                if (!foundPayment) {
-                                  showError("Bu oy uchun to'lov topilmadi", "Xatolik");
-                                  return;
-                                }
+                                // ✅ MUHIM: Payment topilmasa ham, item.month va item.date ishlatib reminder ochishga ruxsat beramiz
+                                // Backend'da barcha oylar uchun payment mavjud (yangi tizim)
+                                const targetMonth = foundPayment?.targetMonth || item.month;
+                                const paymentDate = foundPayment?.date || item.date;
+                                const currentReminder = foundPayment?.reminderDate || paymentWithReminder?.reminderDate;
 
                                 handleOpenReminderDialog(
-                                  foundPayment.targetMonth!,
-                                  (foundPayment.date as string) || item.date,
-                                  foundPayment.reminderDate || paymentWithReminder?.reminderDate
+                                  targetMonth,
+                                  paymentDate as string,
+                                  currentReminder
                                 );
                               }}
                               sx={{
