@@ -597,9 +597,18 @@ const PaymentScheduleNew: FC<PaymentScheduleProps> = ({
 
                                 // ✅ MUHIM: Payment topilmasa ham, item.month va item.date ishlatib reminder ochishga ruxsat beramiz
                                 // Backend'da barcha oylar uchun payment mavjud (yangi tizim)
-                                const targetMonth = foundPayment?.targetMonth || item.month;
+                                // ⚠️ KRITIK: item.month string bo'lishi mumkin, shuning uchun Number() ga o'tkazamiz
+                                const targetMonth = foundPayment?.targetMonth || Number(item.month);
                                 const paymentDate = foundPayment?.date || item.date;
                                 const currentReminder = foundPayment?.reminderDate || paymentWithReminder?.reminderDate;
+
+                                console.log("📍 Opening reminder dialog:", {
+                                  itemMonth: item.month,
+                                  itemMonthType: typeof item.month,
+                                  targetMonth,
+                                  targetMonthType: typeof targetMonth,
+                                  foundPayment: !!foundPayment
+                                });
 
                                 handleOpenReminderDialog(
                                   targetMonth,
