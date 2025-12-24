@@ -583,41 +583,33 @@ const PaymentScheduleNew: FC<PaymentScheduleProps> = ({
                             {hasPendingPayment ? "Kutish" : "To'la"}
                           </Button>
                           
-                          {/* ✅ YANGI: Reminder button */}
-                          {!item.isInitial && contractId && (() => {
-                            // ✅ TUZATISH: Avval DB dagi payment'ni topamiz
-                            const foundPayment = payments.find(
-                              (p) => p.paymentType !== "initial" && p.targetMonth === item.month
-                            );
-                            
-                            // ⚠️ MUHIM: Faqat backend'da mavjud paymentlar uchun reminder button ko'rsatish
-                            // Agar payment topilmasa, reminder button ko'rsatilmaydi
-                            if (!foundPayment) {
-                              console.warn(`⚠️ Payment not found for month ${item.month}, reminder button hidden`);
-                              return null;
-                            }
-                            
-                            return (
+                          {/* ✅ TUZATILDI: Reminder button - har doim ko'rinadi (to'lanmagan oylar uchun) */}
+                          {!item.isInitial && contractId && (
                             <IconButton
                               size="small"
                               onClick={(e) => {
                                 e.stopPropagation();
                                 
-                                const targetMonth = foundPayment.targetMonth!;
-                                const paymentDate = foundPayment.date!;
-                                const currentReminder = foundPayment.reminderDate || paymentWithReminder?.reminderDate;
+                                // ✅ DB'dagi payment'ni topish (agar mavjud bo'lsa)
+                                const foundPayment = payments.find(
+                                  (p) => p.paymentType !== "initial" && p.targetMonth === item.month
+                                );
+                                
+                                // ✅ item.month va item.date ishlatiladi (foundPayment bo'lmasa ham ishlaydi)
+                                const targetMonth = item.month;
+                                const paymentDate = item.date;
+                                const currentReminder = foundPayment?.reminderDate || paymentWithReminder?.reminderDate;
 
                                 console.log("📍 Opening reminder dialog:", {
                                   itemMonth: item.month,
-                                  itemMonthType: typeof item.month,
                                   targetMonth,
-                                  targetMonthType: typeof targetMonth,
-                                  foundPayment: !!foundPayment
+                                  foundPayment: !!foundPayment,
+                                  hasExistingReminder: !!currentReminder
                                 });
 
                                 handleOpenReminderDialog(
                                   targetMonth,
-                                  paymentDate as string,
+                                  paymentDate,
                                   currentReminder
                                 );
                               }}
@@ -632,8 +624,7 @@ const PaymentScheduleNew: FC<PaymentScheduleProps> = ({
                             >
                               <Bell size={isMobile ? 14 : 16} />
                             </IconButton>
-                            );
-                          })()}
+                          )}
                         </>
                       )}
                       
