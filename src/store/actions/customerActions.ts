@@ -96,13 +96,28 @@ export const getContract = createAsyncThunk(
   "customer/getContract",
   async (customerId: string, { dispatch, rejectWithValue }) => {
     try {
+      console.log("🔍 [API] Fetching contracts for:", customerId);
       const res = await authApi.get(`/customer/get-contract-by-id/${customerId}`);
       const { data } = res;
+
+      console.log("📦 [API] Response received:", {
+        status: data.status,
+        hasData: !!data.data,
+        allContractsLength: data.data?.allContracts?.length,
+        paidContractsLength: data.data?.paidContracts?.length,
+        debtorContractsLength: data.data?.debtorContracts?.length,
+      });
 
       dispatch(setCustomerContracts(data.data));
 
       return data.data;
     } catch (error: any) {
+      console.error("❌ [API] Error fetching contracts:", error);
+      console.error("❌ [API] Error details:", {
+        message: error.message,
+        response: error.response?.data,
+        status: error.response?.status,
+      });
       return rejectWithValue(error.response?.data || error.message);
     }
   }

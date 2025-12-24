@@ -2,6 +2,7 @@
 import { Dialog, Box } from "@mui/material";
 import CustomerDetails from "./CustomerDetails";
 import { ICustomer } from "../../types/ICustomer";
+import ErrorBoundary from "../ErrorBoundary";
 
 interface CustomerDialogProps {
   open: boolean;
@@ -46,7 +47,9 @@ const CustomerDialog: React.FC<CustomerDialogProps> = ({
       }}
     >
       <Box sx={{ width: "100%", maxWidth: "100%", p: 0, m: 0 }}>
-        {customer && <CustomerDetails customer={customer} onClose={onClose} />}
+        <ErrorBoundary>
+          {customer && <CustomerDetails customer={customer} onClose={onClose} />}
+        </ErrorBoundary>
       </Box>
     </Dialog>
   );

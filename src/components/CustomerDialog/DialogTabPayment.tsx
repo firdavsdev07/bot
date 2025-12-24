@@ -8,6 +8,7 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
+  Button,
 } from "@mui/material";
 import { FC, useEffect, useState } from "react";
 import { ChevronDown, Wallet } from "lucide-react";
@@ -37,9 +38,21 @@ const DialogTabPayment: FC<IProps> = ({ customerId }) => {
   const [selectedMonth, setSelectedMonth] = useState<number | null>(null);
 
   useEffect(() => {
+    console.log("🔍 Fetching contracts for:", customerId);
     dispatch(getContract(customerId));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [customerId]);
+
+  // ✅ Response'ni kuzatish
+  useEffect(() => {
+    console.log("📦 customerContracts updated:", {
+      isNull: customerContracts === null,
+      isUndefined: customerContracts === undefined,
+      allContracts: customerContracts?.allContracts?.length,
+      paidContracts: customerContracts?.paidContracts?.length,
+      data: customerContracts,
+    });
+  }, [customerContracts]);
 
   useEffect(() => {
     if (selectedContract && customerContracts) {
@@ -207,6 +220,10 @@ const DialogTabPayment: FC<IProps> = ({ customerId }) => {
     </>
   );
 
+  // ✅ Xatolik holatini tekshirish
+  const hasError = !isLoading && !customerContracts;
+  const isEmpty = !isLoading && customerContracts?.allContracts?.length === 0 && customerContracts?.paidContracts?.length === 0;
+
   return (
     <Box
       sx={{
@@ -217,17 +234,50 @@ const DialogTabPayment: FC<IProps> = ({ customerId }) => {
         alignItems: "center",
       }}
     >
-      {isLoading && <CircularProgress sx={{ my: 4 }} />}
+      {/* Loading */}
+      {isLoading && (
+        <Box sx={{ my: 4, textAlign: "center" }}>
+          <CircularProgress sx={{ mb: 2 }} />
+          <Typography variant="body2" color="text.secondary">
+            Shartnomalar yuklanmoqda...
+          </Typography>
+        </Box>
+      )}
 
-      {!isLoading &&
-        customerContracts?.allContracts?.length === 0 &&
-        customerContracts?.paidContracts?.length === 0 && (
-          <Paper sx={{ p: 2, borderRadius: 2, width: "100%" }}>
-            <Typography variant="body2" color="text.secondary">
-              To'lovlar mavjud emas.
-            </Typography>
-          </Paper>
-        )}
+      {/* Xatolik */}
+      {hasError && (
+        <Paper sx={{ p: 3, borderRadius: 2, width: "100%", bgcolor: "error.lighter" }}>
+          <Typography variant="h6" color="error.main" gutterBottom>
+            ⚠️ Xatolik yuz berdi
+          </Typography>
+          <Typography variant="body2" color="text.secondary" paragraph>
+            Shartnomalarni yuklashda xatolik. Iltimos, qayta urinib ko'ring.
+          </Typography>
+          <Typography variant="caption" color="text.secondary" sx={{ fontFamily: "monospace", display: "block", mt: 1 }}>
+            Customer ID: {customerId}
+          </Typography>
+          <Typography variant="caption" color="text.secondary" sx={{ fontFamily: "monospace", display: "block" }}>
+            customerContracts: {customerContracts === null ? "null" : customerContracts === undefined ? "undefined" : "exists"}
+          </Typography>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => dispatch(getContract(customerId))}
+            sx={{ mt: 2 }}
+          >
+            Qayta urinish
+          </Button>
+        </Paper>
+      )}
+
+      {/* Bo'sh holat */}
+      {isEmpty && (
+        <Paper sx={{ p: 2, borderRadius: 2, width: "100%" }}>
+          <Typography variant="body2" color="text.secondary">
+            To'lovlar mavjud emas.
+          </Typography>
+        </Paper>
+      )}
 
       {customerContracts?.allContracts &&
         customerContracts.allContracts.length > 0 &&
