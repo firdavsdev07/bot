@@ -514,7 +514,15 @@ const PaymentScheduleNew: FC<PaymentScheduleProps> = ({
                       color="text.secondary"
                       sx={{ fontSize: { xs: "0.6rem", sm: "0.75rem", md: "0.8rem" } }}
                     >
-                      {format(new Date(item.date), isMobile ? "dd.MM" : "dd.MM.yyyy")}
+                      {(() => {
+                        try {
+                          if (!item.date) return '-';
+                          const date = new Date(item.date);
+                          return isNaN(date.getTime()) ? '-' : format(date, isMobile ? "dd.MM" : "dd.MM.yyyy");
+                        } catch {
+                          return '-';
+                        }
+                      })()}
                     </Typography>
                   </TableCell>
                   
@@ -696,9 +704,20 @@ const PaymentScheduleNew: FC<PaymentScheduleProps> = ({
                                 <strong>To'langan:</strong> ${actualPaidAmount.toLocaleString()}
                               </Typography>
                               <Typography variant="body2" fontSize="0.8rem">
-                                <strong>Sana:</strong> {actualPayment.confirmedAt
-                                  ? format(new Date(actualPayment.confirmedAt as string), "dd.MM.yyyy HH:mm")
-                                  : format(new Date(actualPayment.date as string), "dd.MM.yyyy")}
+                                <strong>Sana:</strong> {(() => {
+                                  try {
+                                    if (actualPayment.confirmedAt) {
+                                      const date = new Date(actualPayment.confirmedAt as string);
+                                      return isNaN(date.getTime()) ? '-' : format(date, "dd.MM.yyyy HH:mm");
+                                    } else if (actualPayment.date) {
+                                      const date = new Date(actualPayment.date as string);
+                                      return isNaN(date.getTime()) ? '-' : format(date, "dd.MM.yyyy");
+                                    }
+                                    return '-';
+                                  } catch {
+                                    return '-';
+                                  }
+                                })()}
                               </Typography>
                             </Stack>
                           )}
@@ -718,7 +737,14 @@ const PaymentScheduleNew: FC<PaymentScheduleProps> = ({
                               <Stack direction="row" alignItems="center" spacing={0.5}>
                                 <Bell size={14} color="#ed6c02" />
                                 <Typography variant="caption" fontWeight={600} color="warning.dark">
-                                  Eslatma: {format(new Date(paymentWithReminder.reminderDate), "dd.MM.yyyy")}
+                                  Eslatma: {(() => {
+                                    try {
+                                      const date = new Date(paymentWithReminder.reminderDate);
+                                      return isNaN(date.getTime()) ? 'Noto\'g\'ri sana' : format(date, "dd.MM.yyyy");
+                                    } catch {
+                                      return 'Noto\'g\'ri sana';
+                                    }
+                                  })()}
                                 </Typography>
                               </Stack>
                             </Box>
