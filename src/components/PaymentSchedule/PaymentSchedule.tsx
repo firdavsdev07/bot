@@ -654,7 +654,15 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                             variant="body2"
                             fontSize={{ xs: "0.7rem", sm: "0.75rem", md: "0.875rem" }}
                           >
-                            {format(new Date(item.date), "dd.MM")}
+                            {(() => {
+                              try {
+                                if (!item.date) return '-';
+                                const d = new Date(item.date);
+                                return isNaN(d.getTime()) ? '-' : format(d, "dd.MM");
+                              } catch {
+                                return '-';
+                              }
+                            })()}
                           </Typography>
                         </TableCell>
 
@@ -686,7 +694,15 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                                     new Date(actualPayment.date as string),
                                     "dd.MM"
                                   )
-                                : format(new Date(item.date), "dd.MM")}
+                                : (() => {
+                                    try {
+                                      if (!item.date) return '-';
+                                      const d = new Date(item.date);
+                                      return isNaN(d.getTime()) ? '-' : format(d, "dd.MM");
+                                    } catch {
+                                      return '-';
+                                    }
+                                  })()}
                               {!item.isInitial &&
                                 delayDays > 0 &&
                                 ` (+${delayDays})`}

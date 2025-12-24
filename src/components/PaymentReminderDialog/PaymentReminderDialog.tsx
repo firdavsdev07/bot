@@ -44,7 +44,19 @@ const PaymentReminderDialog: FC<PaymentReminderDialogProps> = ({
       tomorrow.setDate(tomorrow.getDate() + 1);
       return format(tomorrow, "yyyy-MM-dd");
     }
-    return format(new Date(date), "yyyy-MM-dd");
+    try {
+      const d = new Date(date);
+      if (isNaN(d.getTime())) {
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        return format(tomorrow, "yyyy-MM-dd");
+      }
+      return format(d, "yyyy-MM-dd");
+    } catch {
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      return format(tomorrow, "yyyy-MM-dd");
+    }
   };
 
   const [reminderDate, setReminderDate] = useState<string>(
@@ -148,7 +160,15 @@ const PaymentReminderDialog: FC<PaymentReminderDialogProps> = ({
             <strong>{targetMonth}-oy</strong> to'lovi uchun eslatma
           </Typography>
           <Typography variant="caption" color="text.secondary">
-            Asl to'lov sanasi: {format(new Date(paymentDate), "dd.MM.yyyy")}
+            Asl to'lov sanasi: {(() => {
+              try {
+                if (!paymentDate) return '-';
+                const d = new Date(paymentDate);
+                return isNaN(d.getTime()) ? '-' : format(d, "dd.MM.yyyy");
+              } catch {
+                return '-';
+              }
+            })()}
           </Typography>
         </Box>
 
