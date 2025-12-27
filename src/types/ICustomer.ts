@@ -70,4 +70,8 @@ export type IDebtorContract = {
   totalPrice: number;
   totalPaid: number;
   startDate?: string; // ✅ Shartnoma boshlangan sana
+  period?: number; // ✅ Umumiy muddat (oylar)
+  paidMonthsCount?: number; // ✅ To'langan oylar soni
+  monthlyPayment?: number; // ✅ Oylik to'lov
+  initialPayment?: number; // ✅ Boshlang'ich to'lov
 };

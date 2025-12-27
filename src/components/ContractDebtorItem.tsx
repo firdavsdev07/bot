@@ -41,7 +41,6 @@ const ContractDebtorItem: React.FC<ContractDebtorItemProps> = memo(({
     return fullName;
   };
 
-
   // Truncate product name for mobile
   const truncateProductName = (name: string) => {
     if (name.length > 30) {
@@ -49,6 +48,21 @@ const ContractDebtorItem: React.FC<ContractDebtorItemProps> = memo(({
     }
     return name;
   };
+
+  // Calculate paid months
+  const getPaidMonths = () => {
+    if (contract.paidMonthsCount !== undefined) {
+      return contract.paidMonthsCount;
+    }
+    // Fallback calculation
+    if (contract.period && contract.monthlyPayment && contract.initialPayment !== undefined) {
+      return Math.floor((contract.totalPaid - contract.initialPayment) / contract.monthlyPayment);
+    }
+    return 0;
+  };
+
+  const paidMonths = getPaidMonths();
+  const totalMonths = contract.period || 0;
 
   return (
     <MotionListItemButton
@@ -179,6 +193,31 @@ const ContractDebtorItem: React.FC<ContractDebtorItemProps> = memo(({
                 {truncateProductName(contract.productName)}
               </Typography>
             </Box>
+
+            {/* Contract duration - NEW */}
+            {totalMonths > 0 && (
+              <Box display="flex" alignItems="center" gap={0.5}>
+                <Typography
+                  variant="caption"
+                  sx={{
+                    fontSize: responsive.typography.caption,
+                    fontWeight: 700,
+                    color: "primary.main",
+                  }}
+                >
+                  {paidMonths}
+                </Typography>
+                <Typography
+                  variant="caption"
+                  sx={{
+                    fontSize: responsive.typography.caption,
+                    color: "text.secondary",
+                  }}
+                >
+                  / {totalMonths} oy
+                </Typography>
+              </Box>
+            )}
           </Box>
         }
       />

@@ -9,9 +9,9 @@ import Notifications from "../pages/notifications";
 import { BarChart3, Users, AlertTriangle, Receipt, Bell } from "lucide-react";
 
 export const tabRoutes = [
+  { path: "/debtors", label: "Qarzdorlar", icon: AlertTriangle, component: Debtors },
   { path: "/summary", label: "Hisobot", icon: BarChart3, component: DailySummary },
   { path: "/clients", label: "Mijozlar", icon: Users, component: Clients },
-  { path: "/debtors", label: "Qarzdorlar", icon: AlertTriangle, component: Debtors },
   { path: "/expenses", label: "Harajatlar", icon: Receipt, component: Expenses },
   { path: "/notifications", label: "Xabarlar", icon: Bell, component: Notifications, showBadge: true },
 ];
