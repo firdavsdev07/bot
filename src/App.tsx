@@ -17,7 +17,7 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [error] = useState<string | null>(null);
   const { user } = useSelector((state: RootState) => state.auth);
-  
+
   const isAuthenticated = user.id && user.id !== "";
 
   useEffect(() => {
@@ -30,7 +30,14 @@ function App() {
 
   if (loading) {
     return (
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
         <CircularProgress />
       </div>
     );
@@ -43,13 +50,13 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Toaster 
+      <Toaster
         position="top-center"
         toastOptions={{
           duration: 3000,
           style: {
-            borderRadius: '6px',
-            fontSize: '14px',
+            borderRadius: "6px",
+            fontSize: "14px",
             fontWeight: 500,
           },
         }}
@@ -58,7 +65,7 @@ function App() {
         <ErrorSnackbar />
         {isAuthenticated ? (
           <Routes>
-            <Route path="/" element={<Navigate to="/summary" />} />
+            <Route path="/" element={<Navigate to="/debtors" />} />
             <Route path="/*" element={<TabsLayout />} />
           </Routes>
         ) : (
