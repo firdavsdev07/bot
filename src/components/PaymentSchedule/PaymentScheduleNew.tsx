@@ -102,11 +102,13 @@ const PaymentScheduleNew: FC<PaymentScheduleProps> = ({
     targetMonth: number;
     paymentDate: string;
     currentReminderDate?: string | Date | null;
+    currentReminderComment?: string | null;
   }>({
     open: false,
     targetMonth: 0,
     paymentDate: "",
     currentReminderDate: null,
+    currentReminderComment: null,
   });
 
 
@@ -235,7 +237,7 @@ const PaymentScheduleNew: FC<PaymentScheduleProps> = ({
   };
 
   // ✅ YANGI: Reminder dialog ochish
-  const handleOpenReminderDialog = (month: number, paymentDate: string, currentReminder?: string | Date | null) => {
+  const handleOpenReminderDialog = (month: number, paymentDate: string, currentReminder?: string | Date | null, currentComment?: string | null) => {
     if (!contractId) {
       showError("Shartnoma ID topilmadi", "Xatolik");
       return;
@@ -246,6 +248,7 @@ const PaymentScheduleNew: FC<PaymentScheduleProps> = ({
       targetMonth: month,
       paymentDate,
       currentReminderDate: currentReminder,
+      currentReminderComment: currentComment,
     });
   };
 
@@ -255,6 +258,7 @@ const PaymentScheduleNew: FC<PaymentScheduleProps> = ({
       targetMonth: 0,
       paymentDate: "",
       currentReminderDate: null,
+      currentReminderComment: null,
     });
   };
 
@@ -599,18 +603,21 @@ const PaymentScheduleNew: FC<PaymentScheduleProps> = ({
                                 const targetMonth = item.month;
                                 const paymentDate = item.date;
                                 const currentReminder = foundPayment?.reminderDate || paymentWithReminder?.reminderDate;
+                                const currentComment = foundPayment?.reminderComment || paymentWithReminder?.reminderComment;
 
                                 console.log("📍 Opening reminder dialog:", {
                                   itemMonth: item.month,
                                   targetMonth,
                                   foundPayment: !!foundPayment,
-                                  hasExistingReminder: !!currentReminder
+                                  hasExistingReminder: !!currentReminder,
+                                  hasExistingComment: !!currentComment
                                 });
 
                                 handleOpenReminderDialog(
                                   targetMonth,
                                   paymentDate,
-                                  currentReminder
+                                  currentReminder,
+                                  currentComment
                                 );
                               }}
                               sx={{
@@ -751,19 +758,26 @@ const PaymentScheduleNew: FC<PaymentScheduleProps> = ({
                           
                           {/* ✅ YANGI: Reminder info */}
                           {hasReminder && paymentWithReminder?.reminderDate && (
-                            <Box sx={{ mt: 1, p: 1, bgcolor: "warning.lighter", borderRadius: 1, border: "1px solid", borderColor: "warning.main" }}>
-                              <Stack direction="row" alignItems="center" spacing={0.5}>
-                                <Bell size={14} color="#ed6c02" />
-                                <Typography variant="caption" fontWeight={600} color="warning.dark">
-                                  Eslatma: {(() => {
-                                    try {
-                                      const date = new Date(paymentWithReminder.reminderDate);
-                                      return isNaN(date.getTime()) ? 'Noto\'g\'ri sana' : format(date, "dd.MM.yyyy");
-                                    } catch {
-                                      return 'Noto\'g\'ri sana';
-                                    }
-                                  })()}
-                                </Typography>
+                            <Box sx={{ mt: 1, p: 1.5, bgcolor: "warning.lighter", borderRadius: 1, border: "1px solid", borderColor: "warning.main" }}>
+                              <Stack spacing={0.5}>
+                                <Stack direction="row" alignItems="center" spacing={0.5}>
+                                  <Bell size={14} color="#ed6c02" />
+                                  <Typography variant="caption" fontWeight={600} color="warning.dark">
+                                    Eslatma sanasi: {(() => {
+                                      try {
+                                        const date = new Date(paymentWithReminder.reminderDate);
+                                        return isNaN(date.getTime()) ? 'Noto\'g\'ri sana' : format(date, "dd.MM.yyyy");
+                                      } catch {
+                                        return 'Noto\'g\'ri sana';
+                                      }
+                                    })()}
+                                  </Typography>
+                                </Stack>
+                                {paymentWithReminder?.reminderComment && (
+                                  <Typography variant="caption" color="text.secondary" sx={{ pl: 2.5 }}>
+                                    💬 {paymentWithReminder.reminderComment}
+                                  </Typography>
+                                )}
                               </Stack>
                             </Box>
                           )}
@@ -818,6 +832,7 @@ const PaymentScheduleNew: FC<PaymentScheduleProps> = ({
           targetMonth={reminderDialog.targetMonth}
           paymentDate={reminderDialog.paymentDate}
           currentReminderDate={reminderDialog.currentReminderDate}
+          currentReminderComment={reminderDialog.currentReminderComment}
           onSuccess={handleReminderSuccess}
         />
       )}

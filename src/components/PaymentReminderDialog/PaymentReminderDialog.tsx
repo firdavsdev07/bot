@@ -21,6 +21,7 @@ interface PaymentReminderDialogProps {
   contractId: string;
   targetMonth: number;
   currentReminderDate?: string | Date | null;
+  currentReminderComment?: string | null;
   paymentDate: string | Date; // Original payment date
   onSuccess?: () => void;
 }
@@ -31,6 +32,7 @@ const PaymentReminderDialog: FC<PaymentReminderDialogProps> = ({
   contractId,
   targetMonth,
   currentReminderDate,
+  currentReminderComment,
   paymentDate,
   onSuccess,
 }) => {
@@ -39,28 +41,25 @@ const PaymentReminderDialog: FC<PaymentReminderDialogProps> = ({
   // Format initial date
   const formatDateForInput = (date: string | Date | null | undefined) => {
     if (!date) {
-      // Default: tomorrow
-      const tomorrow = new Date();
-      tomorrow.setDate(tomorrow.getDate() + 1);
-      return format(tomorrow, "yyyy-MM-dd");
+      // Default: empty string (kalendarda ko'rinmasligi uchun)
+      return "";
     }
     try {
       const d = new Date(date);
       if (isNaN(d.getTime())) {
-        const tomorrow = new Date();
-        tomorrow.setDate(tomorrow.getDate() + 1);
-        return format(tomorrow, "yyyy-MM-dd");
+        return "";
       }
       return format(d, "yyyy-MM-dd");
     } catch {
-      const tomorrow = new Date();
-      tomorrow.setDate(tomorrow.getDate() + 1);
-      return format(tomorrow, "yyyy-MM-dd");
+      return "";
     }
   };
 
   const [reminderDate, setReminderDate] = useState<string>(
     formatDateForInput(currentReminderDate)
+  );
+  const [reminderComment, setReminderComment] = useState<string>(
+    currentReminderComment || ""
   );
   const [loading, setLoading] = useState(false);
 
@@ -80,6 +79,7 @@ const PaymentReminderDialog: FC<PaymentReminderDialogProps> = ({
         contractId,
         targetMonth,
         reminderDate,
+        reminderComment: reminderComment.trim() || undefined,
       });
 
       showSuccess("Eslatma muvaffaqiyatli belgilandi", "Eslatma");
@@ -183,8 +183,8 @@ const PaymentReminderDialog: FC<PaymentReminderDialogProps> = ({
           <Typography variant="body2" color="text.secondary" gutterBottom>
             <strong>{targetMonth}-oy</strong> to'lovi uchun eslatma
           </Typography>
-          <Typography variant="caption" color="text.secondary">
-            Asl to'lov sanasi: {(() => {
+          <Typography variant="caption" color="text.secondary" sx={{ display: "block", mb: 0.5 }}>
+            📅 Asl to'lov sanasi: {(() => {
               try {
                 if (!paymentDate) return '-';
                 const d = new Date(paymentDate);
@@ -194,6 +194,11 @@ const PaymentReminderDialog: FC<PaymentReminderDialogProps> = ({
               }
             })()}
           </Typography>
+          {currentReminderDate && (
+            <Typography variant="caption" color="warning.main" sx={{ display: "block" }}>
+              🔔 O'rnatilgan eslatma: {formatDateForInput(currentReminderDate) ? format(new Date(currentReminderDate), "dd.MM.yyyy") : '-'}
+            </Typography>
+          )}
         </Box>
 
         <TextField
@@ -209,18 +214,36 @@ const PaymentReminderDialog: FC<PaymentReminderDialogProps> = ({
             min: minDate,
           }}
           sx={{
+            mb: 2,
             "& .MuiOutlinedInput-root": {
               borderRadius: 1.5,
             },
           }}
+          helperText="Eslatma uchun sana tanlang"
         />
 
-        <Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: "block" }}>
+        <TextField
+          label="Izoh (ixtiyoriy)"
+          fullWidth
+          multiline
+          rows={3}
+          value={reminderComment}
+          onChange={(e) => setReminderComment(e.target.value)}
+          placeholder="Eslatma uchun izoh yozing..."
+          sx={{
+            "& .MuiOutlinedInput-root": {
+              borderRadius: 1.5,
+            },
+          }}
+          helperText="Bu izoh faqat siz uchun ko'rinadi"
+        />
+
+        <Typography variant="caption" color="text.secondary" sx={{ mt: 2, display: "block" }}>
           💡 Bu to'lov sanasini o'zgartirmaydi, faqat sizga eslatma sifatida xizmat qiladi
         </Typography>
       </DialogContent>
 
-      <DialogActions sx={{ px: 3, pb: 2, gap: 1 }}>
+      <DialogActions sx={{ px: 3, pb: 2, gap: 1.5, flexWrap: "wrap" }}>
         {currentReminderDate && (
           <Button
             onClick={handleRemoveReminder}
@@ -229,6 +252,7 @@ const PaymentReminderDialog: FC<PaymentReminderDialogProps> = ({
             disabled={loading}
             sx={{
               borderRadius: 1.5,
+              minWidth: 100,
             }}
           >
             O'chirish
@@ -241,6 +265,7 @@ const PaymentReminderDialog: FC<PaymentReminderDialogProps> = ({
           disabled={loading}
           sx={{
             borderRadius: 1.5,
+            minWidth: 90,
           }}
         >
           Bekor

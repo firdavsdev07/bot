@@ -22,6 +22,7 @@ export interface SetReminderPayload {
   contractId: string;
   targetMonth: number;
   reminderDate: string; // ISO format: "2024-12-25"
+  reminderComment?: string; // Ixtiyoriy izoh
 }
 
 export interface RemoveReminderPayload {
