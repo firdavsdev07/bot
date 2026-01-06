@@ -10,9 +10,13 @@ import {
   DialogContent,
   InputAdornment,
   Alert,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import { motion } from "framer-motion";
-import { DollarSign, CreditCard, FileText, Calendar } from "lucide-react";
+import { DollarSign, CreditCard, FileText, Calendar, Wallet } from "lucide-react";
 
 import { useAppDispatch } from "../../hooks/useAppDispatch";
 import {
@@ -61,6 +65,7 @@ const PaymentModal: FC<PaymentModalProps> = ({
   const [currencyCourse, setCurrencyCourse] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState<string>("som_cash"); // ✅ YANGI: To'lov usuli
   const [nextPaymentDate, setNextPaymentDate] = useState<string>(() => {
     // Default: Ertaga, 10:00
     const tomorrow = new Date();
@@ -159,6 +164,7 @@ const PaymentModal: FC<PaymentModalProps> = ({
       currencyCourse,
       targetMonth: targetMonth || 1,
       nextPaymentDate: nextPaymentDate || undefined,
+      paymentMethod: paymentMethod, // ✅ YANGI: To'lov usuli
     };
 
     try {
@@ -176,6 +182,7 @@ const PaymentModal: FC<PaymentModalProps> = ({
           },
           currencyCourse,
           nextPaymentDate: nextPaymentDate || undefined,
+          paymentMethod: paymentMethod, // ✅ YANGI: To'lov usuli
         });
       } else {
         const payload: IPaydata = {
@@ -420,6 +427,31 @@ const PaymentModal: FC<PaymentModalProps> = ({
               },
             }}
           />
+
+          {/* ✅ YANGI: To'lov usuli tanlash */}
+          <FormControl fullWidth>
+            <InputLabel id="payment-method-label">To'lov usuli</InputLabel>
+            <Select
+              labelId="payment-method-label"
+              id="payment-method-select"
+              value={paymentMethod}
+              label="To'lov usuli"
+              onChange={(e) => setPaymentMethod(e.target.value)}
+              startAdornment={
+                <InputAdornment position="start">
+                  <Wallet size={20} color="#667eea" />
+                </InputAdornment>
+              }
+              sx={{
+                borderRadius: borderRadius.md,
+              }}
+            >
+              <MenuItem value="som_cash">So'm naqd</MenuItem>
+              <MenuItem value="som_card">So'm karta</MenuItem>
+              <MenuItem value="dollar_cash">Dollar naqd</MenuItem>
+              <MenuItem value="dollar_card_visa">Dollar karta (Visa)</MenuItem>
+            </Select>
+          </FormControl>
 
           <Box
             sx={{

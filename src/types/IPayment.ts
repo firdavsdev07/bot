@@ -11,7 +11,8 @@ export interface IPaydata {
   currencyDetails: ICurrencyDetails;
   currencyCourse: number;
   targetMonth?: number;
-  nextPaymentDate?: string; 
+  nextPaymentDate?: string;
+  paymentMethod?: string; // ✅ YANGI: To'lov usuli
 }
 
 export interface IPayment {
@@ -21,6 +22,7 @@ export interface IPayment {
     actualAmount?: number;
     isPaid: boolean;
     paymentType?: string;
+    paymentMethod?: string; // ✅ YANGI - To'lov usuli
     status?: string;
     remainingAmount?: number;
     excessAmount?: number;
