@@ -564,7 +564,7 @@ const PaymentScheduleNew: FC<PaymentScheduleProps> = ({
                   
                   {/* Action Column */}
                   <TableCell sx={{ py: { xs: 0.75, sm: 1.5 } }} align="right">
-                    <Stack direction="row" spacing={isMobile ? 1 : 2} justifyContent="flex-end" alignItems="center">
+                    <Stack direction="row" spacing={isMobile ? 2 : 5} justifyContent="flex-end" alignItems="center">
                       {!readOnly && (contractId || debtorId) && !item.isPaid && (
                         <>
                           <Button
