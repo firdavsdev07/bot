@@ -37,7 +37,7 @@ export type ICustomerContract = {
   initialPayment?: number;
   initialPaymentDueDate?: string;
   startDate?: string;
-  prepaidBalance?: number; 
+  prepaidBalance?: number;
   payments?: Array<{
     _id?: string;
     amount: number;
@@ -74,4 +74,5 @@ export type IDebtorContract = {
   paidMonthsCount?: number; // ✅ To'langan oylar soni
   monthlyPayment?: number; // ✅ Oylik to'lov
   initialPayment?: number; // ✅ Boshlang'ich to'lov
+  isPending?: boolean; // ✅ YANGI: Kassa kutayotgan to'lov bormi?
 };

@@ -79,12 +79,12 @@ const ContractDebtorItem: React.FC<ContractDebtorItemProps> = memo(({
         py: { xs: 1.5, sm: 2 },
         bgcolor: "background.paper",
         border: "2px solid",
-        borderColor: "error.main",
-        boxShadow: shadows.sm,
+        borderColor: contract.isPending ? "info.main" : "error.main",
+        boxShadow: contract.isPending ? shadows.colored("rgba(2, 136, 209, 0.2)") : shadows.sm,
         transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
         "&:hover": {
           bgcolor: "background.paper",
-          borderColor: "error.dark",
+          borderColor: contract.isPending ? "info.dark" : "error.dark",
           boxShadow: shadows.md,
         },
       }}
@@ -95,7 +95,7 @@ const ContractDebtorItem: React.FC<ContractDebtorItemProps> = memo(({
           mr: responsive.spacing.gap,
           width: responsive.avatar.medium.xs,
           height: responsive.avatar.medium.xs,
-          bgcolor: "error.main",
+          bgcolor: contract.isPending ? "info.main" : "error.main",
           fontSize: responsive.typography.body1.xs,
           fontWeight: 700,
           boxShadow: shadows.sm,
@@ -150,7 +150,7 @@ const ContractDebtorItem: React.FC<ContractDebtorItemProps> = memo(({
             </Typography>
             
             {/* Delay days badge - responsive */}
-            {contract.delayDays !== undefined && contract.delayDays > 0 && (
+            {contract.delayDays !== undefined && contract.delayDays > 0 && !contract.isPending && (
               <Chip
                 icon={<Clock size={responsive.icon.small.xs} />}
                 label={`${contract.delayDays > 99 ? "99+" : contract.delayDays} kun`}
@@ -171,6 +171,27 @@ const ContractDebtorItem: React.FC<ContractDebtorItemProps> = memo(({
                   "& .MuiChip-label": {
                     px: { xs: 0.5, sm: 1 }
                   }
+                }}
+              />
+            )}
+
+            {/* Kassa kutilmoqda - NEW */}
+            {contract.isPending && (
+              <Chip
+                label="TASDIQ KUTILMOQDA"
+                size="small"
+                color="info"
+                sx={{
+                  height: { xs: 18, sm: 20 },
+                  fontSize: "0.6rem",
+                  fontWeight: 800,
+                  animation: "pulse 2s infinite ease-in-out",
+                  "@keyframes pulse": {
+                    "0%": { opacity: 1, transform: "scale(1)" },
+                    "50%": { opacity: 0.7, transform: "scale(0.98)" },
+                    "100%": { opacity: 1, transform: "scale(1)" },
+                  },
+                  "& .MuiChip-label": { px: 1 }
                 }}
               />
             )}
