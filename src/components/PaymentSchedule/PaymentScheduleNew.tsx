@@ -763,14 +763,14 @@ const PaymentScheduleNew: FC<PaymentScheduleProps> = ({
                                 <Stack direction="row" alignItems="center" spacing={0.5}>
                                   <Bell size={14} color="#ed6c02" />
                                   <Typography variant="caption" fontWeight={600} color="warning.dark">
-                                    Eslatma sanasi: {(() => {
+                                    To'lov {(() => {
                                       try {
                                         const date = new Date(paymentWithReminder.reminderDate);
                                         return isNaN(date.getTime()) ? 'Noto\'g\'ri sana' : format(date, "dd.MM.yyyy");
                                       } catch {
                                         return 'Noto\'g\'ri sana';
                                       }
-                                    })()}
+                                    })()} kuniga ko'chirildi
                                   </Typography>
                                 </Stack>
                                 {paymentWithReminder?.reminderComment && (
