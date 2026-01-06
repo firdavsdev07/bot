@@ -15,7 +15,7 @@ import { ChevronDown, Wallet } from "lucide-react";
 import { useAppDispatch } from "../../hooks/useAppDispatch";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store";
-import { getContract } from "../../store/actions/customerActions";
+import { getContract, getCustomersDebtor } from "../../store/actions/customerActions";
 import { blue } from "@mui/material/colors";
 import { ICustomerContract } from "../../types/ICustomer";
 import ContractInfo from "../Drawer/ContractInfo";
@@ -210,8 +210,9 @@ const DialogTabPayment: FC<IProps> = ({ customerId }) => {
                 readOnly={false}
                 nextPaymentDate={contract.nextPaymentDate}
                 onPaymentSuccess={() => {
-                  // ✅ TUZATISH: Force refresh - eslatma saqlanganidan keyin yangi ma'lumot olish
+                  // ✅ TUZATISH: Force refresh - hamma ma'lumotlarni yangilash
                   dispatch(getContract(customerId));
+                  dispatch(getCustomersDebtor()); // ✅ Qarzdorlar ro'yxatini ham yangilash (ko'k rang uchun)
                 }}
               />
             </AccordionDetails>
