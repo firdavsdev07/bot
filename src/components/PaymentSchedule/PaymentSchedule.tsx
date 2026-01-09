@@ -39,6 +39,7 @@ interface PaymentScheduleItem {
 
 interface PaymentScheduleProps {
   startDate: string;
+  nextPaymentDate?: string; // ✅ YANGI: Birinchi oylik to'lov sanasi
   monthlyPayment: number;
   period: number;
   initialPayment?: number;
@@ -56,6 +57,7 @@ interface PaymentScheduleProps {
 
 const PaymentSchedule: FC<PaymentScheduleProps> = ({
   startDate,
+  nextPaymentDate, // ✅ YANGI prop
   monthlyPayment,
   period,
   initialPayment = 0,
@@ -129,9 +131,16 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
         return dateA.getTime() - dateB.getTime();
       });
 
+    // ✅ TUZATISH: nextPaymentDate dan boshlab oylar qo'shamiz
+    // startDate emas, nextPaymentDate - bu birinchi oylik to'lov sanasi
+    const firstMonthlyPaymentDate = nextPaymentDate ? new Date(nextPaymentDate) : addMonths(start, 1);
+
     // Oylik to'lovlarni qo'shish
     for (let i = 1; i <= period; i++) {
-      const paymentDate = addMonths(start, i);
+      // ✅ TUZATILDI: nextPaymentDate dan (i-1) oy qo'shish
+      // i=1 -> nextPaymentDate (birinchi oy)
+      // i=2 -> nextPaymentDate + 1 oy (ikkinchi oy)
+      const paymentDate = addMonths(firstMonthlyPaymentDate, i - 1);
 
       // Bu oy uchun to'lov mavjudmi tekshirish (index bo'yicha)
       const isPaid = i <= monthlyPayments.length;
