@@ -86,9 +86,9 @@ const ContractDebtorItem: React.FC<ContractDebtorItemProps> = memo(({
           <Typography
             fontSize={{ xs: "0.8rem", sm: "0.85rem" }}
             fontWeight={700}
-            color={getDelayColor(contract.delayDays)}
+            color="#d32f2f"
           >
-            {contract.delayDays > 99 ? "99+" : contract.delayDays}
+            {contract.delayDays > 99 ? "99+" : contract.delayDays} kun
           </Typography>
         )}
         
