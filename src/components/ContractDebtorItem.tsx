@@ -103,64 +103,66 @@ const ContractDebtorItem: React.FC<ContractDebtorItemProps> = memo(({
         )}
       </Stack>
 
-      {/* Mijoz ismi (uzun bo'lsa - initials) */}
-      <Typography
-        fontWeight={700}
-        fontSize={{ xs: "0.85rem", sm: "0.9rem" }}
-        color="text.primary"
-        sx={{
-          overflow: "hidden",
-          textOverflow: "ellipsis",
-          whiteSpace: "nowrap",
-          mb: 0.3,
-        }}
-      >
-        {contract.fullName.length > 20 ? getInitials(contract.fullName) : contract.fullName}
-      </Typography>
-
-      {/* Mahsulot nomi */}
-      <Typography
-        fontSize={{ xs: "0.7rem", sm: "0.75rem" }}
-        color="text.secondary"
-        sx={{
-          overflow: "hidden",
-          textOverflow: "ellipsis",
-          whiteSpace: "nowrap",
-          mb: 0.3,
-        }}
-      >
-        {contract.productName}
-      </Typography>
-
-      {/* To'lov ID va To'langan/Jami oylar */}
+      {/* Mijoz va Mahsulot - yonma-yon */}
       <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 0.5 }}>
         <Typography
-          fontSize={{ xs: "0.65rem", sm: "0.7rem" }}
-          fontWeight={600}
-          color="primary.main"
+          fontWeight={700}
+          fontSize={{ xs: "0.85rem", sm: "0.9rem" }}
+          color="text.primary"
+          sx={{
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+          }}
         >
-          {contract.paymentId || "---"}
+          {contract.fullName.length > 20 ? getInitials(contract.fullName) : contract.fullName}
         </Typography>
-        
-        {contract.paidMonthsCount !== undefined && contract.period && (
-          <Typography
-            fontSize={{ xs: "0.7rem", sm: "0.75rem" }}
-            fontWeight={600}
-            color="text.secondary"
-          >
-            {contract.paidMonthsCount}/{contract.period}
-          </Typography>
-        )}
+
+        <Typography
+          fontSize={{ xs: "0.7rem", sm: "0.75rem" }}
+          color="text.secondary"
+          sx={{
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+          }}
+        >
+          • {contract.productName}
+        </Typography>
       </Stack>
 
-      {/* Oylik to'lov summasi - KATTA */}
-      <Typography
-        fontWeight={700}
-        fontSize={{ xs: "1.1rem", sm: "1.2rem" }}
-        color={getDelayColor(contract.delayDays || 0)}
-      >
-        {formatCurrency(monthlyAmount)} $
-      </Typography>
+      {/* Bottom: Oylik to'lov (left) va To'lov ID + 3/8 (right) */}
+      <Stack direction="row" justifyContent="space-between" alignItems="center">
+        {/* Oylik to'lov summasi - KATTA */}
+        <Typography
+          fontWeight={700}
+          fontSize={{ xs: "1.1rem", sm: "1.2rem" }}
+          color={getDelayColor(contract.delayDays || 0)}
+        >
+          {formatCurrency(monthlyAmount)} $
+        </Typography>
+
+        {/* To'lov ID va 3/8 - bottom-right */}
+        <Stack direction="row" spacing={1} alignItems="center">
+          <Typography
+            fontSize={{ xs: "0.65rem", sm: "0.7rem" }}
+            fontWeight={600}
+            color="primary.main"
+          >
+            {contract.paymentId || "---"}
+          </Typography>
+
+          {contract.paidMonthsCount !== undefined && contract.period && (
+            <Typography
+              fontSize={{ xs: "0.7rem", sm: "0.75rem" }}
+              fontWeight={600}
+              color="text.secondary"
+            >
+              {contract.paidMonthsCount}/{contract.period}
+            </Typography>
+          )}
+        </Stack>
+      </Stack>
     </MotionPaper>
   );
 });
