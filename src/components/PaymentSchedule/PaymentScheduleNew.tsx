@@ -392,21 +392,21 @@ const PaymentScheduleNew: FC<PaymentScheduleProps> = ({
           <Table size="small" stickyHeader>
             <TableHead>
               <TableRow>
-                <TableCell sx={{ fontWeight: 700, py: { xs: 0.5, sm: 1 }, fontSize: { xs: "0.6rem", sm: "0.75rem", md: "0.8rem" } }}>
-                  {isMobile ? "ID/Oy" : "ID / To'lov"}
+                <TableCell sx={{ fontWeight: 700, py: { xs: 0.4, sm: 0.6 }, px: { xs: 0.75, sm: 1 }, fontSize: { xs: "0.65rem", sm: "0.7rem" } }}>
+                  {isMobile ? "Oy" : "ID / Oy"}
                 </TableCell>
-                <TableCell sx={{ fontWeight: 700, py: { xs: 0.5, sm: 1 }, fontSize: { xs: "0.6rem", sm: "0.75rem", md: "0.8rem" } }}>
-                  {isMobile ? "Sana" : "Muddat"}
+                <TableCell sx={{ fontWeight: 700, py: { xs: 0.4, sm: 0.6 }, px: { xs: 0.75, sm: 1 }, fontSize: { xs: "0.65rem", sm: "0.7rem" } }}>
+                  Sana
                 </TableCell>
-                <TableCell sx={{ fontWeight: 700, py: { xs: 0.5, sm: 1 }, fontSize: { xs: "0.6rem", sm: "0.75rem", md: "0.8rem" } }}>
+                <TableCell sx={{ fontWeight: 700, py: { xs: 0.4, sm: 0.6 }, px: { xs: 0.75, sm: 1 }, fontSize: { xs: "0.65rem", sm: "0.7rem" } }}>
                   Summa
                 </TableCell>
                 {!isMobile && (
-                  <TableCell sx={{ fontWeight: 700, py: { xs: 0.5, sm: 1 }, fontSize: { xs: "0.6rem", sm: "0.75rem", md: "0.8rem" } }}>
+                  <TableCell sx={{ fontWeight: 700, py: { xs: 0.4, sm: 0.6 }, px: { xs: 0.5, sm: 0.75 }, fontSize: { xs: "0.65rem", sm: "0.7rem" } }}>
                     Holat
                   </TableCell>
                 )}
-                <TableCell sx={{ fontWeight: 700, py: { xs: 0.5, sm: 1 }, fontSize: { xs: "0.6rem", sm: "0.75rem", md: "0.8rem" } }} align="right">
+                <TableCell sx={{ fontWeight: 700, py: { xs: 0.4, sm: 0.6 }, px: { xs: 0.5, sm: 0.75 }, fontSize: { xs: "0.65rem", sm: "0.7rem" } }} align="right">
                   Amal
                 </TableCell>
               </TableRow>
@@ -505,7 +505,7 @@ const PaymentScheduleNew: FC<PaymentScheduleProps> = ({
                   onClick={() => toggleExpand(item.month)}
                 >
                   {/* ID/Month/Type Column */}
-                  <TableCell sx={{ py: { xs: 0.75, sm: 1.5 } }}>
+                  <TableCell sx={{ py: { xs: 0.5, sm: 0.75 }, px: { xs: 0.75, sm: 1 } }}>
                     <Stack spacing={0.5}>
                       {actualPayment?.paymentId && (
                         <Typography
@@ -538,7 +538,7 @@ const PaymentScheduleNew: FC<PaymentScheduleProps> = ({
                   </TableCell>
                   
                   {/* Date Column */}
-                  <TableCell sx={{ py: { xs: 0.75, sm: 1.5 } }}>
+                  <TableCell sx={{ py: { xs: 0.5, sm: 0.75 }, px: { xs: 0.75, sm: 1 } }}>
                     <Typography 
                       variant="body2" 
                       color="text.secondary"
@@ -557,7 +557,7 @@ const PaymentScheduleNew: FC<PaymentScheduleProps> = ({
                   </TableCell>
                   
                   {/* Amount Column */}
-                  <TableCell sx={{ py: { xs: 0.75, sm: 1.5 } }}>
+                  <TableCell sx={{ py: { xs: 0.5, sm: 0.75 }, px: { xs: 0.75, sm: 1 } }}>
                     <Typography 
                       variant="body2" 
                       fontWeight={600}
@@ -569,7 +569,7 @@ const PaymentScheduleNew: FC<PaymentScheduleProps> = ({
                   
                   {/* Status Column (Desktop only) */}
                   {!isMobile && (
-                    <TableCell sx={{ py: { xs: 0.75, sm: 1.5 } }}>
+                    <TableCell sx={{ py: { xs: 0.5, sm: 0.75 }, px: { xs: 0.5, sm: 0.75 } }}>
                       {actualPayment?.status ? (
                         <StatusBadge status={actualPayment.status} size="small" />
                       ) : (
@@ -589,7 +589,7 @@ const PaymentScheduleNew: FC<PaymentScheduleProps> = ({
                   )}
                   
                   {/* Action Column */}
-                  <TableCell sx={{ py: { xs: 0.75, sm: 1.5 } }} align="right">
+                  <TableCell sx={{ py: { xs: 0.5, sm: 0.75 }, px: { xs: 0.5, sm: 0.75 } }} align="right">
                     <Stack direction="row" spacing={isMobile ? 2 : 5} justifyContent="flex-end" alignItems="center">
                       {!readOnly && (contractId || debtorId) && !item.isPaid && (
                         <>
