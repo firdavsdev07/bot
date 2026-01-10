@@ -134,15 +134,13 @@ const ContractDebtorItem: React.FC<ContractDebtorItemProps> = memo(({
 
       {/* To'lov ID va To'langan/Jami oylar */}
       <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 0.5 }}>
-        {contract.paymentId && (
-          <Typography
-            fontSize={{ xs: "0.65rem", sm: "0.7rem" }}
-            fontWeight={600}
-            color="primary.main"
-          >
-            {contract.paymentId}
-          </Typography>
-        )}
+        <Typography
+          fontSize={{ xs: "0.65rem", sm: "0.7rem" }}
+          fontWeight={600}
+          color="primary.main"
+        >
+          {contract.paymentId || "---"}
+        </Typography>
         
         {contract.paidMonthsCount !== undefined && contract.period && (
           <Typography
