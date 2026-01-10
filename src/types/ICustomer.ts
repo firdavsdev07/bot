@@ -67,7 +67,9 @@ export type IDebtorContract = {
   fullName: string;
   phoneNumber: string;
   productName: string; // ✅ Shartnoma nomi
-  contractId: string; // ✅ Shartnoma ID (click uchun)
+  contractId?: string; // ✅ Shartnoma ID (S0001, S0002...)
+  paymentId?: string; // ✅ To'lov ID (T0001, T0002...) - Qarzdorlik bo'yicha to'lov
+  debtorId?: string; // ✅ Qarzdor ID (backend'dan keladi)
   remainingDebt: number; // ✅ Shu shartnomaning qarzi
   delayDays: number; // ✅ Shu shartnomaning kechikishi
   nextPaymentDate: string;

@@ -136,18 +136,33 @@ const ContractDebtorItem: React.FC<ContractDebtorItemProps> = memo(({
             )}
             
             {/* Name - responsive */}
-            <Typography 
-              fontWeight={700} 
-              color="text.primary"
-              sx={{
-                fontSize: responsive.typography.body1,
-                lineHeight: 1.3,
-                flex: 1,
-                minWidth: { xs: "120px", sm: "auto" }
-              }}
-            >
-              {getDisplayName(contract.fullName)}
-            </Typography>
+            <Box sx={{ flex: 1, minWidth: { xs: "120px", sm: "auto" } }}>
+              <Typography 
+                fontWeight={700} 
+                color="text.primary"
+                sx={{
+                  fontSize: responsive.typography.body1,
+                  lineHeight: 1.3,
+                }}
+              >
+                {getDisplayName(contract.fullName)}
+              </Typography>
+              {/* To'lov ID ko'rsatish - faqat to'lov ID */}
+              {contract.paymentId && (
+                <Typography
+                  variant="caption"
+                  color="primary.main"
+                  fontWeight={600}
+                  sx={{ 
+                    fontSize: { xs: "0.7rem", sm: "0.75rem" },
+                    mt: 0.3,
+                    display: 'block'
+                  }}
+                >
+                  To'lov: {contract.paymentId}
+                </Typography>
+              )}
+            </Box>
             
             {/* Delay days badge - responsive */}
             {contract.delayDays !== undefined && contract.delayDays > 0 && !contract.isPending && (

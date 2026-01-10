@@ -122,6 +122,20 @@ const ContractCard: FC<ContractCardProps> = ({
             {contract.paidMonthsCount || 0}/{contract.durationMonths || 0} oy
             to'langan
           </Typography>
+          {contract.contractId && (
+            <Typography
+              variant="caption"
+              color="primary.main"
+              fontWeight={600}
+              sx={{
+                fontSize: { xs: "0.7rem", sm: "0.75rem", md: "0.8rem" },
+                display: "block",
+                mt: 0.3,
+              }}
+            >
+              ID: {contract.contractId}
+            </Typography>
+          )}
         </Box>
         {variant === "paid" && (
           <Chip
