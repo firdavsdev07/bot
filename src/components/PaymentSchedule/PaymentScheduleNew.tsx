@@ -60,11 +60,10 @@ interface PaymentScheduleProps {
 
 const PaymentScheduleNew: FC<PaymentScheduleProps> = ({
   startDate,
-  nextPaymentDate, // ✅ YANGI prop
+  nextPaymentDate,
   monthlyPayment,
   period,
   initialPayment = 0,
-  initialPaymentDueDate,
   contractId,
   remainingDebt = 0,
   totalPaid = 0,
