@@ -2,8 +2,6 @@ import { memo } from "react";
 import {
   Paper,
   Typography,
-  Box,
-  Chip,
   Stack,
 } from "@mui/material";
 import { motion } from "framer-motion";
@@ -27,30 +25,22 @@ const ContractDebtorItem: React.FC<ContractDebtorItemProps> = memo(({
     return "#2e7d32";
   };
 
-  const getDelayBgColor = (days: number) => {
-    if (days > 30) return "rgba(211, 47, 47, 0.1)";
-    if (days > 7) return "rgba(237, 108, 2, 0.1)";
-    return "rgba(46, 125, 50, 0.1)";
-  };
-
   // Format currency
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('uz-UZ').format(amount);
   };
 
-  // Calculate paid months
-  const getPaidMonths = () => {
-    if (contract.paidMonthsCount !== undefined) {
-      return contract.paidMonthsCount;
+  // Get initials from name
+  const getInitials = (name: string) => {
+    const parts = name.trim().split(' ');
+    if (parts.length >= 2) {
+      return parts[0].charAt(0) + parts[1].charAt(0);
     }
-    if (contract.period && contract.monthlyPayment && contract.initialPayment !== undefined) {
-      return Math.floor((contract.totalPaid - contract.initialPayment) / contract.monthlyPayment);
-    }
-    return 0;
+    return parts[0].charAt(0);
   };
 
-  const paidMonths = getPaidMonths();
-  const totalMonths = contract.period || 0;
+  // Oylik to'lov summasi (faqat bir oy uchun)
+  const monthlyAmount = contract.monthlyPayment || 0;
 
   return (
     <MotionPaper
@@ -82,84 +72,86 @@ const ContractDebtorItem: React.FC<ContractDebtorItemProps> = memo(({
         },
       }}
     >
-      {/* Bitta qator: Ism + Status */}
-      <Stack direction="row" justifyContent="space-between" alignItems="center">
-        <Box flex={1}>
+      {/* Top: To'lov kuni (left, ko'k) va Kechikish (right, qizil) */}
+      <Stack direction="row" justifyContent="space-between" alignItems="center" mb={0.5}>
+        <Typography
+          fontSize={{ xs: "0.8rem", sm: "0.85rem" }}
+          fontWeight={700}
+          color="#1976d2"
+        >
+          {(contract.originalPaymentDay || (contract.initialPaymentDueDate ? new Date(contract.initialPaymentDueDate).getDate() : 0)).toString().padStart(2, "0")}
+        </Typography>
+
+        {!contract.isPending && contract.delayDays > 0 && (
           <Typography
+            fontSize={{ xs: "0.8rem", sm: "0.85rem" }}
             fontWeight={700}
-            sx={{
-              fontSize: { xs: "0.9rem", sm: "0.95rem" },
-              color: "text.primary",
-            }}
+            color={getDelayColor(contract.delayDays)}
           >
-            {contract.fullName}
-          </Typography>
-        </Box>
-
-        {/* Status Badge */}
-        {contract.isPending ? (
-          <Chip
-            label="Tasdiq"
-            size="small"
-            sx={{
-              height: 20,
-              fontSize: "0.6rem",
-              fontWeight: 700,
-              bgcolor: "#e3f2fd",
-              color: "#0288d1",
-              "& .MuiChip-label": { px: 0.7 }
-            }}
-          />
-        ) : (
-          <Chip
-            label={`${contract.delayDays > 99 ? "99+" : contract.delayDays} kun`}
-            size="small"
-            sx={{
-              height: 20,
-              fontSize: "0.6rem",
-              fontWeight: 700,
-              bgcolor: getDelayBgColor(contract.delayDays),
-              color: getDelayColor(contract.delayDays),
-              "& .MuiChip-label": { px: 0.7 }
-            }}
-          />
-        )}
-      </Stack>
-
-      {/* Ikkinchi qator: Ma'lumotlar */}
-      <Stack
-        direction="row"
-        justifyContent="space-between"
-        alignItems="center"
-        spacing={1}
-        sx={{ mt: 0.8 }}
-      >
-        {/* Qarz */}
-        <Typography fontSize={{ xs: "0.75rem", sm: "0.8rem" }} color="text.secondary">
-          <Typography component="span" fontWeight={700} color={getDelayColor(contract.delayDays || 0)} fontSize={{ xs: "0.85rem", sm: "0.9rem" }}>
-            {formatCurrency(contract.remainingDebt)}$
-          </Typography>
-        </Typography>
-
-        {/* To'lov ID */}
-        {contract.paymentId && (
-          <Typography fontSize={{ xs: "0.7rem", sm: "0.75rem" }} fontWeight={600} color="primary.main">
-            {contract.paymentId}
+            {contract.delayDays > 99 ? "99+" : contract.delayDays}
           </Typography>
         )}
-
-        {/* To'lov kuni */}
-        <Typography fontSize={{ xs: "0.75rem", sm: "0.8rem" }} color="text.secondary">
-          {(contract.originalPaymentDay || (contract.initialPaymentDueDate ? new Date(contract.initialPaymentDueDate).getDate() : 0)).toString().padStart(2, "0")}-kun
-        </Typography>
         
-        {/* To'langan oylar */}
-        {totalMonths > 0 && (
-          <Typography fontSize={{ xs: "0.75rem", sm: "0.8rem" }} fontWeight={600} color="primary.main">
-            {paidMonths}/{totalMonths}
+        {contract.isPending && (
+          <Typography
+            fontSize={{ xs: "0.7rem", sm: "0.75rem" }}
+            fontWeight={700}
+            color="#0288d1"
+          >
+            Tasdiq
           </Typography>
         )}
       </Stack>
+
+      {/* Mijoz ismi (uzun bo'lsa - initials) */}
+      <Typography
+        fontWeight={700}
+        fontSize={{ xs: "0.85rem", sm: "0.9rem" }}
+        color="text.primary"
+        sx={{
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+          whiteSpace: "nowrap",
+          mb: 0.3,
+        }}
+      >
+        {contract.fullName.length > 20 ? getInitials(contract.fullName) : contract.fullName}
+      </Typography>
+
+      {/* Mahsulot nomi */}
+      <Typography
+        fontSize={{ xs: "0.7rem", sm: "0.75rem" }}
+        color="text.secondary"
+        sx={{
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+          whiteSpace: "nowrap",
+          mb: 0.5,
+        }}
+      >
+        {contract.productName}
+      </Typography>
+
+      {/* To'lov ID */}
+      {contract.paymentId && (
+        <Typography
+          fontSize={{ xs: "0.65rem", sm: "0.7rem" }}
+          fontWeight={600}
+          color="primary.main"
+          sx={{ mb: 0.5 }}
+        >
+          {contract.paymentId}
+        </Typography>
+      )}
+
+      {/* Oylik to'lov summasi - KATTA */}
+      <Typography
+        fontWeight={700}
+        fontSize={{ xs: "1.1rem", sm: "1.2rem" }}
+        color={getDelayColor(contract.delayDays || 0)}
+      >
+        {formatCurrency(monthlyAmount)} $
+      </Typography>
     </MotionPaper>
   );
 });
