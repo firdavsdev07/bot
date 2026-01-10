@@ -126,23 +126,34 @@ const ContractDebtorItem: React.FC<ContractDebtorItemProps> = memo(({
           overflow: "hidden",
           textOverflow: "ellipsis",
           whiteSpace: "nowrap",
-          mb: 0.5,
+          mb: 0.3,
         }}
       >
         {contract.productName}
       </Typography>
 
-      {/* To'lov ID */}
-      {contract.paymentId && (
-        <Typography
-          fontSize={{ xs: "0.65rem", sm: "0.7rem" }}
-          fontWeight={600}
-          color="primary.main"
-          sx={{ mb: 0.5 }}
-        >
-          {contract.paymentId}
-        </Typography>
-      )}
+      {/* To'lov ID va To'langan/Jami oylar */}
+      <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 0.5 }}>
+        {contract.paymentId && (
+          <Typography
+            fontSize={{ xs: "0.65rem", sm: "0.7rem" }}
+            fontWeight={600}
+            color="primary.main"
+          >
+            {contract.paymentId}
+          </Typography>
+        )}
+        
+        {contract.paidMonthsCount !== undefined && contract.period && (
+          <Typography
+            fontSize={{ xs: "0.7rem", sm: "0.75rem" }}
+            fontWeight={600}
+            color="text.secondary"
+          >
+            {contract.paidMonthsCount}/{contract.period}
+          </Typography>
+        )}
+      </Stack>
 
       {/* Oylik to'lov summasi - KATTA */}
       <Typography
