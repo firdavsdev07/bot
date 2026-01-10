@@ -123,14 +123,12 @@ const PaymentScheduleNew: FC<PaymentScheduleProps> = ({
     );
     const isInitialPaid = !!initialPaymentRecord;
 
+    // ✅ TUZATISH: Boshlang'ich to'lov = startDate (shartnoma tuzilgan kun)
+    // initialPaymentDueDate = birinchi OYLIK to'lov sanasi (boshqa narsa)
     if (initialPayment > 0) {
-      const initialDate = initialPaymentDueDate
-        ? new Date(initialPaymentDueDate)
-        : start;
-
       schedule.push({
         month: 0,
-        date: format(initialDate, "yyyy-MM-dd"),
+        date: format(start, "yyyy-MM-dd"),
         amount: initialPayment,
         isPaid: isInitialPaid,
         isInitial: true,
