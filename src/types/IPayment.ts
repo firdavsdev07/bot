@@ -17,6 +17,7 @@ export interface IPaydata {
 
 export interface IPayment {
     _id?: string;
+    paymentId?: string; // ✅ YANGI - To'lov ID (T0001, T0002...)
     date: Date | string;
     amount: number;
     actualAmount?: number;

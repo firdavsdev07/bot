@@ -144,6 +144,11 @@ const ContractInfo: FC<DrawerProps> = ({
             <Typography variant="caption" color="text.secondary">
               {contract.paidMonthsCount || 0}/{contract.durationMonths || 0} oy to'langan
             </Typography>
+            {contract.contractId && (
+              <Typography variant="caption" color="text.secondary" display="block" sx={{ mt: 0.5 }}>
+                ID: {contract.contractId}
+              </Typography>
+            )}
           </Box>
           <IconButton onClick={onClose} size="small">
             <X size={24} />

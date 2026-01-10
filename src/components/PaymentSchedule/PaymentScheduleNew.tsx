@@ -117,14 +117,15 @@ const PaymentScheduleNew: FC<PaymentScheduleProps> = ({
     const schedule: PaymentScheduleItem[] = [];
     const start = new Date(startDate);
 
-    const initialPaymentRecord = payments.find(
-      (p) => p.paymentType === "initial" && p.isPaid
-    );
-    const isInitialPaid = !!initialPaymentRecord;
-
-    // ✅ TUZATISH: Boshlang'ich to'lov = startDate (shartnoma tuzilgan kun)
-    // initialPaymentDueDate = birinchi OYLIK to'lov sanasi (boshqa narsa)
+    // ✅ TUZATILDI: Agar boshlang'ich to'lov 0 bo'lsa, jadvalda ko'rsatmaymiz
     if (initialPayment > 0) {
+      const initialPaymentRecord = payments.find(
+        (p) => p.paymentType === "initial" && p.isPaid
+      );
+      const isInitialPaid = !!initialPaymentRecord;
+
+      // Boshlang'ich to'lov = startDate (shartnoma tuzilgan kun)
+      // initialPaymentDueDate = birinchi OYLIK to'lov sanasi (boshqa narsa)
       schedule.push({
         month: 0,
         date: format(start, "yyyy-MM-dd"),
@@ -392,7 +393,7 @@ const PaymentScheduleNew: FC<PaymentScheduleProps> = ({
             <TableHead>
               <TableRow>
                 <TableCell sx={{ fontWeight: 700, py: { xs: 0.5, sm: 1 }, fontSize: { xs: "0.6rem", sm: "0.75rem", md: "0.8rem" } }}>
-                  {isMobile ? "Oy" : "To'lov"}
+                  {isMobile ? "ID/Oy" : "ID / To'lov"}
                 </TableCell>
                 <TableCell sx={{ fontWeight: 700, py: { xs: 0.5, sm: 1 }, fontSize: { xs: "0.6rem", sm: "0.75rem", md: "0.8rem" } }}>
                   {isMobile ? "Sana" : "Muddat"}
@@ -495,24 +496,36 @@ const PaymentScheduleNew: FC<PaymentScheduleProps> = ({
                   }}
                   onClick={() => toggleExpand(item.month)}
                 >
-                  {/* Month/Type Column */}
+                  {/* ID/Month/Type Column */}
                   <TableCell sx={{ py: { xs: 0.75, sm: 1.5 } }}>
-                    <Stack direction="row" alignItems="center" spacing={isMobile ? 0.5 : 1}>
-                      {isPast && !item.isPaid && !isMobile && <AlertCircle size={16} color="#d32f2f" />}
-                      {item.isPaid && !isMobile && <MdCheckCircle size={18} color="#2e7d32" />}
-                      <Typography
-                        variant="body2"
-                        fontWeight={600}
-                        color={isPast && !item.isPaid ? "error.main" : "text.primary"}
-                        sx={{ fontSize: { xs: "0.65rem", sm: "0.8rem", md: "0.875rem" } }}
-                      >
-                        {item.isInitial 
-                          ? (isMobile ? "0" : "Boshlang'ich") 
-                          : isMobile 
-                            ? `${item.month}` 
-                            : `${item.month}-oy`
-                        }
-                      </Typography>
+                    <Stack spacing={0.5}>
+                      {actualPayment?.paymentId && (
+                        <Typography
+                          variant="caption"
+                          fontWeight="600"
+                          fontSize={{ xs: "0.6rem", sm: "0.65rem", md: "0.7rem" }}
+                          color="primary.main"
+                        >
+                          {actualPayment.paymentId}
+                        </Typography>
+                      )}
+                      <Stack direction="row" alignItems="center" spacing={isMobile ? 0.5 : 1}>
+                        {isPast && !item.isPaid && !isMobile && <AlertCircle size={16} color="#d32f2f" />}
+                        {item.isPaid && !isMobile && <MdCheckCircle size={18} color="#2e7d32" />}
+                        <Typography
+                          variant="body2"
+                          fontWeight={600}
+                          color={isPast && !item.isPaid ? "error.main" : "text.secondary"}
+                          sx={{ fontSize: { xs: "0.65rem", sm: "0.8rem", md: "0.875rem" } }}
+                        >
+                          {item.isInitial 
+                            ? (isMobile ? "Bosh" : "Boshlang'ich") 
+                            : isMobile 
+                              ? `${item.month}-oy` 
+                              : `${item.month}-oy`
+                          }
+                        </Typography>
+                      </Stack>
                     </Stack>
                   </TableCell>
                   

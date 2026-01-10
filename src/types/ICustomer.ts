@@ -22,6 +22,7 @@ export type PaymentStatus = "PAID" | "UNDERPAID" | "OVERPAID" | "PENDING" | "REJ
 
 export type ICustomerContract = {
   _id: string;
+  contractId?: string; // ✅ YANGI - Shartnoma ID (S0001, S0002...)
   productName: string;
   totalDebt: number;
   totalPaid: number;
@@ -41,6 +42,7 @@ export type ICustomerContract = {
   prepaidBalance?: number;
   payments?: Array<{
     _id?: string;
+    paymentId?: string; // ✅ YANGI - To'lov ID (T0001, T0002...)
     amount: number;
     actualAmount?: number;
     date: Date | string;
@@ -54,6 +56,7 @@ export type ICustomerContract = {
     notes?: string;
     targetMonth?: number;
     reminderDate?: Date | string; // ✅ YANGI - Eslatma sanasi
+    reminderComment?: string; // ✅ YANGI - Eslatma izohi
   }>;
 };
 

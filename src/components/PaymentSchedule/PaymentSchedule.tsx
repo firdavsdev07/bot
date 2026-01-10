@@ -90,13 +90,14 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
     const schedule: PaymentScheduleItem[] = [];
     const start = new Date(startDate);
 
-    const initialPaymentRecord = payments.find(
-      (p) => p.paymentType === "initial" && p.isPaid
-    );
-    const isInitialPaid = !!initialPaymentRecord;
-
-    // ✅ TUZATISH: Boshlang'ich to'lov = startDate (shartnoma tuzilgan kun)
+    // ✅ TUZATILDI: Agar boshlang'ich to'lov 0 bo'lsa, jadvalda ko'rsatmaymiz
     if (initialPayment > 0) {
+      const initialPaymentRecord = payments.find(
+        (p) => p.paymentType === "initial" && p.isPaid
+      );
+      const isInitialPaid = !!initialPaymentRecord;
+
+      // Boshlang'ich to'lov = startDate (shartnoma tuzilgan kun)
       schedule.push({
         month: 0,
         date: format(start, "yyyy-MM-dd"),
@@ -336,7 +337,7 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                     whiteSpace: "nowrap",
                   }}
                 >
-                  #
+                  ID
                 </TableCell>
                 <TableCell
                   sx={{
@@ -612,7 +613,7 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                           },
                         }}
                       >
-                        {/* # */}
+                        {/* ID */}
                         <TableCell
                           sx={{
                             py: { xs: 0.75, sm: 1 },
@@ -620,30 +621,42 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                             borderBottom: "1px solid rgba(224, 224, 224, 1)",
                           }}
                         >
-                          <Box display="flex" alignItems="center" gap={0.5}>
-                            {isPast && !item.isPaid && (
-                              <MdWarning size={14} color="#d32f2f" />
+                          <Box display="flex" flexDirection="column" gap={0.5}>
+                            {actualPayment?.paymentId && (
+                              <Typography
+                                variant="caption"
+                                fontWeight="600"
+                                fontSize={{ xs: "0.65rem", sm: "0.7rem", md: "0.75rem" }}
+                                color="primary.main"
+                              >
+                                {actualPayment.paymentId}
+                              </Typography>
                             )}
-                            <Typography
-                              variant="body2"
-                              fontWeight="600"
-                              fontSize={{ xs: "0.75rem", sm: "0.8rem", md: "0.875rem" }}
-                              color={
-                                isPast && !item.isPaid
-                                  ? "error.main"
-                                  : "inherit"
-                              }
-                            >
-                              {item.isInitial ? "0" : item.month}
+                            <Box display="flex" alignItems="center" gap={0.5}>
                               {isPast && !item.isPaid && (
-                                <Box
-                                  component="span"
-                                  sx={{ display: { xs: "none", md: "inline" } }}
-                                >
-                                  {" (Kechikkan)"}
-                                </Box>
+                                <MdWarning size={14} color="#d32f2f" />
                               )}
-                            </Typography>
+                              <Typography
+                                variant="body2"
+                                fontWeight="600"
+                                fontSize={{ xs: "0.75rem", sm: "0.8rem", md: "0.875rem" }}
+                                color={
+                                  isPast && !item.isPaid
+                                    ? "error.main"
+                                    : "text.secondary"
+                                }
+                              >
+                                {item.isInitial ? "Boshlang'ich" : `${item.month}-oy`}
+                                {isPast && !item.isPaid && (
+                                  <Box
+                                    component="span"
+                                    sx={{ display: { xs: "none", md: "inline" } }}
+                                  >
+                                    {" (Kechikkan)"}
+                                  </Box>
+                                )}
+                              </Typography>
+                            </Box>
                           </Box>
                         </TableCell>
 
