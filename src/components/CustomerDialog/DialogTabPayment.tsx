@@ -132,9 +132,9 @@ const DialogTabPayment: FC<IProps> = ({ customerId }) => {
                   {/* 1-qator: Product nomi with Day badge */}
                   <Box display="flex" alignItems="center" gap={1} mb={1}>
                     {/* Day badge - NEW */}
-                    {(contract.originalPaymentDay || contract.startDate) && (
+                    {(contract.originalPaymentDay || contract.initialPaymentDueDate) && (
                       <Chip
-                        label={(contract.originalPaymentDay || new Date(contract.startDate!).getDate()).toString().padStart(2, "0")}
+                        label={(contract.originalPaymentDay || new Date(contract.initialPaymentDueDate!).getDate()).toString().padStart(2, "0")}
                         size="small"
                         sx={{
                           height: { xs: 20, sm: 22 },

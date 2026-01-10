@@ -117,9 +117,9 @@ const ContractDebtorItem: React.FC<ContractDebtorItemProps> = memo(({
             }}
           >
             {/* Day badge - NEW */}
-            {(contract.originalPaymentDay || contract.startDate) && (
+            {(contract.originalPaymentDay || contract.initialPaymentDueDate) && (
               <Chip
-                label={(contract.originalPaymentDay || new Date(contract.startDate!).getDate()).toString().padStart(2, "0")}
+                label={(contract.originalPaymentDay || new Date(contract.initialPaymentDueDate!).getDate()).toString().padStart(2, "0")}
                 size="small"
                 sx={{
                   height: { xs: 22, sm: 24 },
