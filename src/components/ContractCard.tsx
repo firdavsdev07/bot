@@ -83,9 +83,9 @@ const ContractCard: FC<ContractCardProps> = ({
         <Box sx={{ flex: 1, minWidth: 0 }}>
           <Box display="flex" alignItems="center" gap={1} mb={0.5}>
             {/* Day badge - NEW */}
-            {contract.startDate && (
+            {(contract.originalPaymentDay || contract.startDate) && (
               <Chip
-                label={new Date(contract.startDate).getDate().toString().padStart(2, "0")}
+                label={(contract.originalPaymentDay || new Date(contract.startDate!).getDate()).toString().padStart(2, "0")}
                 size="small"
                 sx={{
                   height: { xs: 20, sm: 22 },
