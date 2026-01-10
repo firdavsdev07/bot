@@ -429,7 +429,15 @@ const PaymentScheduleNew: FC<PaymentScheduleProps> = ({
             if (item.isInitial) {
               actualPayment = payments.find((p) => p.paymentType === "initial" && p.isPaid);
             } else {
+              // To'langan to'lovni olish
               actualPayment = monthlyPayments[item.month - 1];
+              
+              // Agar to'langan to'lov topilmasa, rejalashtirilgan to'lovni qidiramiz (to'lanmagan)
+              if (!actualPayment) {
+                actualPayment = payments.find(
+                  (p) => p.paymentType === "monthly" && p.targetMonth === item.month
+                );
+              }
             }
 
             // ✅ PENDING payment check - o'sha oyga to'lov kutilmoqda

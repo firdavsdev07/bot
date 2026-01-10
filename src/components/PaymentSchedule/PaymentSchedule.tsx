@@ -469,7 +469,15 @@ const PaymentSchedule: FC<PaymentScheduleProps> = ({
                       (p) => p.paymentType === "initial" && p.isPaid
                     );
                   } else {
+                    // To'langan to'lovni olish
                     actualPayment = monthlyPayments[item.month - 1];
+                    
+                    // Agar to'langan to'lov topilmasa, rejalashtirilgan to'lovni qidiramiz (to'lanmagan)
+                    if (!actualPayment) {
+                      actualPayment = payments.find(
+                        (p) => p.paymentType === "monthly" && p.targetMonth === item.month
+                      );
+                    }
                   }
 
                   // Ortiqcha va kam to'langan summalarni tekshirish
