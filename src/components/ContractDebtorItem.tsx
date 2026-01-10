@@ -1,52 +1,43 @@
 import { memo } from "react";
 import {
-  ListItemButton,
-  ListItemText,
-  Avatar,
+  Paper,
   Typography,
   Box,
   Chip,
+  Stack,
+  Divider,
 } from "@mui/material";
 import { motion } from "framer-motion";
-import { Clock, Package } from "lucide-react";
+import { Clock, Package, Calendar, AlertCircle } from "lucide-react";
 import { IDebtorContract } from "../types/ICustomer";
 import { borderRadius, shadows } from "../theme/colors";
-import { responsive } from "../theme/responsive";
 
 interface ContractDebtorItemProps {
   contract: IDebtorContract;
   onClick: (contract: IDebtorContract) => void;
 }
 
-const MotionListItemButton = motion(ListItemButton);
+const MotionPaper = motion(Paper);
 
 const ContractDebtorItem: React.FC<ContractDebtorItemProps> = memo(({
   contract,
   onClick,
 }) => {
   const getDelayColor = (days: number) => {
-    if (days > 30) return "error.main";
-    if (days > 7) return "warning.main";
-    return "success.main";
+    if (days > 30) return "#d32f2f";
+    if (days > 7) return "#ed6c02";
+    return "#2e7d32";
   };
 
-  // Smart name truncation
-  const getDisplayName = (fullName: string) => {
-    if (fullName.length > 20) {
-      const parts = fullName.split(' ');
-      if (parts.length > 1) {
-        return `${parts[0]} ${parts[parts.length - 1].charAt(0)}.`;
-      }
-    }
-    return fullName;
+  const getDelayBgColor = (days: number) => {
+    if (days > 30) return "rgba(211, 47, 47, 0.1)";
+    if (days > 7) return "rgba(237, 108, 2, 0.1)";
+    return "rgba(46, 125, 50, 0.1)";
   };
 
-  // Truncate product name for mobile
-  const truncateProductName = (name: string) => {
-    if (name.length > 30) {
-      return `${name.slice(0, 30)}...`;
-    }
-    return name;
+  // Format currency
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat('uz-UZ').format(amount);
   };
 
   // Calculate paid months
@@ -54,7 +45,6 @@ const ContractDebtorItem: React.FC<ContractDebtorItemProps> = memo(({
     if (contract.paidMonthsCount !== undefined) {
       return contract.paidMonthsCount;
     }
-    // Fallback calculation
     if (contract.period && contract.monthlyPayment && contract.initialPayment !== undefined) {
       return Math.floor((contract.totalPaid - contract.initialPayment) / contract.monthlyPayment);
     }
@@ -63,201 +53,194 @@ const ContractDebtorItem: React.FC<ContractDebtorItemProps> = memo(({
 
   const paidMonths = getPaidMonths();
   const totalMonths = contract.period || 0;
+  const progress = totalMonths > 0 ? (paidMonths / totalMonths) * 100 : 0;
 
   return (
-    <MotionListItemButton
-      initial={{ opacity: 0, y: 10 }}
+    <MotionPaper
+      initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.2 }}
-      whileHover={{ scale: 1.005 }}
-      whileTap={{ scale: 0.995 }}
+      transition={{ duration: 0.3 }}
+      whileHover={{ y: -4, boxShadow: shadows.lg }}
+      whileTap={{ scale: 0.98 }}
       onClick={() => onClick(contract)}
       sx={{
-        borderRadius: borderRadius.md,
-        mb: 1.5,
-        px: responsive.spacing.container,
-        py: { xs: 1.5, sm: 2 },
+        borderRadius: borderRadius.lg,
+        mb: 2,
+        p: { xs: 2, sm: 2.5 },
         bgcolor: "background.paper",
         border: "2px solid",
-        borderColor: contract.isPending ? "info.main" : "error.main",
-        boxShadow: contract.isPending ? shadows.colored("rgba(2, 136, 209, 0.2)") : shadows.sm,
+        borderColor: contract.isPending ? "#0288d1" : "#f44336",
+        boxShadow: shadows.md,
+        cursor: "pointer",
+        position: "relative",
+        overflow: "hidden",
         transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-        "&:hover": {
-          bgcolor: "background.paper",
-          borderColor: contract.isPending ? "info.dark" : "error.dark",
-          boxShadow: shadows.md,
+        "&::before": {
+          content: '""',
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          height: "4px",
+          bgcolor: contract.isPending ? "#0288d1" : getDelayColor(contract.delayDays || 0),
         },
       }}
     >
-      {/* Avatar - responsive sizing */}
-      <Avatar
-        sx={{
-          mr: responsive.spacing.gap,
-          width: responsive.avatar.medium.xs,
-          height: responsive.avatar.medium.xs,
-          bgcolor: contract.isPending ? "info.main" : "error.main",
-          fontSize: responsive.typography.body1.xs,
-          fontWeight: 700,
-          boxShadow: shadows.sm,
-        }}
-      >
-        {contract.fullName.charAt(0)}
-      </Avatar>
-
-      <ListItemText
-        primary={
-          <Box 
-            display="flex" 
-            alignItems="center" 
-            gap={1} 
-            mb={0.5}
-            sx={{ 
-              flexWrap: { xs: "wrap", sm: "nowrap" },
-              minHeight: { xs: 24, sm: "auto" }
+      {/* Header: Ism va Status */}
+      <Stack direction="row" justifyContent="space-between" alignItems="flex-start" mb={1.5}>
+        <Box flex={1}>
+          <Typography
+            variant="h6"
+            fontWeight={700}
+            sx={{
+              fontSize: { xs: "1rem", sm: "1.1rem" },
+              color: "text.primary",
+              mb: 0.5,
             }}
           >
-            {/* Day badge - NEW */}
-            {(contract.originalPaymentDay || contract.initialPaymentDueDate) && (
-              <Chip
-                label={(contract.originalPaymentDay || new Date(contract.initialPaymentDueDate!).getDate()).toString().padStart(2, "0")}
-                size="small"
-                sx={{
-                  height: { xs: 22, sm: 24 },
-                  minWidth: { xs: 28, sm: 32 },
-                  fontSize: { xs: "0.7rem", sm: "0.75rem" },
-                  fontWeight: 700,
-                  bgcolor: "primary.main",
-                  color: "white",
-                  "& .MuiChip-label": {
-                    px: { xs: 0.5, sm: 0.75 }
-                  }
-                }}
-              />
-            )}
-            
-            {/* Name - responsive */}
-            <Box sx={{ flex: 1, minWidth: { xs: "120px", sm: "auto" } }}>
-              <Typography 
-                fontWeight={700} 
-                color="text.primary"
-                sx={{
-                  fontSize: responsive.typography.body1,
-                  lineHeight: 1.3,
-                }}
-              >
-                {getDisplayName(contract.fullName)}
-              </Typography>
-              {/* To'lov ID ko'rsatish - faqat to'lov ID */}
-              {contract.paymentId && (
-                <Typography
-                  variant="caption"
-                  color="primary.main"
-                  fontWeight={600}
-                  sx={{ 
-                    fontSize: { xs: "0.7rem", sm: "0.75rem" },
-                    mt: 0.3,
-                    display: 'block'
-                  }}
-                >
-                  To'lov: {contract.paymentId}
-                </Typography>
-              )}
-            </Box>
-            
-            {/* Delay days badge - responsive */}
-            {contract.delayDays !== undefined && contract.delayDays > 0 && !contract.isPending && (
-              <Chip
-                icon={<Clock size={responsive.icon.small.xs} />}
-                label={`${contract.delayDays > 99 ? "99+" : contract.delayDays} kun`}
-                size="small"
-                color="error"
-                sx={{
-                  height: { xs: 20, sm: 22 },
-                  fontSize: responsive.typography.caption,
-                  fontWeight: 700,
-                  bgcolor: getDelayColor(contract.delayDays),
-                  color: "white",
-                  "& .MuiChip-icon": { 
-                    ml: 0.5,
-                    width: responsive.icon.small.xs,
-                    height: responsive.icon.small.xs,
-                    color: "white",
-                  },
-                  "& .MuiChip-label": {
-                    px: { xs: 0.5, sm: 1 }
-                  }
-                }}
-              />
-            )}
+            {contract.fullName}
+          </Typography>
+          
+          {/* To'lov ID */}
+          {contract.paymentId && (
+            <Chip
+              label={contract.paymentId}
+              size="small"
+              sx={{
+                height: 22,
+                fontSize: "0.7rem",
+                fontWeight: 600,
+                bgcolor: "#e3f2fd",
+                color: "#1976d2",
+                "& .MuiChip-label": { px: 1 }
+              }}
+            />
+          )}
+        </Box>
 
-            {/* Kassa kutilmoqda - NEW */}
-            {contract.isPending && (
-              <Chip
-                label="TASDIQ KUTILMOQDA"
-                size="small"
-                color="info"
-                sx={{
-                  height: { xs: 18, sm: 20 },
-                  fontSize: "0.6rem",
-                  fontWeight: 800,
-                  animation: "pulse 2s infinite ease-in-out",
-                  "@keyframes pulse": {
-                    "0%": { opacity: 1, transform: "scale(1)" },
-                    "50%": { opacity: 0.7, transform: "scale(0.98)" },
-                    "100%": { opacity: 1, transform: "scale(1)" },
-                  },
-                  "& .MuiChip-label": { px: 1 }
-                }}
-              />
-            )}
-          </Box>
-        }
-        secondary={
-          <Box display="flex" flexDirection="column" gap={0.5}>
-            {/* Product name */}
-            <Box display="flex" alignItems="center" gap={0.5}>
-              <Package size={responsive.icon.small.xs} color="#6B7280" />
-              <Typography
-                variant="body2"
-                color="text.secondary"
-                sx={{
-                  fontSize: responsive.typography.body2,
-                  lineHeight: 1.3,
-                  fontWeight: 600,
-                }}
-              >
-                {truncateProductName(contract.productName)}
-              </Typography>
-            </Box>
+        {/* Status Badge */}
+        {contract.isPending ? (
+          <Chip
+            icon={<Clock size={14} />}
+            label="Tasdiq kutilmoqda"
+            size="small"
+            sx={{
+              height: 24,
+              fontSize: "0.7rem",
+              fontWeight: 700,
+              bgcolor: "#e3f2fd",
+              color: "#0288d1",
+              animation: "pulse 2s infinite ease-in-out",
+              "@keyframes pulse": {
+                "0%, 100%": { opacity: 1 },
+                "50%": { opacity: 0.7 },
+              },
+            }}
+          />
+        ) : (
+          <Chip
+            icon={<AlertCircle size={14} />}
+            label={`${contract.delayDays > 99 ? "99+" : contract.delayDays} kun`}
+            size="small"
+            sx={{
+              height: 24,
+              fontSize: "0.7rem",
+              fontWeight: 700,
+              bgcolor: getDelayBgColor(contract.delayDays),
+              color: getDelayColor(contract.delayDays),
+            }}
+          />
+        )}
+      </Stack>
 
-            {/* Contract duration - NEW */}
-            {totalMonths > 0 && (
-              <Box display="flex" alignItems="center" gap={0.5}>
-                <Typography
-                  variant="caption"
-                  sx={{
-                    fontSize: responsive.typography.caption,
-                    fontWeight: 700,
-                    color: "primary.main",
-                  }}
-                >
-                  {paidMonths}
-                </Typography>
-                <Typography
-                  variant="caption"
-                  sx={{
-                    fontSize: responsive.typography.caption,
-                    color: "text.secondary",
-                  }}
-                >
-                  / {totalMonths} oy
-                </Typography>
-              </Box>
-            )}
+      <Divider sx={{ my: 1.5 }} />
+
+      {/* Product Info */}
+      <Stack direction="row" alignItems="center" spacing={1} mb={1.5}>
+        <Package size={16} color="#666" />
+        <Typography
+          variant="body2"
+          fontWeight={600}
+          sx={{
+            fontSize: { xs: "0.85rem", sm: "0.9rem" },
+            color: "text.secondary",
+            flex: 1,
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+          }}
+        >
+          {contract.productName}
+        </Typography>
+      </Stack>
+
+      {/* Progress Bar */}
+      {totalMonths > 0 && (
+        <Box mb={2}>
+          <Stack direction="row" justifyContent="space-between" alignItems="center" mb={0.5}>
+            <Typography variant="caption" color="text.secondary" fontSize="0.75rem">
+              To'lov jarayoni
+            </Typography>
+            <Typography variant="caption" fontWeight={700} fontSize="0.75rem" color="primary.main">
+              {paidMonths}/{totalMonths} oy
+            </Typography>
+          </Stack>
+          <Box
+            sx={{
+              width: "100%",
+              height: 6,
+              bgcolor: "#e0e0e0",
+              borderRadius: 3,
+              overflow: "hidden",
+            }}
+          >
+            <Box
+              sx={{
+                width: `${progress}%`,
+                height: "100%",
+                bgcolor: progress >= 100 ? "#4caf50" : "#2196f3",
+                transition: "width 0.5s ease",
+                borderRadius: 3,
+              }}
+            />
           </Box>
-        }
-      />
-    </MotionListItemButton>
+        </Box>
+      )}
+
+      {/* Footer: Qarz ma'lumoti */}
+      <Stack
+        direction="row"
+        spacing={2}
+        sx={{
+          p: 1.5,
+          bgcolor: getDelayBgColor(contract.delayDays || 0),
+          borderRadius: borderRadius.sm,
+        }}
+      >
+        <Box flex={1}>
+          <Typography variant="caption" color="text.secondary" fontSize="0.7rem">
+            Qarz
+          </Typography>
+          <Typography variant="body2" fontWeight={700} color={getDelayColor(contract.delayDays || 0)} fontSize="0.9rem">
+            {formatCurrency(contract.remainingDebt)} $
+          </Typography>
+        </Box>
+
+        {(contract.originalPaymentDay || contract.initialPaymentDueDate) && (
+          <Box flex={1} textAlign="right">
+            <Typography variant="caption" color="text.secondary" fontSize="0.7rem">
+              To'lov kuni
+            </Typography>
+            <Stack direction="row" alignItems="center" justifyContent="flex-end" spacing={0.5}>
+              <Calendar size={14} color="#666" />
+              <Typography variant="body2" fontWeight={700} fontSize="0.9rem">
+                {(contract.originalPaymentDay || new Date(contract.initialPaymentDueDate!).getDate()).toString().padStart(2, "0")}-kun
+              </Typography>
+            </Stack>
+          </Box>
+        )}
+      </Stack>
+    </MotionPaper>
   );
 });
 
