@@ -114,6 +114,19 @@ const CustomerListItem: React.FC<CustomerListItemProps> = memo(({
                 minWidth: { xs: "120px", sm: "auto" }
               }}
             >
+              {customer.customerId && (
+                <Typography
+                  component="span"
+                  sx={{
+                    color: "primary.main",
+                    fontWeight: 600,
+                    mr: 1,
+                    fontSize: responsive.typography.body2,
+                  }}
+                >
+                  {customer.customerId}
+                </Typography>
+              )}
               {getDisplayName(customer.fullName)}
             </Typography>
             

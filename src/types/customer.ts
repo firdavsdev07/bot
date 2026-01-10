@@ -1,5 +1,6 @@
 export interface ICustomer {
   _id: string;
+  customerId: string;
   fullName: string;
   passportSeries: string;
   phoneNumber: string;

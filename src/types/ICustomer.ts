@@ -1,5 +1,6 @@
 export type ICustomer = {
   _id: string;
+  customerId?: string;
   fullName: string;
   phoneNumber: string;
   delayDays?: number;
